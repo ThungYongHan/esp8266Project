@@ -1,0 +1,1640 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Welcome to Firebase Hosting</title>
+
+    <script defer src="/__/firebase/9.8.4/firebase-app-compat.js"></script>
+    <script defer src="/__/firebase/9.8.4/firebase-database-compat.js"></script>
+    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<style>
+    th {
+        color: #000000;
+    }
+
+    .modal {
+        display: none;
+        /* Hidden by default */
+        position: fixed;
+        /* Stay in place */
+        z-index: 1;
+        /* Sit on top */
+        padding-top: 100px;
+        /* Location of the box */
+        left: 0;
+        top: 0;
+        width: 100%;
+        /* Full width */
+        height: 100%;
+        /* Full height */
+        /*overflow: auto; !* Enable scroll if needed *!*/
+        background-color: rgb(0, 0, 0);
+        /* Fallback color */
+        background-color: rgba(0, 0, 0, 0.4);
+        /* Black w/ opacity */
+    }
+
+    /* tempModal Content/Box */
+    .modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        /* 15% from the top and centered */
+        padding: 20px;
+        border: 1px solid #888;
+        width: 50%;
+        /* Could be more or less, depending on screen size */
+    }
+
+    .modal-header {
+        padding: 2px 16px;
+        background-color: #23408e;
+        color: white;
+    }
+
+    /* The Close Button */
+    .close {
+        color: white;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    body {
+        background-image: url(https://img.freepik.com/premium-vector/background-white-elegant-texture_23-2148438404.jpg?w=2000);
+    }
+
+    canvas {
+        max-height: 700px;
+    }
+
+    select {
+        margin-bottom: 15px;
+    }
+</style>
+
+<body>
+<div class="container">
+    <div class="row" style="text-align: center; padding: 30px 0;">
+        <div class="col-md-3"></div>
+        <div class="col-md-3">
+            <h3 id="currentDate"></h3>
+        </div>
+        <div class="col-md-3">
+            <h3 id="currentTime"></h3>
+        </div>
+        <div class="col-md-3"></div>
+    </div>
+
+    <div id="temperatureModal" class="modal">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Temperature Dashboard</h2>
+                <span class="close">&times;</span>
+            </div>
+
+            <div class="modal-body">
+                <select class="btn-secondary dropdown-toggle" id="temperatureDateArray"
+                        onchange="selectTemperatureOption()"></select>
+                <div id="temperatureChartContainer">
+                    <canvas id="temperatureChart"></canvas>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+        </div>
+
+    </div>
+
+
+    <div id="humidityModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Humidity Dashboard</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <select class="btn-secondary dropdown-toggle" id="humidityDateArray"
+                        onchange="selectHumidityOption()"></select>
+                <div id="humidityChartContainer">
+                    <canvas id="humidityChart"></canvas>
+                </div>
+                <p>30% - 59% = Low Risk of Mold Growth</p>
+                <p>60% - 69% = Risk of Mold Growth</p>
+                70% - 90% = High Risk of Mold Growth
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+
+    <div id="airQualityModal" class="modal">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Carbon Dioxide Dashboard</h2>
+                <span class="close">&times;</span>
+            </div>
+
+            <div class="modal-body">
+
+                <select class="btn-secondary dropdown-toggle" id="airQualityDateArr"
+                        onchange="selectAirQualityOption()"></select>
+                <div id="airQualityChartContainer">
+                    <canvas id="airQualityChart"></canvas>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+        </div>
+
+    </div>
+
+    <div id="smokeModal" class="modal">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Smoke Dashboard</h2>
+                <span class="close">&times;</span>
+            </div>
+
+            <div class="modal-body">
+                <select class="btn-secondary dropdown-toggle" id="SmokeDateArr" onchange="selectSmokeOption()"></select>
+                <div id="smokeChartContainer">
+                    <canvas id="smokeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+        </div>
+
+    </div>
+    <div id="lpgModal" class="modal">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Liquefied Petroleum Gas Dashboard</h2>
+                <span class="close">&times;</span>
+            </div>
+
+            <div class="modal-body">
+                <select class="btn-secondary dropdown-toggle" id="LPGDateArr" onchange="selectLPGOption()"></select>
+                <div id="LPGChartContainer">
+                    <canvas id="LPGChart"></canvas>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+        </div>
+
+    </div>
+
+    <div id="coModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Carbon Monoxide Dashboard</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <select class="btn-secondary dropdown-toggle" id="CODateArr" onchange="selectCOOption()"></select>
+                <div id="COChartContainer">
+                    <canvas id="COChart"></canvas>
+                </div>
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+
+    </div>
+
+    <div id="dustModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>PM2.5 Particles Dashboard</h2>
+                <span class="close">&times;</span>
+            </div>
+
+            <div class="modal-body">
+                <select class="btn-secondary dropdown-toggle" id="dustDateArr" onchange="selectDustOption()"></select>
+                <div id="dustChartContainer">
+                    <canvas id="dustChart"></canvas>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+
+    <div class="row" style="justify-content: space-between;">
+        <div id="temperatureIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <h5 style="color: #fff;">Temperature &#127777;</h5>
+            <h1 id="latestTemperature" style="color: #fff;"></h1>
+        </div>
+        <div id="humidityIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <h5 style="color: #fff;">Humidity &#128167;</h5>
+            <h1 id="latestHumidity" style="color: #fff;"></h1>
+        </div>
+        <div id="airQualityIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <h5 style="color: #fff;">Carbon Dioxide &#128168;</h5>
+            <h1 id="latestAirQuality" style="color: #fff;"></h1>
+        </div>
+    </div>
+
+    <div class="row mt-5" style="justify-content: space-between;">
+        <div id="smokeIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <h5 style="color: #fff;">
+                Smoke &#128684;
+            </h5>
+            <h1 id="latestSmoke" style="color: #fff;"></h1>
+        </div>
+        <div id="lpgIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <h5 style="color: #fff;">
+                Liquefied petroleum gas &#9981;
+            </h5>
+            <h1 id="latestLPG" style="color: #fff;"></h1>
+        </div>
+        <div id="coIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <h5 style="color: #fff;">
+                Carbon Monoxide &#128168;
+            </h5>
+            <h1 id="latestCO" style="color: #fff;"></h1>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <div id="dustIndicator" class="col-md-3" style="background-color:
+        #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+        box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <h5 style="color: #fff;">PM2.5 Particles&#128173;</h5>
+            <h1 id="latestDust" style="color: #fff;"></h1>
+        </div>
+    </div>
+    <script>
+
+        function dateComparison(a, b) {
+            const date1 = new Date(a)
+            const date2 = new Date(b)
+
+            return date1 - date2;
+        }
+
+        function selectHumidityOption() {
+            var selectedHumidDate = document.getElementById("humidityDateArray").value;
+            // console.log(selectedHumidDate);
+            let selectedDayHumid = 'DHT11/Humidity/' + selectedHumidDate;
+            // console.log(selectedDayHumid);
+            firebase.database().ref(selectedDayHumid).on('value', (snap) => {
+                var humidityStr = snap.val();
+                var humidityArray = [];
+
+                Object.keys(humidityStr).forEach((key) => {
+                    humidityArray.push({[key]: humidityStr[key]});
+                });
+                // console.log(humidityArray);
+
+                var latestHumidity = humidityArray[humidityArray.length - 1];
+                var humidityValue = Object.values(latestHumidity);
+                var jsonHumidityVal = JSON.stringify(humidityValue);
+
+                jsonHumidityVal = jsonHumidityVal.split(":").pop();
+                jsonHumidityVal = jsonHumidityVal.replaceAll("\"", "");
+                jsonHumidityVal = jsonHumidityVal.replaceAll("}", "");
+                jsonHumidityVal = jsonHumidityVal.replaceAll("]", "");
+
+                var iterator = humidityArray.values();
+                // console.log(iterator);
+                var dateArray = [];
+                var humidityValueArray = [];
+                for (let elements of iterator) {
+                    dateArray.push(Object.keys(elements).toString());
+                    // console.log(dateArray);
+                    let cleanHumidity = JSON.stringify(Object.values(elements));
+                    cleanHumidity = cleanHumidity.split(":").pop();
+                    cleanHumidity = cleanHumidity.replaceAll("\"", "");
+                    cleanHumidity = cleanHumidity.replaceAll("}", "");
+                    cleanHumidity = cleanHumidity.replaceAll("]", "");
+                    // console.log(cleanHumidity);
+                    humidityValueArray.push(cleanHumidity);
+                    // console.log(humidityValueArray);
+                }
+                document.getElementById('humidityChartContainer').innerHTML = "";
+                document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
+                new Chart("humidityChart", {
+                    type: "line",
+                    data: {
+                        labels: dateArray,
+                        datasets: [{
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(0,0,255,1.0)",
+                            borderColor: "rgba(0,0,255,0.1)",
+                            data: humidityValueArray
+                        }]
+                    },
+                    options: {
+                        legend: {display: false},
+                        scales: {
+                            yAxes: [{ticks: {min: 20.00, max: 90.00}}],
+                            xAxes: [{
+                                ticks: {
+                                    display: true,
+                                    autoSkip: true,
+                                    maxTicksLimit: 24
+                                }
+                            }],
+                        }
+                    }
+                });
+            });
+        }
+
+        function selectTemperatureOption() {
+            var selectedTemperatureDate = document.getElementById("temperatureDateArray").value;
+            // console.log(selectedTemperatureDate);
+            let selectedDayTemp = 'DHT11/Temperature/' + selectedTemperatureDate;
+            // console.log(selectedDayTemp);
+            firebase.database().ref(selectedDayTemp).on('value', (snap) => {
+                var tempStr = snap.val();
+                var temperatureArray = [];
+
+                Object.keys(tempStr).forEach((key) => {
+                    temperatureArray.push({[key]: tempStr[key]});
+                });
+                // console.log(temperatureArray);
+
+                var latestTemperature = temperatureArray[temperatureArray.length - 1];
+                var temperatureValue = Object.values(latestTemperature);
+                var jsonTemperatureValue = JSON.stringify(temperatureValue);
+
+                jsonTemperatureValue = jsonTemperatureValue.split(":").pop();
+                jsonTemperatureValue = jsonTemperatureValue.replaceAll("\"", "");
+                jsonTemperatureValue = jsonTemperatureValue.replaceAll("}", "");
+                jsonTemperatureValue = jsonTemperatureValue.replaceAll("]", "");
+
+                var iterator = temperatureArray.values();
+                // console.log(iterator);
+                var dateArray = [];
+                var temperatureValueArray = [];
+                for (let elements of iterator) {
+                    dateArray.push(Object.keys(elements).toString());
+                    // console.log(dateArray);
+                    let cleanTemperature = JSON.stringify(Object.values(elements));
+                    cleanTemperature = cleanTemperature.split(":").pop();
+                    cleanTemperature = cleanTemperature.replaceAll("\"", "");
+                    cleanTemperature = cleanTemperature.replaceAll("}", "");
+                    cleanTemperature = cleanTemperature.replaceAll("]", "");
+                    // console.log(cleanTemperature);
+                    temperatureValueArray.push(cleanTemperature);
+                    // console.log(temperatureValueArray);
+                }
+                document.getElementById("temperatureChartContainer").innerHTML = "";
+                document.getElementById('temperatureChartContainer').innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
+                new Chart("temperatureChart", {
+                    type: "line",
+                    data: {
+                        labels: dateArray,
+                        datasets: [{
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(0,0,255,1.0)",
+                            borderColor: "rgba(0,0,255,0.1)",
+                            data: temperatureValueArray
+                        }]
+                    },
+                    options: {
+                        legend: {display: false},
+                        scales: {
+                            yAxes: [{ticks: {min: 10.00, max: 45.00}}],
+                            xAxes: [{
+                                ticks: {
+                                    display: true,
+                                    autoSkip: true,
+                                    maxTicksLimit: 24
+                                }
+                            }],
+                        }
+                    }
+                });
+            });
+        }
+
+        function selectAirQualityOption() {
+            var selectedAirDate = document.getElementById("airQualityDateArr").value;
+            // console.log(selectedAirDate);
+            let selectedDayAir = 'MQ135/air_quality/' + selectedAirDate;
+            // console.log(selectedDayAir);
+            firebase.database().ref(selectedDayAir).on('value', (snap) => {
+                var airQualityStr = snap.val();
+                var airQualityArray = [];
+
+                Object.keys(airQualityStr).forEach((key) => {
+                    airQualityArray.push({[key]: airQualityStr[key]});
+                });
+                // console.log(airQualityArray);
+
+                var latestAirQuality = airQualityArray[airQualityArray.length - 1];
+                var airQualityVal = Object.values(latestAirQuality);
+                var jsonAirQualityVal = JSON.stringify(airQualityVal);
+
+                jsonAirQualityVal = jsonAirQualityVal.split(":").pop();
+                jsonAirQualityVal = jsonAirQualityVal.replaceAll("\"", "");
+                jsonAirQualityVal = jsonAirQualityVal.replaceAll("}", "");
+                jsonAirQualityVal = jsonAirQualityVal.replaceAll("]", "");
+
+                var iterator = airQualityArray.values();
+                // console.log(iterator);
+                var dateArray = [];
+                var airValueArray = [];
+                for (let elements of iterator) {
+                    dateArray.push(Object.keys(elements).toString());
+                    // console.log(dateArray);
+                    let cleanAirQuality = JSON.stringify(Object.values(elements));
+                    cleanAirQuality = cleanAirQuality.split(":").pop();
+                    cleanAirQuality = cleanAirQuality.replaceAll("\"", "");
+                    cleanAirQuality = cleanAirQuality.replaceAll("}", "");
+                    cleanAirQuality = cleanAirQuality.replaceAll("]", "");
+                    // console.log(cleanAirQuality);
+                    airValueArray.push(cleanAirQuality);
+                    // console.log(airValueArray);
+                }
+
+                document.getElementById("airQualityChartContainer").innerHTML = "";
+                document.getElementById('airQualityChartContainer').innerHTML = "<canvas id=\"airQualityChart\"></canvas>";
+                new Chart("airQualityChart", {
+                    type: "line",
+                    data: {
+                        labels: dateArray,
+                        datasets: [{
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(0,0,255,1.0)",
+                            borderColor: "rgba(0,0,255,0.1)",
+                            data: airValueArray
+                        }]
+                    },
+                    options: {
+                        legend: {display: false},
+                        scales: {
+                            yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                            xAxes: [{
+                                ticks: {
+                                    display: true,
+                                    autoSkip: true,
+                                    maxTicksLimit: 24
+                                }
+                            }],
+                        }
+                    }
+                });
+            });
+        }
+
+
+        function selectSmokeOption() {
+            var selectedSmokeDate = document.getElementById("SmokeDateArr").value;
+            // console.log(selectedSmokeDate);
+            let selectedDaySmoke = 'MQ2/Smoke/' + selectedSmokeDate;
+            // console.log(selectedDaySmoke);
+            firebase.database().ref(selectedDaySmoke).on('value', (snap) => {
+                var smokeStr = snap.val();
+                var smokeArray = [];
+
+                Object.keys(smokeStr).forEach((key) => {
+                    smokeArray.push({[key]: smokeStr[key]});
+                });
+                // console.log(smokeArray);
+
+                var latestSmoke = smokeArray[smokeArray.length - 1];
+                var smokeVal = Object.values(latestSmoke);
+                var jsonSmokeVal = JSON.stringify(smokeVal);
+
+                jsonSmokeVal = jsonSmokeVal.split(":").pop();
+                jsonSmokeVal = jsonSmokeVal.replaceAll("\"", "");
+                jsonSmokeVal = jsonSmokeVal.replaceAll("}", "");
+                jsonSmokeVal = jsonSmokeVal.replaceAll("]", "");
+
+                var iterator = smokeArray.values();
+                // console.log(iterator);
+                var dateArray = [];
+                var smokeValueArray = [];
+                for (let elements of iterator) {
+                    dateArray.push(Object.keys(elements).toString());
+                    // console.log(dateArray);
+                    let cleanSmoke = JSON.stringify(Object.values(elements));
+                    cleanSmoke = cleanSmoke.split(":").pop();
+                    cleanSmoke = cleanSmoke.replaceAll("\"", "");
+                    cleanSmoke = cleanSmoke.replaceAll("}", "");
+                    cleanSmoke = cleanSmoke.replaceAll("]", "");
+                    // console.log(cleanSmoke);
+                    smokeValueArray.push(cleanSmoke);
+                    // console.log(smokeValueArray);
+                }
+
+                document.getElementById("smokeChartContainer").innerHTML = "";
+                document.getElementById('smokeChartContainer').innerHTML = "<canvas id=\"smokeChart\"></canvas>";
+                new Chart("smokeChart", {
+                    type: "line",
+                    data: {
+                        labels: dateArray,
+                        datasets: [{
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(0,0,255,1.0)",
+                            borderColor: "rgba(0,0,255,0.1)",
+                            data: smokeValueArray
+                        }]
+                    },
+                    options: {
+                        legend: {display: false},
+                        scales: {
+                            yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                            xAxes: [{
+                                ticks: {
+                                    display: true,
+                                    autoSkip: true,
+                                    maxTicksLimit: 24
+                                }
+                            }],
+                        }
+                    }
+                });
+            });
+        }
+
+
+        function selectLPGOption() {
+            var selectedLPGDate = document.getElementById("LPGDateArr").value;
+            // console.log(selectedLPGDate);
+            let selectedDayLPG = 'MQ2/LPG/' + selectedLPGDate;
+            // console.log(selectedDayLPG);
+            firebase.database().ref(selectedDayLPG).on('value', (snap) => {
+                var LPGStr = snap.val();
+                var LPGArray = [];
+
+                Object.keys(LPGStr).forEach((key) => {
+                    LPGArray.push({[key]: LPGStr[key]});
+                });
+                // console.log(LPGArray);
+
+                var latestLPG = LPGArray[LPGArray.length - 1];
+                var LPGVal = Object.values(latestLPG);
+                var jsonLPGVal = JSON.stringify(LPGVal);
+
+                jsonLPGVal = jsonLPGVal.split(":").pop();
+                jsonLPGVal = jsonLPGVal.replaceAll("\"", "");
+                jsonLPGVal = jsonLPGVal.replaceAll("}", "");
+                jsonLPGVal = jsonLPGVal.replaceAll("]", "");
+
+                var iterator = LPGArray.values();
+                // console.log(iterator);
+                var dateArray = [];
+                var LPGValueArray = [];
+                for (let elements of iterator) {
+                    dateArray.push(Object.keys(elements).toString());
+                    // console.log(dateArray);
+                    let cleanLPG = JSON.stringify(Object.values(elements));
+                    cleanLPG = cleanLPG.split(":").pop();
+                    cleanLPG = cleanLPG.replaceAll("\"", "");
+                    cleanLPG = cleanLPG.replaceAll("}", "");
+                    cleanLPG = cleanLPG.replaceAll("]", "");
+                    // console.log(cleanLPG);
+                    LPGValueArray.push(cleanLPG);
+                    // console.log(LPGValueArray);
+                }
+                document.getElementById("LPGChartContainer").innerHTML = "";
+                document.getElementById('LPGChartContainer').innerHTML = "<canvas id=\"LPGChart\"></canvas>";
+                new Chart("LPGChart", {
+                    type: "line",
+                    data: {
+                        labels: dateArray,
+                        datasets: [{
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(0,0,255,1.0)",
+                            borderColor: "rgba(0,0,255,0.1)",
+                            data: LPGValueArray
+                        }]
+                    },
+                    options: {
+                        legend: {display: false},
+                        scales: {
+                            yAxes: [{ticks: {min: 0.00, max: 5000.00}}],
+                            xAxes: [{
+                                ticks: {
+                                    display: true,
+                                    autoSkip: true,
+                                    maxTicksLimit: 24
+                                }
+                            }],
+                        }
+                    }
+                });
+            });
+        }
+
+
+        function selectCOOption() {
+            var selectedCODate = document.getElementById("CODateArr").value;
+            // console.log(selectedCODate);
+            let selectedDayCO = 'MQ2/CO/' + selectedCODate;
+            // console.log(selectedDayCO);
+            firebase.database().ref(selectedDayCO).on('value', (snap) => {
+                var COStr = snap.val();
+                var COArray = [];
+
+                Object.keys(COStr).forEach((key) => {
+                    COArray.push({[key]: COStr[key]});
+                });
+                // console.log(COArray);
+
+                var latestCO = COArray[COArray.length - 1];
+                var COVal = Object.values(latestCO);
+                var jsonCOVal = JSON.stringify(COVal);
+
+                jsonCOVal = jsonCOVal.split(":").pop();
+                jsonCOVal = jsonCOVal.replaceAll("\"", "");
+                jsonCOVal = jsonCOVal.replaceAll("}", "");
+                jsonCOVal = jsonCOVal.replaceAll("]", "");
+
+                var iterator = COArray.values();
+                // console.log(iterator);
+                var dateArray = [];
+                var COValueArray = [];
+                for (let elements of iterator) {
+                    dateArray.push(Object.keys(elements).toString());
+                    // console.log(dateArray);
+                    let cleanCO = JSON.stringify(Object.values(elements));
+                    cleanCO = cleanCO.split(":").pop();
+                    cleanCO = cleanCO.replaceAll("\"", "");
+                    cleanCO = cleanCO.replaceAll("}", "");
+                    cleanCO = cleanCO.replaceAll("]", "");
+                    // console.log(cleanCO);
+                    COValueArray.push(cleanCO);
+                    // console.log(COValueArray);
+                }
+                document.getElementById("COChartContainer").innerHTML = "";
+                document.getElementById('COChartContainer').innerHTML = "<canvas id=\"COChart\"></canvas>";
+                new Chart("COChart", {
+                    type: "line",
+                    data: {
+                        labels: dateArray,
+                        datasets: [{
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(0,0,255,1.0)",
+                            borderColor: "rgba(0,0,255,0.1)",
+                            data: COValueArray
+                        }]
+                    },
+                    options: {
+                        legend: {display: false},
+                        scales: {
+                            yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                            xAxes: [{
+                                ticks: {
+                                    display: true,
+                                    autoSkip: true,
+                                    maxTicksLimit: 24
+                                }
+                            }],
+                        }
+                    }
+                });
+            });
+        }
+
+        function selectDustOption() {
+            var selectedDustDate = document.getElementById("dustDateArr").value;
+            console.log(selectedDustDate);
+            let selectedDayDust = 'DSM501A/conPM25/' + selectedDustDate;
+            console.log(selectedDayDust);
+            firebase.database().ref(selectedDayDust).on('value', (snap) => {
+                var dustStr = snap.val();
+                var dustArray = [];
+
+                Object.keys(dustStr).forEach((key) => {
+                    dustArray.push({[key]: dustStr[key]});
+                });
+                // console.log(dustArray);
+
+                var latestDust = dustArray[dustArray.length - 1];
+                var dustVal = Object.values(latestDust);
+                var jsonDustVal = JSON.stringify(dustVal);
+
+                jsonDustVal = jsonDustVal.split(":").pop();
+                jsonDustVal = jsonDustVal.replaceAll("\"", "");
+                jsonDustVal = jsonDustVal.replaceAll("}", "");
+                jsonDustVal = jsonDustVal.replaceAll("]", "");
+
+                var iterator = dustArray.values();
+                // console.log(iterator);
+                var dateArray = [];
+                var dustValueArray = [];
+                for (let elements of iterator) {
+                    dateArray.push(Object.keys(elements).toString());
+                    // console.log(dateArray);
+                    let cleanDust = JSON.stringify(Object.values(elements));
+                    cleanDust = cleanDust.split(":").pop();
+                    cleanDust = cleanDust.replaceAll("\"", "");
+                    cleanDust = cleanDust.replaceAll("}", "");
+                    cleanDust = cleanDust.replaceAll("]", "");
+                    // console.log(cleanDust);
+                    dustValueArray.push(cleanDust);
+                    // console.log(dustValueArray);
+                }
+                document.getElementById("dustChartContainer").innerHTML = "";
+                document.getElementById('dustChartContainer').innerHTML = "<canvas id=\"dustChart\"></canvas>";
+                new Chart("dustChart", {
+                    type: "line",
+                    data: {
+                        labels: dateArray,
+                        datasets: [{
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(0,0,255,1.0)",
+                            borderColor: "rgba(0,0,255,0.1)",
+                            data: dustValueArray
+                        }]
+                    },
+                    options: {
+                        legend: {display: false},
+                        scales: {
+                            yAxes: [{ticks: {min: 0.00, max: 50.00}}],
+                            xAxes: [{
+                                ticks: {
+                                    display: true,
+                                    autoSkip: true,
+                                    maxTicksLimit: 24
+                                }
+                            }],
+                        }
+                    }
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', async function () {
+
+                var temperatureModal = document.getElementById("temperatureModal");
+                var humidityModal = document.getElementById("humidityModal");
+                var airQualityModal = document.getElementById("airQualityModal");
+                var dustModal = document.getElementById("dustModal");
+
+                var temperatureBtn = document.getElementById("temperatureIndicator");
+                var humidityBtn = document.getElementById("humidityIndicator");
+                var airQualityBtn = document.getElementById("airQualityIndicator");
+                var dustBtn = document.getElementById("dustIndicator");
+
+                var smokeModal = document.getElementById("smokeModal");
+                var lpgModal = document.getElementById("lpgModal");
+                var coModal = document.getElementById("coModal");
+
+                var smokeBtn = document.getElementById("smokeIndicator");
+                var lpgBtn = document.getElementById("lpgIndicator");
+                var coBtn = document.getElementById("coIndicator");
+
+                var span1 = document.getElementsByClassName("close")[0];
+                var span2 = document.getElementsByClassName("close")[1];
+                var span3 = document.getElementsByClassName("close")[2];
+                var span4 = document.getElementsByClassName("close")[3];
+                var span5 = document.getElementsByClassName("close")[4];
+                var span6 = document.getElementsByClassName("close")[5];
+                var span7 = document.getElementsByClassName("close")[6];
+
+                // When the user clicks on the button, open the tempModal
+                temperatureBtn.onclick = function () {
+                    temperatureModal.style.display = "block";
+                }
+
+                humidityBtn.onclick = function () {
+                    humidityModal.style.display = "block";
+                }
+
+                airQualityBtn.onclick = function () {
+                    airQualityModal.style.display = "block";
+                }
+
+                dustBtn.onclick = function () {
+                    dustModal.style.display = "block";
+                }
+
+                smokeBtn.onclick = function () {
+                    smokeModal.style.display = "block";
+                }
+
+                lpgBtn.onclick = function () {
+                    lpgModal.style.display = "block";
+                }
+
+                coBtn.onclick = function () {
+                    coModal.style.display = "block";
+                }
+
+
+                // When the user clicks on <span> (x), close the tempModal
+                span1.onclick = function () {
+                    temperatureModal.style.display = "none";
+                }
+
+                span2.onclick = function () {
+                    humidityModal.style.display = "none";
+                }
+
+                span3.onclick = function () {
+                    airQualityModal.style.display = "none";
+                }
+
+
+                span4.onclick = function () {
+                    smokeModal.style.display = "none";
+                }
+
+                span5.onclick = function () {
+                    lpgModal.style.display = "none";
+                }
+
+                span6.onclick = function () {
+                    coModal.style.display = "none";
+                }
+
+                span7.onclick = function () {
+                    dustModal.style.display = "none";
+                }
+                // When the user clicks anywhere outside of the tempModal, close it
+                window.onclick = function (event) {
+                    if (event.target === temperatureModal) {
+                        temperatureModal.style.display = "none";
+                    }
+                    if (event.target === humidityModal) {
+                        humidityModal.style.display = "none";
+                    }
+                    if (event.target === airQualityModal) {
+                        airQualityModal.style.display = "none";
+                    }
+                    if (event.target === dustModal) {
+                        dustModal.style.display = "none";
+                    }
+                    if (event.target === smokeModal) {
+                        smokeModal.style.display = "none";
+                    }
+                    if (event.target === coModal) {
+                        coModal.style.display = "none";
+                    }
+                    if (event.target === lpgModal) {
+                        lpgModal.style.display = "none";
+                    }
+                }
+
+                document.querySelector('#load');
+                var today = new Date();
+                var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+                let currentDayTemperature = 'DHT11/Temperature/' + date;
+                let currentDayHumidity = 'DHT11/Humidity/' + date;
+                let currentDayAirQuality = 'MQ135/air_quality/' + date;
+                let currentDaySmoke = 'MQ2/Smoke/' + date;
+                let currentDayLPG = 'MQ2/LPG/' + date;
+                let currentDayCO = 'MQ2/CO/' + date;
+                let currentDayDust = 'DSM501A/conPM25/' + date;
+                // console.log(currentDayTemperature);
+
+                var select = document.getElementById("temperatureDateArray");
+                var select1 = document.getElementById("humidityDateArray");
+                var select2 = document.getElementById("airQualityDateArr");
+                var select3 = document.getElementById("SmokeDateArr");
+                var select4 = document.getElementById("LPGDateArr");
+                var select5 = document.getElementById("CODateArr");
+                var select6 = document.getElementById("dustDateArr");
+
+                await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
+                    var temperatureDays = snap.val();
+                    // console.log(temperatureDays);
+                    temperatureDays = Object.keys(temperatureDays);
+                    // console.log(temperatureDays);
+                    temperatureDays.sort(dateComparison);
+                    // console.log(temperatureDays);
+                    // var select = document.getElementById("tempDateArr");
+                    for (var i = 0; i < temperatureDays.length; i++) {
+                        var option = temperatureDays[i];
+                        var el = document.createElement("option");
+                        el.textContent = option;
+                        el.value = option;
+                        select.prepend(el);
+                    }
+                    console.log(temperatureDays);
+                    document.getElementById("temperatureDateArray").selectedIndex = "0";
+                });
+
+                firebase.database().ref(currentDayTemperature).on('value', (snap) => {
+                    var temperatureStr = snap.val();
+                    var temperatureArray = [];
+
+                    Object.keys(temperatureStr).forEach((key) => {
+                        temperatureArray.push({[key]: temperatureStr[key]});
+                    });
+                    // console.log(temperatureArray);
+
+                    var latestTemperature = temperatureArray[temperatureArray.length - 1];
+                    var timeStr = Object.keys(latestTemperature);
+                    var temperatureValue = Object.values(latestTemperature);
+                    var jsonTemperatureValue = JSON.stringify(temperatureValue);
+
+                    jsonTemperatureValue = jsonTemperatureValue.split(":").pop();
+                    jsonTemperatureValue = jsonTemperatureValue.replaceAll("\"", "");
+                    jsonTemperatureValue = jsonTemperatureValue.replaceAll("}", "");
+                    jsonTemperatureValue = jsonTemperatureValue.replaceAll("]", "");
+                    if (jsonTemperatureValue > 26) {
+                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#128293';
+                        // document.getElementById("temperatureIndicator").style.backgroundColor = "#bd1816";
+                    }
+                    if (jsonTemperatureValue >= 23 && jsonTemperatureValue <= 26) {
+                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#127777';
+                        // document.getElementById("temperatureIndicator").style.backgroundColor = "#bd1816";
+                    }
+                    if (jsonTemperatureValue <= 22) {
+                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#x2744';
+                        // document.getElementById("temperatureIndicator").style.backgroundColor = "#1184e8";
+                    }
+
+                    document.getElementById('latestTemperature').innerHTML = jsonTemperatureValue;
+                    document.getElementById('currentDate').innerHTML = "Date: " + date;
+                    document.getElementById('currentTime').innerHTML = "Time: " + timeStr;
+
+                    var iterator = temperatureArray.values();
+
+                    // console.log(iterator);
+                    // Here all the elements of the array is being printed.
+                    var dateArray = [];
+                    var temperatureValueArray = [];
+                    for (let elements of iterator) {
+                        dateArray.push(Object.keys(elements).toString());
+                        // console.log(dateArray);
+                        let cleanTemperature = JSON.stringify(Object.values(elements));
+                        cleanTemperature = cleanTemperature.split(":").pop();
+                        cleanTemperature = cleanTemperature.replaceAll("\"", "");
+                        cleanTemperature = cleanTemperature.replaceAll("}", "");
+                        cleanTemperature = cleanTemperature.replaceAll("]", "");
+                        // console.log(cleanTemperature);
+                        temperatureValueArray.push(cleanTemperature);
+                        // console.log(temperatureValueArray);
+                    }
+                    // document.getElementById("temperatureDateArray").selectedIndex = "0";
+                    console.log(document.getElementById("temperatureDateArray").selectedIndex);
+                    console.log(document.getElementById("temperatureDateArray").value);
+                    // console.log(date);
+                    if (document.getElementById("temperatureDateArray").value === date) {
+                        // document.getElementById('temperatureChartContainer').innerHTML = "";
+                        // document.getElementById('temperatureChartContainer').innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
+                        new Chart("temperatureChart", {
+                            type: "line",
+                            data: {
+                                labels: dateArray,
+                                datasets: [{
+                                    fill: false,
+                                    lineTension: 0,
+                                    backgroundColor: "rgba(0,0,255,1.0)",
+                                    borderColor: "rgba(0,0,255,0.1)",
+                                    data: temperatureValueArray
+                                }]
+                            },
+                            options: {
+                                legend: {display: false},
+                                scales: {
+                                    yAxes: [{ticks: {min: 10.00, max: 45.00}}],
+                                    xAxes: [{
+                                        ticks: {
+                                            display: true,
+                                            autoSkip: true,
+                                            maxTicksLimit: 24
+                                        }
+                                    }],
+                                }
+                            }
+                        });
+                    }
+                });
+
+                await firebase.database().ref('DHT11/Humidity/').once('value', (snap) => {
+                    var humidityDays = snap.val();
+                    // console.log(humidityDays);
+                    humidityDays = Object.keys(humidityDays);
+                    humidityDays.sort(dateComparison);
+                    // console.log(humidityDays);
+                    for (var i = 0; i < humidityDays.length; i++) {
+                        var option = humidityDays[i];
+                        var el = document.createElement("option");
+                        el.textContent = option;
+                        el.value = option;
+                        select1.prepend(el);
+                    }
+                    document.getElementById("humidityDateArray").selectedIndex = "0";
+                });
+
+                firebase.database().ref(currentDayHumidity).on('value', (snap) => {
+                    var humidityStr = snap.val();
+                    var humidityArray = [];
+                    Object.keys(humidityStr).forEach((key) => {
+                        humidityArray.push({[key]: humidityStr[key]});
+                    });
+                    // console.log(humidityArray);
+
+                    var latestHumidity = humidityArray[humidityArray.length - 1];
+                    var humidityValue = Object.values(latestHumidity);
+                    var jsonHumidityValue = JSON.stringify(humidityValue);
+
+                    jsonHumidityValue = jsonHumidityValue.split(":").pop();
+                    jsonHumidityValue = jsonHumidityValue.replaceAll("\"", "");
+                    jsonHumidityValue = jsonHumidityValue.replaceAll("}", "");
+                    jsonHumidityValue = jsonHumidityValue.replaceAll("]", "");
+                    // if (jsonHumidityValue >= 80) {
+                    //     jsonHumidityValue = jsonHumidityValue + "%";
+                    // }
+                    // if (jsonHumidityValue >= 70 && jsonHumidityValue < 80) {
+                    //     jsonHumidityValue = jsonHumidityValue + "%" + '&#128308';
+                    // }
+                    if (jsonHumidityValue >= 70) {
+                        jsonHumidityValue = jsonHumidityValue + "%";
+                        // jsonHumidityValue = jsonHumidityValue + "%" + '&#128308';
+                    }
+                    if (jsonHumidityValue >= 60 && jsonHumidityValue < 70) {
+                        jsonHumidityValue = jsonHumidityValue + "%";
+                        // jsonHumidityValue = jsonHumidityValue + "%" + '&#128993';
+                        // document.getElementById("humidityIndicator").style.backgroundColor = "#1184e8";
+                    }
+                    if (jsonHumidityValue >= 30 && jsonHumidityValue < 60) {
+                        jsonHumidityValue = jsonHumidityValue + "%";
+                        // jsonHumidityValue = jsonHumidityValue + "%" + '&#128994';
+
+                        // document.getElementById("humidityIndicator").style.backgroundColor = "#1184e8";
+                    }
+                    // jsonHumidityValue = jsonHumidityValue + "%";
+
+                    // console.log(Object.keys(latestHumidity));
+                    document.getElementById('latestHumidity').innerHTML = jsonHumidityValue;
+                    var iterator = humidityArray.values();
+
+                    // console.log(iterator);
+                    // Here all the elements of the array is being printed.
+                    var dateArray = [];
+                    var humidityValueArray = [];
+                    for (let elements of iterator) {
+                        dateArray.push(Object.keys(elements).toString());
+                        // console.log(dateArray);
+                        let cleanHumidity = JSON.stringify(Object.values(elements));
+                        cleanHumidity = cleanHumidity.split(":").pop();
+                        cleanHumidity = cleanHumidity.replaceAll("\"", "");
+                        cleanHumidity = cleanHumidity.replaceAll("}", "");
+                        cleanHumidity = cleanHumidity.replaceAll("]", "");
+                        humidityValueArray.push(cleanHumidity);
+                        // console.log(cleanTemperature);
+                        // console.log(temperatureValueArray);
+                    }
+                    if (document.getElementById("humidityDateArray").value === date) {
+                        new Chart("humidityChart", {
+                            type: "line",
+                            data: {
+                                labels: dateArray,
+                                datasets: [{
+                                    fill: false,
+                                    lineTension: 0,
+                                    backgroundColor: "rgba(0,0,255,1.0)",
+                                    borderColor: "rgba(0,0,255,0.1)",
+                                    data: humidityValueArray
+                                }]
+                            },
+                            options: {
+                                legend: {display: false},
+                                scales: {
+                                    yAxes: [{ticks: {min: 20.00, max: 90.00}}],
+                                    xAxes: [{
+                                        ticks: {
+                                            display: true,
+                                            autoSkip: true,
+                                            maxTicksLimit: 24
+                                        }
+                                    }],
+                                }
+                            }
+                        });
+                    }
+                });
+
+                await firebase.database().ref('MQ135/air_quality/').once('value', (snap) => {
+                    var airDays = snap.val();
+                    // console.log(airDays);
+                    airDays = Object.keys(airDays);
+                    airDays.sort(dateComparison);
+                    // console.log(airDays);
+                    for (var i = 0; i < airDays.length; i++) {
+                        var option = airDays[i];
+                        var el = document.createElement("option");
+                        el.textContent = option;
+                        el.value = option;
+                        select2.prepend(el);
+                    }
+                    document.getElementById("airQualityDateArr").selectedIndex = "0";
+                });
+
+                firebase.database().ref(currentDayAirQuality).on('value', (snap) => {
+                    var airQualityStr = snap.val();
+                    var airQualityArray = [];
+                    Object.keys(airQualityStr).forEach((key) => {
+                        airQualityArray.push({[key]: airQualityStr[key]});
+                    });
+                    // console.log(airQualityArray);
+
+                    var latestAirQuality = airQualityArray[airQualityArray.length - 1];
+                    var airQualityVal = Object.values(latestAirQuality);
+                    var jsonAirQualityVal = JSON.stringify(airQualityVal);
+
+                    jsonAirQualityVal = jsonAirQualityVal.split(":").pop();
+                    jsonAirQualityVal = jsonAirQualityVal.replaceAll("\"", "");
+                    jsonAirQualityVal = jsonAirQualityVal.replaceAll("}", "");
+                    jsonAirQualityVal = jsonAirQualityVal.replaceAll("]", "");
+
+                    if (jsonAirQualityVal >= 800) {
+                        jsonAirQualityVal = jsonAirQualityVal + 'ppm' + '&#128128;';
+                        document.getElementById("airQualityIndicator").style.backgroundColor = "red";
+                    }
+                    if (jsonAirQualityVal >= 600 && jsonAirQualityVal <= 799) {
+                        jsonAirQualityVal = jsonAirQualityVal + 'ppm' + '&#128567;';
+                        document.getElementById("airQualityIndicator").style.backgroundColor = "#FFA500";
+                    }
+                    if (jsonAirQualityVal <= 599) {
+                        jsonAirQualityVal = jsonAirQualityVal + 'ppm' + '&#128516;';
+                        document.getElementById("airQualityIndicator").style.backgroundColor = "#4CBB17";
+                    }
+
+                    // console.log(Object.keys(latestAirQuality));
+                    document.getElementById('latestAirQuality').innerHTML = jsonAirQualityVal;
+                    var iterator = airQualityArray.values();
+
+                    // console.log(iterator);
+                    // Here all the elements of the array is being printed.
+                    var dateArray = [];
+                    var airQualityValueArray = [];
+                    for (let elements of iterator) {
+                        dateArray.push(Object.keys(elements).toString());
+                        // console.log(dateArray);
+                        let cleanAirQuality = JSON.stringify(Object.values(elements));
+                        cleanAirQuality = cleanAirQuality.split(":").pop();
+                        cleanAirQuality = cleanAirQuality.replaceAll("\"", "");
+                        cleanAirQuality = cleanAirQuality.replaceAll("}", "");
+                        cleanAirQuality = cleanAirQuality.replaceAll("]", "");
+                        // console.log(cleanAirQuality);
+                        airQualityValueArray.push(cleanAirQuality);
+                        // console.log(airQualityValueArray);
+                    }
+                    if (document.getElementById("airQualityDateArr").value === date) {
+                        new Chart("airQualityChart", {
+                            type: "line",
+                            data: {
+                                labels: dateArray,
+                                datasets: [{
+                                    fill: false,
+                                    lineTension: 0,
+                                    backgroundColor: "rgba(0,0,255,1.0)",
+                                    borderColor: "rgba(0,0,255,0.1)",
+                                    data: airQualityValueArray
+                                }]
+                            },
+                            options: {
+                                legend: {display: false},
+                                scales: {
+                                    yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                                    xAxes: [{
+                                        ticks: {
+                                            display: true,
+                                            autoSkip: true,
+                                            maxTicksLimit: 24
+                                        }
+                                    }],
+                                }
+                            }
+                        });
+                    }
+                });
+
+                await firebase.database().ref('DSM501A/conPM25/').once('value', (snap) => {
+                    var dustDays = snap.val();
+                    // console.log(dustDays);
+                    dustDays = Object.keys(dustDays);
+                    dustDays.sort(dateComparison);
+                    // console.log(dustDays);
+                    for (var i = 0; i < dustDays.length; i++) {
+                        var option = dustDays[i];
+                        var el = document.createElement("option");
+                        el.textContent = option;
+                        el.value = option;
+                        select6.prepend(el);
+                    }
+                    document.getElementById("dustDateArr").selectedIndex = "0";
+                });
+
+                firebase.database().ref(currentDayDust).on('value', (snap) => {
+                    var dustStr = snap.val();
+                    var dustArray = [];
+                    Object.keys(dustStr).forEach((key) => {
+                        dustArray.push({[key]: dustStr[key]});
+                    });
+                    // console.log(dustArray);
+
+                    var latestDust = dustArray[dustArray.length - 1];
+                    var dustVal = Object.values(latestDust);
+                    var jsonDustVal = JSON.stringify(dustVal);
+
+                    jsonDustVal = jsonDustVal.split(":").pop();
+                    jsonDustVal = jsonDustVal.replaceAll("\"", "");
+                    jsonDustVal = jsonDustVal.replaceAll("}", "");
+                    jsonDustVal = jsonDustVal.replaceAll("]", "");
+
+                    if (jsonDustVal >= 10) {
+                        jsonDustVal = jsonDustVal + 'ppm' + '&#128128;';
+                        document.getElementById("dustIndicator").style.backgroundColor = "red";
+                    }
+                    if (jsonDustVal >= 7 && jsonDustVal <= 5) {
+                        jsonDustVal = jsonDustVal + 'ppm' + '&#128567;';
+                        document.getElementById("dustIndicator").style.backgroundColor = "#FFA500";
+                    }
+                    if (jsonDustVal <= 4) {
+                        jsonDustVal = jsonDustVal + 'ppm' + '&#128516;';
+                        document.getElementById("dustIndicator").style.backgroundColor = "#4CBB17";
+                    }
+
+                    // console.log(Object.keys(latestDust));
+                    document.getElementById('latestDust').innerHTML = jsonDustVal;
+                    var iterator = dustArray.values();
+
+                    // console.log(iterator);
+                    // Here all the elements of the array is being printed.
+                    var dateArray = [];
+                    var dustValueArray = [];
+                    for (let elements of iterator) {
+                        dateArray.push(Object.keys(elements).toString());
+                        // console.log(dateArray);
+                        let cleanDust = JSON.stringify(Object.values(elements));
+                        cleanDust = cleanDust.split(":").pop();
+                        cleanDust = cleanDust.replaceAll("\"", "");
+                        cleanDust = cleanDust.replaceAll("}", "");
+                        cleanDust = cleanDust.replaceAll("]", "");
+                        // console.log(cleanDust);
+                        dustValueArray.push(cleanDust);
+                        // console.log(dustValueArray);
+                    }
+                    if (document.getElementById("dustDateArr").value === date) {
+                        new Chart("dustChart", {
+                            type: "line",
+                            data: {
+                                labels: dateArray,
+                                datasets: [{
+                                    fill: false,
+                                    lineTension: 0,
+                                    backgroundColor: "rgba(0,0,255,1.0)",
+                                    borderColor: "rgba(0,0,255,0.1)",
+                                    data: dustValueArray
+                                }]
+                            },
+                            options: {
+                                legend: {display: false},
+                                scales: {
+                                    yAxes: [{ticks: {min: 0.00, max: 50.00}}],
+                                    xAxes: [{
+                                        ticks: {
+                                            display: true,
+                                            autoSkip: true,
+                                            maxTicksLimit: 24
+                                        }
+                                    }],
+                                }
+                            }
+                        });
+                    }
+                });
+
+                await firebase.database().ref('MQ2/Smoke/').once('value', (snap) => {
+                    var smokeDays = snap.val();
+                    // console.log(smokeDays);
+                    smokeDays = Object.keys(smokeDays);
+                    smokeDays.sort(dateComparison);
+
+                    // console.log(smokeDays);
+                    for (var i = 0; i < smokeDays.length; i++) {
+                        var option = smokeDays[i];
+                        var el = document.createElement("option");
+                        el.textContent = option;
+                        el.value = option;
+                        select3.prepend(el);
+                    }
+                    document.getElementById("SmokeDateArr").selectedIndex = "0";
+                });
+
+                firebase.database().ref(currentDaySmoke).on('value', (snap) => {
+                    var smokeStr = snap.val();
+                    var smokeArray = [];
+                    Object.keys(smokeStr).forEach((key) => {
+                        smokeArray.push({[key]: smokeStr[key]});
+                    });
+                    // console.log(smokeArray);
+
+                    var latestSmoke = smokeArray[smokeArray.length - 1];
+                    var smokeVal = Object.values(latestSmoke);
+                    var jsonSmokeVal = JSON.stringify(smokeVal);
+
+                    jsonSmokeVal = jsonSmokeVal.split(":").pop();
+                    jsonSmokeVal = jsonSmokeVal.replaceAll("\"", "");
+                    jsonSmokeVal = jsonSmokeVal.replaceAll("}", "");
+                    jsonSmokeVal = jsonSmokeVal.replaceAll("]", "");
+
+                    if (jsonSmokeVal >= 800) {
+                        jsonSmokeVal = jsonSmokeVal + 'ppm' + '&#128128;';
+                        document.getElementById("smokeIndicator").style.backgroundColor = "red";
+                    }
+                    if (jsonSmokeVal >= 400 && jsonSmokeVal < 800) {
+                        jsonSmokeVal = jsonSmokeVal + 'ppm' + '&#128567;';
+                        document.getElementById("smokeIndicator").style.backgroundColor = "	#FFA500";
+                    }
+                    if (jsonSmokeVal < 400) {
+                        jsonSmokeVal = jsonSmokeVal + 'ppm' + '&#128516;';
+                        document.getElementById("smokeIndicator").style.backgroundColor = "#4CBB17";
+                    }
+
+                    // console.log(Object.keys(latestSmoke));
+                    document.getElementById('latestSmoke').innerHTML = jsonSmokeVal;
+                    var iterator = smokeArray.values();
+
+                    // console.log(iterator);
+                    // Here all the elements of the array is being printed.
+                    var dateArray = [];
+                    var smokeValueArray = [];
+                    for (let elements of iterator) {
+                        dateArray.push(Object.keys(elements).toString());
+                        // console.log(dateArray);
+                        let cleanSmoke = JSON.stringify(Object.values(elements));
+                        cleanSmoke = cleanSmoke.split(":").pop();
+                        cleanSmoke = cleanSmoke.replaceAll("\"", "");
+                        cleanSmoke = cleanSmoke.replaceAll("}", "");
+                        cleanSmoke = cleanSmoke.replaceAll("]", "");
+                        // console.log(cleanSmoke);
+                        smokeValueArray.push(cleanSmoke);
+                        // console.log(smokeValueArray);
+                    }
+
+                    if (document.getElementById("SmokeDateArr").value === date) {
+                        new Chart("smokeChart", {
+                            type: "line",
+                            data: {
+                                labels: dateArray,
+                                datasets: [{
+                                    fill: false,
+                                    lineTension: 0,
+                                    backgroundColor: "rgba(0,0,255,1.0)",
+                                    borderColor: "rgba(0,0,255,0.1)",
+                                    data: smokeValueArray
+                                }]
+                            },
+                            options: {
+                                legend: {display: false},
+                                scales: {
+                                    yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                                    xAxes: [{
+                                        ticks: {
+                                            display: true,
+                                            autoSkip: true,
+                                            maxTicksLimit: 24
+                                        }
+                                    }],
+                                }
+                            }
+                        });
+                    }
+                });
+
+                await firebase.database().ref('MQ2/LPG/').once('value', (snap) => {
+                    var LPGDays = snap.val();
+                    // console.log(LPGDays);
+                    LPGDays = Object.keys(LPGDays);
+                    LPGDays.sort(dateComparison);
+
+                    // console.log(LPGDays);
+                    for (var i = 0; i < LPGDays.length; i++) {
+                        var option = LPGDays[i];
+                        var el = document.createElement("option");
+                        el.textContent = option;
+                        el.value = option;
+                        select4.prepend(el);
+                    }
+                    document.getElementById("LPGDateArr").selectedIndex = "0";
+                });
+
+                firebase.database().ref(currentDayLPG).on('value', (snap) => {
+                    var LPGStr = snap.val();
+                    var LPGArray = [];
+                    Object.keys(LPGStr).forEach((key) => {
+                        LPGArray.push({[key]: LPGStr[key]});
+                    });
+                    // console.log(LPGArray);
+
+                    var latestLPG = LPGArray[LPGArray.length - 1];
+                    var LPGVal = Object.values(latestLPG);
+                    var jsonLPGVal = JSON.stringify(LPGVal);
+
+                    jsonLPGVal = jsonLPGVal.split(":").pop();
+                    jsonLPGVal = jsonLPGVal.replaceAll("\"", "");
+                    jsonLPGVal = jsonLPGVal.replaceAll("}", "");
+                    jsonLPGVal = jsonLPGVal.replaceAll("]", "");
+
+                    if (jsonLPGVal >= 1000) {
+                        jsonLPGVal = jsonLPGVal + 'ppm' + '&#128128;';
+                        document.getElementById("lpgIndicator").style.backgroundColor = "red";
+                    }
+                    if (jsonLPGVal >= 500 && jsonLPGVal < 1000) {
+                        jsonLPGVal = jsonLPGVal + 'ppm' + '&#128567;';
+                        document.getElementById("lpgIndicator").style.backgroundColor = "#FFA500";
+                    }
+                    if (jsonLPGVal < 500) {
+                        jsonLPGVal = jsonLPGVal + 'ppm' + '&#128516;';
+                        document.getElementById("lpgIndicator").style.backgroundColor = "#4CBB17";
+                    }
+
+                    // console.log(Object.keys(latestLPG));
+                    document.getElementById('latestLPG').innerHTML = jsonLPGVal;
+                    var iterator = LPGArray.values();
+
+                    // console.log(iterator);
+                    // Here all the elements of the array is being printed.
+                    var dateArray = [];
+                    var LPGValueArray = [];
+                    for (let elements of iterator) {
+                        dateArray.push(Object.keys(elements).toString());
+                        // console.log(dateArray);
+                        let cleanLPG = JSON.stringify(Object.values(elements));
+                        cleanLPG = cleanLPG.split(":").pop();
+                        cleanLPG = cleanLPG.replaceAll("\"", "");
+                        cleanLPG = cleanLPG.replaceAll("}", "");
+                        cleanLPG = cleanLPG.replaceAll("]", "");
+                        // console.log(cleanLPG);
+                        LPGValueArray.push(cleanLPG);
+                        // console.log(LPGValueArray);
+                    }
+                    if (document.getElementById("LPGDateArr").value === date) {
+                        new Chart("LPGChart", {
+                            type: "line",
+                            data: {
+                                labels: dateArray,
+                                datasets: [{
+                                    fill: false,
+                                    lineTension: 0,
+                                    backgroundColor: "rgba(0,0,255,1.0)",
+                                    borderColor: "rgba(0,0,255,0.1)",
+                                    data: LPGValueArray
+                                }]
+                            },
+                            options: {
+                                legend: {display: false},
+                                scales: {
+                                    yAxes: [{ticks: {min: 0.00, max: 5000.00}}],
+                                    xAxes: [{
+                                        ticks: {
+                                            display: true,
+                                            autoSkip: true,
+                                            maxTicksLimit: 24
+                                        }
+                                    }],
+                                }
+                            }
+                        });
+                    }
+                });
+
+                await firebase.database().ref('MQ2/CO/').once('value', (snap) => {
+                    var CODays = snap.val();
+                    // console.log(CODays);
+                    CODays = Object.keys(CODays);
+                    CODays.sort(dateComparison);
+
+                    // console.log(CODays);
+                    for (var i = 0; i < CODays.length; i++) {
+                        var option = CODays[i];
+                        var el = document.createElement("option");
+                        el.textContent = option;
+                        el.value = option;
+                        select5.prepend(el);
+                    }
+                    document.getElementById("CODateArr").selectedIndex = "0";
+                });
+
+                firebase.database().ref(currentDayCO).on('value', (snap) => {
+                    var COStr = snap.val();
+                    var COArray = [];
+                    Object.keys(COStr).forEach((key) => {
+                        COArray.push({[key]: COStr[key]});
+                    });
+                    // console.log(COArray);
+
+                    var latestCO = COArray[COArray.length - 1];
+                    var COVal = Object.values(latestCO);
+                    var jsonCOVal = JSON.stringify(COVal);
+
+                    jsonCOVal = jsonCOVal.split(":").pop();
+                    jsonCOVal = jsonCOVal.replaceAll("\"", "");
+                    jsonCOVal = jsonCOVal.replaceAll("}", "");
+                    jsonCOVal = jsonCOVal.replaceAll("]", "");
+
+                    if (jsonCOVal >= 800) {
+                        jsonCOVal = jsonCOVal + 'ppm' + '&#128128;';
+                        document.getElementById("coIndicator").style.backgroundColor = "red";
+                    }
+                    if (jsonCOVal >= 400 && jsonCOVal < 800) {
+                        jsonCOVal = jsonCOVal + 'ppm' + '&#128567;';
+                        document.getElementById("coIndicator").style.backgroundColor = "#FFA500";
+                    }
+                    if (jsonCOVal < 400) {
+                        jsonCOVal = jsonCOVal + 'ppm' + '&#128516;';
+                        document.getElementById("coIndicator").style.backgroundColor = "#4CBB17";
+                    }
+
+                    // console.log(Object.keys(latestCO));
+                    document.getElementById('latestCO').innerHTML = jsonCOVal;
+                    var iterator = COArray.values();
+
+                    // console.log(iterator);
+                    // Here all the elements of the array is being printed.
+                    var dateArray = [];
+                    var COValueArray = [];
+                    for (let elements of iterator) {
+                        dateArray.push(Object.keys(elements).toString());
+                        // console.log(dateArray);
+                        let cleanCO = JSON.stringify(Object.values(elements));
+                        cleanCO = cleanCO.split(":").pop();
+                        cleanCO = cleanCO.replaceAll("\"", "");
+                        cleanCO = cleanCO.replaceAll("}", "");
+                        cleanCO = cleanCO.replaceAll("]", "");
+                        // console.log(cleanCO);
+                        COValueArray.push(cleanCO);
+                        // console.log(COValueArray);
+                    }
+                    if (document.getElementById("CODateArr").value === date) {
+                        new Chart("COChart", {
+                            type: "line",
+                            data: {
+                                labels: dateArray,
+                                datasets: [{
+                                    fill: false,
+                                    lineTension: 0,
+                                    backgroundColor: "rgba(0,0,255,1.0)",
+                                    borderColor: "rgba(0,0,255,0.1)",
+                                    data: COValueArray
+                                }]
+                            },
+                            options: {
+                                legend: {display: false},
+                                scales: {
+                                    yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                                    xAxes: [{
+                                        ticks: {
+                                            display: true,
+                                            autoSkip: true,
+                                            maxTicksLimit: 24
+                                        }
+                                    }],
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+        );
+
+    </script>
+</body>
+
+</html>
