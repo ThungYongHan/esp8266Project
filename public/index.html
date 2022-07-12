@@ -20,35 +20,23 @@
 
     .modal {
         display: none;
-        /* Hidden by default */
         position: fixed;
-        /* Stay in place */
         z-index: 1;
-        /* Sit on top */
         padding-top: 100px;
-        /* Location of the box */
         left: 0;
         top: 0;
         width: 100%;
-        /* Full width */
         height: 100%;
-        /* Full height */
-        /*overflow: auto; !* Enable scroll if needed *!*/
         background-color: rgb(0, 0, 0);
-        /* Fallback color */
         background-color: rgba(0, 0, 0, 0.4);
-        /* Black w/ opacity */
     }
 
-    /* tempModal Content/Box */
     .modal-content {
         background-color: #fefefe;
         margin: 5% auto;
-        /* 15% from the top and centered */
         padding: 20px;
         border: 1px solid #888;
         width: 50%;
-        /* Could be more or less, depending on screen size */
     }
 
     .modal-header {
@@ -57,7 +45,6 @@
         color: white;
     }
 
-    /* The Close Button */
     .close {
         color: white;
         float: right;
@@ -304,7 +291,6 @@
         function dateComparison(a, b) {
             const date1 = new Date(a)
             const date2 = new Date(b)
-
             return date1 - date2;
         }
 
@@ -402,20 +388,16 @@
                 jsonTemperatureValue = jsonTemperatureValue.replaceAll("]", "");
 
                 var iterator = temperatureArray.values();
-                // console.log(iterator);
                 var dateArray = [];
                 var temperatureValueArray = [];
                 for (let elements of iterator) {
                     dateArray.push(Object.keys(elements).toString());
-                    // console.log(dateArray);
                     let cleanTemperature = JSON.stringify(Object.values(elements));
                     cleanTemperature = cleanTemperature.split(":").pop();
                     cleanTemperature = cleanTemperature.replaceAll("\"", "");
                     cleanTemperature = cleanTemperature.replaceAll("}", "");
                     cleanTemperature = cleanTemperature.replaceAll("]", "");
-                    // console.log(cleanTemperature);
                     temperatureValueArray.push(cleanTemperature);
-                    // console.log(temperatureValueArray);
                 }
                 document.getElementById("temperatureChartContainer").innerHTML = "";
                 document.getElementById('temperatureChartContainer').innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
@@ -594,9 +576,7 @@
 
         function selectLPGOption() {
             var selectedLPGDate = document.getElementById("LPGDateArr").value;
-            // console.log(selectedLPGDate);
             let selectedDayLPG = 'MQ2/LPG/' + selectedLPGDate;
-            // console.log(selectedDayLPG);
             firebase.database().ref(selectedDayLPG).on('value', (snap) => {
                 var LPGStr = snap.val();
                 var LPGArray = [];
@@ -604,7 +584,6 @@
                 Object.keys(LPGStr).forEach((key) => {
                     LPGArray.push({[key]: LPGStr[key]});
                 });
-                // console.log(LPGArray);
 
                 var latestLPG = LPGArray[LPGArray.length - 1];
                 var LPGVal = Object.values(latestLPG);
@@ -616,20 +595,16 @@
                 jsonLPGVal = jsonLPGVal.replaceAll("]", "");
 
                 var iterator = LPGArray.values();
-                // console.log(iterator);
                 var dateArray = [];
                 var LPGValueArray = [];
                 for (let elements of iterator) {
                     dateArray.push(Object.keys(elements).toString());
-                    // console.log(dateArray);
                     let cleanLPG = JSON.stringify(Object.values(elements));
                     cleanLPG = cleanLPG.split(":").pop();
                     cleanLPG = cleanLPG.replaceAll("\"", "");
                     cleanLPG = cleanLPG.replaceAll("}", "");
                     cleanLPG = cleanLPG.replaceAll("]", "");
-                    // console.log(cleanLPG);
                     LPGValueArray.push(cleanLPG);
-                    // console.log(LPGValueArray);
                 }
                 document.getElementById("LPGChartContainer").innerHTML = "";
                 document.getElementById('LPGChartContainer').innerHTML = "<canvas id=\"LPGChart\"></canvas>";
@@ -665,9 +640,7 @@
 
         function selectCOOption() {
             var selectedCODate = document.getElementById("CODateArr").value;
-            // console.log(selectedCODate);
             let selectedDayCO = 'MQ2/CO/' + selectedCODate;
-            // console.log(selectedDayCO);
             firebase.database().ref(selectedDayCO).on('value', (snap) => {
                 var COStr = snap.val();
                 var COArray = [];
@@ -675,7 +648,6 @@
                 Object.keys(COStr).forEach((key) => {
                     COArray.push({[key]: COStr[key]});
                 });
-                // console.log(COArray);
 
                 var latestCO = COArray[COArray.length - 1];
                 var COVal = Object.values(latestCO);
@@ -687,20 +659,16 @@
                 jsonCOVal = jsonCOVal.replaceAll("]", "");
 
                 var iterator = COArray.values();
-                // console.log(iterator);
                 var dateArray = [];
                 var COValueArray = [];
                 for (let elements of iterator) {
                     dateArray.push(Object.keys(elements).toString());
-                    // console.log(dateArray);
                     let cleanCO = JSON.stringify(Object.values(elements));
                     cleanCO = cleanCO.split(":").pop();
                     cleanCO = cleanCO.replaceAll("\"", "");
                     cleanCO = cleanCO.replaceAll("}", "");
                     cleanCO = cleanCO.replaceAll("]", "");
-                    // console.log(cleanCO);
                     COValueArray.push(cleanCO);
-                    // console.log(COValueArray);
                 }
                 document.getElementById("COChartContainer").innerHTML = "";
                 document.getElementById('COChartContainer').innerHTML = "<canvas id=\"COChart\"></canvas>";
@@ -745,7 +713,6 @@
                 Object.keys(dustStr).forEach((key) => {
                     dustArray.push({[key]: dustStr[key]});
                 });
-                // console.log(dustArray);
 
                 var latestDust = dustArray[dustArray.length - 1];
                 var dustVal = Object.values(latestDust);
@@ -757,20 +724,16 @@
                 jsonDustVal = jsonDustVal.replaceAll("]", "");
 
                 var iterator = dustArray.values();
-                // console.log(iterator);
                 var dateArray = [];
                 var dustValueArray = [];
                 for (let elements of iterator) {
                     dateArray.push(Object.keys(elements).toString());
-                    // console.log(dateArray);
                     let cleanDust = JSON.stringify(Object.values(elements));
                     cleanDust = cleanDust.split(":").pop();
                     cleanDust = cleanDust.replaceAll("\"", "");
                     cleanDust = cleanDust.replaceAll("}", "");
                     cleanDust = cleanDust.replaceAll("]", "");
-                    // console.log(cleanDust);
                     dustValueArray.push(cleanDust);
-                    // console.log(dustValueArray);
                 }
                 document.getElementById("dustChartContainer").innerHTML = "";
                 document.getElementById('dustChartContainer').innerHTML = "<canvas id=\"dustChart\"></canvas>";
@@ -831,7 +794,6 @@
                 var span6 = document.getElementsByClassName("close")[5];
                 var span7 = document.getElementsByClassName("close")[6];
 
-                // When the user clicks on the button, open the tempModal
                 temperatureBtn.onclick = function () {
                     temperatureModal.style.display = "block";
                 }
@@ -860,8 +822,6 @@
                     coModal.style.display = "block";
                 }
 
-
-                // When the user clicks on <span> (x), close the tempModal
                 span1.onclick = function () {
                     temperatureModal.style.display = "none";
                 }
@@ -890,7 +850,7 @@
                 span7.onclick = function () {
                     dustModal.style.display = "none";
                 }
-                // When the user clicks anywhere outside of the tempModal, close it
+
                 window.onclick = function (event) {
                     if (event.target === temperatureModal) {
                         temperatureModal.style.display = "none";
@@ -925,7 +885,6 @@
                 let currentDayLPG = 'MQ2/LPG/' + date;
                 let currentDayCO = 'MQ2/CO/' + date;
                 let currentDayDust = 'DSM501A/conPM25/' + date;
-                // console.log(currentDayTemperature);
 
                 var select = document.getElementById("temperatureDateArray");
                 var select1 = document.getElementById("humidityDateArray");
@@ -937,12 +896,8 @@
 
                 await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
                     var temperatureDays = snap.val();
-                    // console.log(temperatureDays);
                     temperatureDays = Object.keys(temperatureDays);
-                    // console.log(temperatureDays);
                     temperatureDays.sort(dateComparison);
-                    // console.log(temperatureDays);
-                    // var select = document.getElementById("tempDateArr");
                     for (var i = 0; i < temperatureDays.length; i++) {
                         var option = temperatureDays[i];
                         var el = document.createElement("option");
@@ -961,7 +916,6 @@
                     Object.keys(temperatureStr).forEach((key) => {
                         temperatureArray.push({[key]: temperatureStr[key]});
                     });
-                    // console.log(temperatureArray);
 
                     var latestTemperature = temperatureArray[temperatureArray.length - 1];
                     var timeStr = Object.keys(latestTemperature);
@@ -991,29 +945,20 @@
 
                     var iterator = temperatureArray.values();
 
-                    // console.log(iterator);
-                    // Here all the elements of the array is being printed.
                     var dateArray = [];
                     var temperatureValueArray = [];
                     for (let elements of iterator) {
                         dateArray.push(Object.keys(elements).toString());
-                        // console.log(dateArray);
                         let cleanTemperature = JSON.stringify(Object.values(elements));
                         cleanTemperature = cleanTemperature.split(":").pop();
                         cleanTemperature = cleanTemperature.replaceAll("\"", "");
                         cleanTemperature = cleanTemperature.replaceAll("}", "");
                         cleanTemperature = cleanTemperature.replaceAll("]", "");
-                        // console.log(cleanTemperature);
                         temperatureValueArray.push(cleanTemperature);
-                        // console.log(temperatureValueArray);
                     }
-                    // document.getElementById("temperatureDateArray").selectedIndex = "0";
                     console.log(document.getElementById("temperatureDateArray").selectedIndex);
                     console.log(document.getElementById("temperatureDateArray").value);
-                    // console.log(date);
                     if (document.getElementById("temperatureDateArray").value === date) {
-                        // document.getElementById('temperatureChartContainer').innerHTML = "";
-                        // document.getElementById('temperatureChartContainer').innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
                         new Chart("temperatureChart", {
                             type: "line",
                             data: {
@@ -1045,10 +990,8 @@
 
                 await firebase.database().ref('DHT11/Humidity/').once('value', (snap) => {
                     var humidityDays = snap.val();
-                    // console.log(humidityDays);
                     humidityDays = Object.keys(humidityDays);
                     humidityDays.sort(dateComparison);
-                    // console.log(humidityDays);
                     for (var i = 0; i < humidityDays.length; i++) {
                         var option = humidityDays[i];
                         var el = document.createElement("option");
@@ -1065,7 +1008,6 @@
                     Object.keys(humidityStr).forEach((key) => {
                         humidityArray.push({[key]: humidityStr[key]});
                     });
-                    // console.log(humidityArray);
 
                     var latestHumidity = humidityArray[humidityArray.length - 1];
                     var humidityValue = Object.values(latestHumidity);
@@ -1075,12 +1017,7 @@
                     jsonHumidityValue = jsonHumidityValue.replaceAll("\"", "");
                     jsonHumidityValue = jsonHumidityValue.replaceAll("}", "");
                     jsonHumidityValue = jsonHumidityValue.replaceAll("]", "");
-                    // if (jsonHumidityValue >= 80) {
-                    //     jsonHumidityValue = jsonHumidityValue + "%";
-                    // }
-                    // if (jsonHumidityValue >= 70 && jsonHumidityValue < 80) {
-                    //     jsonHumidityValue = jsonHumidityValue + "%" + '&#128308';
-                    // }
+
                     if (jsonHumidityValue >= 70) {
                         jsonHumidityValue = jsonHumidityValue + "%";
                         // jsonHumidityValue = jsonHumidityValue + "%" + '&#128308';
@@ -1098,25 +1035,19 @@
                     }
                     // jsonHumidityValue = jsonHumidityValue + "%";
 
-                    // console.log(Object.keys(latestHumidity));
                     document.getElementById('latestHumidity').innerHTML = jsonHumidityValue;
                     var iterator = humidityArray.values();
 
-                    // console.log(iterator);
-                    // Here all the elements of the array is being printed.
                     var dateArray = [];
                     var humidityValueArray = [];
                     for (let elements of iterator) {
                         dateArray.push(Object.keys(elements).toString());
-                        // console.log(dateArray);
                         let cleanHumidity = JSON.stringify(Object.values(elements));
                         cleanHumidity = cleanHumidity.split(":").pop();
                         cleanHumidity = cleanHumidity.replaceAll("\"", "");
                         cleanHumidity = cleanHumidity.replaceAll("}", "");
                         cleanHumidity = cleanHumidity.replaceAll("]", "");
                         humidityValueArray.push(cleanHumidity);
-                        // console.log(cleanTemperature);
-                        // console.log(temperatureValueArray);
                     }
                     if (document.getElementById("humidityDateArray").value === date) {
                         new Chart("humidityChart", {
@@ -1150,10 +1081,8 @@
 
                 await firebase.database().ref('MQ135/air_quality/').once('value', (snap) => {
                     var airDays = snap.val();
-                    // console.log(airDays);
                     airDays = Object.keys(airDays);
                     airDays.sort(dateComparison);
-                    // console.log(airDays);
                     for (var i = 0; i < airDays.length; i++) {
                         var option = airDays[i];
                         var el = document.createElement("option");
@@ -1170,7 +1099,6 @@
                     Object.keys(airQualityStr).forEach((key) => {
                         airQualityArray.push({[key]: airQualityStr[key]});
                     });
-                    // console.log(airQualityArray);
 
                     var latestAirQuality = airQualityArray[airQualityArray.length - 1];
                     var airQualityVal = Object.values(latestAirQuality);
@@ -1194,25 +1122,19 @@
                         document.getElementById("airQualityIndicator").style.backgroundColor = "#4CBB17";
                     }
 
-                    // console.log(Object.keys(latestAirQuality));
                     document.getElementById('latestAirQuality').innerHTML = jsonAirQualityVal;
                     var iterator = airQualityArray.values();
 
-                    // console.log(iterator);
-                    // Here all the elements of the array is being printed.
                     var dateArray = [];
                     var airQualityValueArray = [];
                     for (let elements of iterator) {
                         dateArray.push(Object.keys(elements).toString());
-                        // console.log(dateArray);
                         let cleanAirQuality = JSON.stringify(Object.values(elements));
                         cleanAirQuality = cleanAirQuality.split(":").pop();
                         cleanAirQuality = cleanAirQuality.replaceAll("\"", "");
                         cleanAirQuality = cleanAirQuality.replaceAll("}", "");
                         cleanAirQuality = cleanAirQuality.replaceAll("]", "");
-                        // console.log(cleanAirQuality);
                         airQualityValueArray.push(cleanAirQuality);
-                        // console.log(airQualityValueArray);
                     }
                     if (document.getElementById("airQualityDateArr").value === date) {
                         new Chart("airQualityChart", {
@@ -1246,10 +1168,8 @@
 
                 await firebase.database().ref('DSM501A/conPM25/').once('value', (snap) => {
                     var dustDays = snap.val();
-                    // console.log(dustDays);
                     dustDays = Object.keys(dustDays);
                     dustDays.sort(dateComparison);
-                    // console.log(dustDays);
                     for (var i = 0; i < dustDays.length; i++) {
                         var option = dustDays[i];
                         var el = document.createElement("option");
@@ -1266,7 +1186,6 @@
                     Object.keys(dustStr).forEach((key) => {
                         dustArray.push({[key]: dustStr[key]});
                     });
-                    // console.log(dustArray);
 
                     var latestDust = dustArray[dustArray.length - 1];
                     var dustVal = Object.values(latestDust);
@@ -1290,12 +1209,9 @@
                         document.getElementById("dustIndicator").style.backgroundColor = "#4CBB17";
                     }
 
-                    // console.log(Object.keys(latestDust));
                     document.getElementById('latestDust').innerHTML = jsonDustVal;
                     var iterator = dustArray.values();
 
-                    // console.log(iterator);
-                    // Here all the elements of the array is being printed.
                     var dateArray = [];
                     var dustValueArray = [];
                     for (let elements of iterator) {
@@ -1306,9 +1222,7 @@
                         cleanDust = cleanDust.replaceAll("\"", "");
                         cleanDust = cleanDust.replaceAll("}", "");
                         cleanDust = cleanDust.replaceAll("]", "");
-                        // console.log(cleanDust);
                         dustValueArray.push(cleanDust);
-                        // console.log(dustValueArray);
                     }
                     if (document.getElementById("dustDateArr").value === date) {
                         new Chart("dustChart", {
@@ -1342,11 +1256,9 @@
 
                 await firebase.database().ref('MQ2/Smoke/').once('value', (snap) => {
                     var smokeDays = snap.val();
-                    // console.log(smokeDays);
                     smokeDays = Object.keys(smokeDays);
                     smokeDays.sort(dateComparison);
 
-                    // console.log(smokeDays);
                     for (var i = 0; i < smokeDays.length; i++) {
                         var option = smokeDays[i];
                         var el = document.createElement("option");
@@ -1363,7 +1275,6 @@
                     Object.keys(smokeStr).forEach((key) => {
                         smokeArray.push({[key]: smokeStr[key]});
                     });
-                    // console.log(smokeArray);
 
                     var latestSmoke = smokeArray[smokeArray.length - 1];
                     var smokeVal = Object.values(latestSmoke);
@@ -1387,25 +1298,19 @@
                         document.getElementById("smokeIndicator").style.backgroundColor = "#4CBB17";
                     }
 
-                    // console.log(Object.keys(latestSmoke));
                     document.getElementById('latestSmoke').innerHTML = jsonSmokeVal;
                     var iterator = smokeArray.values();
 
-                    // console.log(iterator);
-                    // Here all the elements of the array is being printed.
                     var dateArray = [];
                     var smokeValueArray = [];
                     for (let elements of iterator) {
                         dateArray.push(Object.keys(elements).toString());
-                        // console.log(dateArray);
                         let cleanSmoke = JSON.stringify(Object.values(elements));
                         cleanSmoke = cleanSmoke.split(":").pop();
                         cleanSmoke = cleanSmoke.replaceAll("\"", "");
                         cleanSmoke = cleanSmoke.replaceAll("}", "");
                         cleanSmoke = cleanSmoke.replaceAll("]", "");
-                        // console.log(cleanSmoke);
                         smokeValueArray.push(cleanSmoke);
-                        // console.log(smokeValueArray);
                     }
 
                     if (document.getElementById("SmokeDateArr").value === date) {
@@ -1440,11 +1345,9 @@
 
                 await firebase.database().ref('MQ2/LPG/').once('value', (snap) => {
                     var LPGDays = snap.val();
-                    // console.log(LPGDays);
                     LPGDays = Object.keys(LPGDays);
                     LPGDays.sort(dateComparison);
 
-                    // console.log(LPGDays);
                     for (var i = 0; i < LPGDays.length; i++) {
                         var option = LPGDays[i];
                         var el = document.createElement("option");
@@ -1461,7 +1364,6 @@
                     Object.keys(LPGStr).forEach((key) => {
                         LPGArray.push({[key]: LPGStr[key]});
                     });
-                    // console.log(LPGArray);
 
                     var latestLPG = LPGArray[LPGArray.length - 1];
                     var LPGVal = Object.values(latestLPG);
@@ -1485,25 +1387,20 @@
                         document.getElementById("lpgIndicator").style.backgroundColor = "#4CBB17";
                     }
 
-                    // console.log(Object.keys(latestLPG));
                     document.getElementById('latestLPG').innerHTML = jsonLPGVal;
                     var iterator = LPGArray.values();
 
-                    // console.log(iterator);
-                    // Here all the elements of the array is being printed.
+
                     var dateArray = [];
                     var LPGValueArray = [];
                     for (let elements of iterator) {
                         dateArray.push(Object.keys(elements).toString());
-                        // console.log(dateArray);
                         let cleanLPG = JSON.stringify(Object.values(elements));
                         cleanLPG = cleanLPG.split(":").pop();
                         cleanLPG = cleanLPG.replaceAll("\"", "");
                         cleanLPG = cleanLPG.replaceAll("}", "");
                         cleanLPG = cleanLPG.replaceAll("]", "");
-                        // console.log(cleanLPG);
                         LPGValueArray.push(cleanLPG);
-                        // console.log(LPGValueArray);
                     }
                     if (document.getElementById("LPGDateArr").value === date) {
                         new Chart("LPGChart", {
@@ -1537,11 +1434,9 @@
 
                 await firebase.database().ref('MQ2/CO/').once('value', (snap) => {
                     var CODays = snap.val();
-                    // console.log(CODays);
                     CODays = Object.keys(CODays);
                     CODays.sort(dateComparison);
 
-                    // console.log(CODays);
                     for (var i = 0; i < CODays.length; i++) {
                         var option = CODays[i];
                         var el = document.createElement("option");
@@ -1558,7 +1453,6 @@
                     Object.keys(COStr).forEach((key) => {
                         COArray.push({[key]: COStr[key]});
                     });
-                    // console.log(COArray);
 
                     var latestCO = COArray[COArray.length - 1];
                     var COVal = Object.values(latestCO);
@@ -1582,25 +1476,19 @@
                         document.getElementById("coIndicator").style.backgroundColor = "#4CBB17";
                     }
 
-                    // console.log(Object.keys(latestCO));
                     document.getElementById('latestCO').innerHTML = jsonCOVal;
                     var iterator = COArray.values();
 
-                    // console.log(iterator);
-                    // Here all the elements of the array is being printed.
                     var dateArray = [];
                     var COValueArray = [];
                     for (let elements of iterator) {
                         dateArray.push(Object.keys(elements).toString());
-                        // console.log(dateArray);
                         let cleanCO = JSON.stringify(Object.values(elements));
                         cleanCO = cleanCO.split(":").pop();
                         cleanCO = cleanCO.replaceAll("\"", "");
                         cleanCO = cleanCO.replaceAll("}", "");
                         cleanCO = cleanCO.replaceAll("]", "");
-                        // console.log(cleanCO);
                         COValueArray.push(cleanCO);
-                        // console.log(COValueArray);
                     }
                     if (document.getElementById("CODateArr").value === date) {
                         new Chart("COChart", {
