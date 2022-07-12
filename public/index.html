@@ -105,12 +105,13 @@
                 <span style="color: #FFA500">23&#8451 - 26&#8451 = Recommended Indoor Temperature &#127777;</span>
                 <br>
                 <span style="color: #bd1816">Above 26&#8451 = High Temperature &#128293;</span>
-             </div>
-        <div class="modal-footer">
-        </div>
+            </div>
+            <div class="modal-footer">
+            </div>
         </div>
     </div>
 
+    <select hidden id="firebaseDateArray"></select>
     <!--    modal for humidity dashboard-->
     <div id="humidityModal" class="modal">
         <div class="modal-content">
@@ -890,14 +891,15 @@
 
                 document.querySelector('#load');
                 var today = new Date();
-                var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
-                let currentDayTemperature = 'DHT11/Temperature/' + date;
-                let currentDayHumidity = 'DHT11/Humidity/' + date;
-                let currentDayAirQuality = 'MQ135/CO2/' + date;
-                let currentDaySmoke = 'MQ2/Smoke/' + date;
-                let currentDayLPG = 'MQ2/LPG/' + date;
-                let currentDayCO = 'MQ2/CO/' + date;
-                let currentDayDust = 'DSM501A/PM25/' + date;
+                // var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+
+                var temperatureDays;
+                var humidityDays;
+                var airDays;
+                var dustDays;
+                var LPGDays;
+                var smokeDays;
+                var CODays;
 
                 var temperatureDateSelect = document.getElementById("temperatureDateArray");
                 var humidityDateSelect = document.getElementById("humidityDateArray");
@@ -907,8 +909,10 @@
                 var CODateSelect = document.getElementById("CODateArray");
                 var dustDateSelect = document.getElementById("dustDateArray");
 
+                var firebaseDays = document.getElementById("firebaseDateArray");
+
                 await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
-                    var temperatureDays = snap.val();
+                    temperatureDays = snap.val();
                     temperatureDays = Object.keys(temperatureDays);
                     temperatureDays.sort(dateComparison);
                     for (var i = 0; i < temperatureDays.length; i++) {
@@ -918,9 +922,51 @@
                         element.value = option;
                         temperatureDateSelect.prepend(element);
                     }
-                    console.log(temperatureDays);
                     document.getElementById("temperatureDateArray").selectedIndex = "0";
                 });
+                var date;
+                var previousDateCount;
+                var currentDateCount;
+
+                await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
+                    firebaseDays = snap.val();
+                    firebaseDays = Object.keys(firebaseDays);
+                    firebaseDays.sort(dateComparison);
+                    previousDateCount = firebaseDays.length;
+                });
+
+                async function loop10SecondDays() {
+                    await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
+                        firebaseDays = snap.val();
+                        firebaseDays = Object.keys(firebaseDays);
+                        firebaseDays.sort(dateComparison);
+                        console.log(firebaseDays);
+                        date = firebaseDays[firebaseDays.length - 1];
+                    });
+                }
+
+                console.log(previousDateCount);
+                async function tallyDays(){
+                    currentDateCount = firebaseDays.length;
+                    if (previousDateCount !== currentDateCount){
+                        location.reload();
+                    }
+                }
+                await loop10SecondDays();
+                setInterval(function () {
+                    loop10SecondDays();
+                    tallyDays();
+                }, 10000);
+                // date = firebaseDays[firebaseDays.length - 1];
+                let currentDayTemperature = 'DHT11/Temperature/' + date;
+                let currentDayHumidity = 'DHT11/Humidity/' + date;
+                let currentDayAirQuality = 'MQ135/CO2/' + date;
+                let currentDaySmoke = 'MQ2/Smoke/' + date;
+                let currentDayLPG = 'MQ2/LPG/' + date;
+                let currentDayCO = 'MQ2/CO/' + date;
+                let currentDayDust = 'DSM501A/PM25/' + date;
+
+                var timeStr;
 
                 firebase.database().ref(currentDayTemperature).on('value', (snap) => {
                     var temperatureStr = snap.val();
@@ -931,7 +977,7 @@
                     });
 
                     var latestTemperature = temperatureArray[temperatureArray.length - 1];
-                    var timeStr = Object.keys(latestTemperature);
+                    timeStr = Object.keys(latestTemperature);
                     var temperatureValue = Object.values(latestTemperature);
                     var jsonTemperatureValue = JSON.stringify(temperatureValue);
 
@@ -969,8 +1015,8 @@
                         cleanTemperature = cleanTemperature.replaceAll("]", "");
                         temperatureValueArray.push(cleanTemperature);
                     }
-                    console.log(document.getElementById("temperatureDateArray").selectedIndex);
-                    console.log(document.getElementById("temperatureDateArray").value);
+                    // console.log(document.getElementById("temperatureDateArray").selectedIndex);
+                    // console.log(document.getElementById("temperatureDateArray").value);
                     if (document.getElementById("temperatureDateArray").value === date) {
                         new Chart("temperatureChart", {
                             type: "line",
@@ -1002,7 +1048,7 @@
                 });
 
                 await firebase.database().ref('DHT11/Humidity/').once('value', (snap) => {
-                    var humidityDays = snap.val();
+                    humidityDays = snap.val();
                     humidityDays = Object.keys(humidityDays);
                     humidityDays.sort(dateComparison);
                     for (var i = 0; i < humidityDays.length; i++) {
@@ -1092,7 +1138,7 @@
                 });
 
                 await firebase.database().ref('MQ135/CO2/').once('value', (snap) => {
-                    var airDays = snap.val();
+                    airDays = snap.val();
                     airDays = Object.keys(airDays);
                     airDays.sort(dateComparison);
                     for (var i = 0; i < airDays.length; i++) {
@@ -1179,7 +1225,7 @@
                 });
 
                 await firebase.database().ref('DSM501A/PM25/').once('value', (snap) => {
-                    var dustDays = snap.val();
+                    dustDays = snap.val();
                     dustDays = Object.keys(dustDays);
                     dustDays.sort(dateComparison);
                     for (var i = 0; i < dustDays.length; i++) {
@@ -1266,7 +1312,7 @@
                 });
 
                 await firebase.database().ref('MQ2/Smoke/').once('value', (snap) => {
-                    var smokeDays = snap.val();
+                    smokeDays = snap.val();
                     smokeDays = Object.keys(smokeDays);
                     smokeDays.sort(dateComparison);
 
@@ -1355,7 +1401,7 @@
                 });
 
                 await firebase.database().ref('MQ2/LPG/').once('value', (snap) => {
-                    var LPGDays = snap.val();
+                    LPGDays = snap.val();
                     LPGDays = Object.keys(LPGDays);
                     LPGDays.sort(dateComparison);
 
@@ -1444,7 +1490,7 @@
                 });
 
                 await firebase.database().ref('MQ2/CO/').once('value', (snap) => {
-                    var CODays = snap.val();
+                    CODays = snap.val();
                     CODays = Object.keys(CODays);
                     CODays.sort(dateComparison);
 
