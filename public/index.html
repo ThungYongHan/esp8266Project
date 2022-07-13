@@ -112,6 +112,7 @@
     </div>
 
     <select hidden id="firebaseDateArray"></select>
+
     <!--    modal for humidity dashboard-->
     <div id="humidityModal" class="modal">
         <div class="modal-content">
@@ -946,7 +947,7 @@
                 }
 
                 console.log(previousDateCount);
-                async function tallyDays(){
+                    async function tallyDays(){
                     currentDateCount = firebaseDays.length;
                     if (previousDateCount !== currentDateCount){
                         location.reload();
