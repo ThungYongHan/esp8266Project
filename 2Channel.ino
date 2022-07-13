@@ -25,14 +25,15 @@ unsigned long endtime;
 unsigned long sampletime_ms = 30000;
 unsigned long lowpulseoccupancyPM25 = 0;
 
-int i=0;
-
+// MQ-135
 MQ135 gasSensor = MQ135(ANALOGPIN);
 
+// MQ-2
 int LPG, CO, Smoke;
 int mq2_Pin = A0;
 MQ2 mq2(mq2_Pin);
 
+// DHT-11
 DHT dht(DHTPIN,DHTTYPE);  
 float flttemperature;
 float flthumidity;
@@ -42,6 +43,7 @@ String humidity;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org");
 
+// Firebase & Wi-Fi Connection
 #define FIREBASE_HOST "group-project-esp8266-default-rtdb.asia-southeast1.firebasedatabase.app"
 #define FIREBASE_AUTH "NKH6PeDAccfhdILOG7kcZgVvXOyjWzmm7YVDfvpQ"
 #define WIFI_SSID "POCO X3 Pro"
@@ -174,7 +176,7 @@ void loop(){
   durationPM25 = pulseIn(D5, LOW);
   lowpulseoccupancyPM25 += durationPM25;
   endtime = millis();
-  if ((endtime-starttime) > sampletime_ms) //Only after 30s has passed we calcualte the ratio
+  if ((endtime-starttime) > sampletime_ms) // calculate the ratio only after 30s has passed
   {
     float conPM25 = calculateConcentration(lowpulseoccupancyPM25,30);
     Serial.print("PM25: ");
@@ -190,9 +192,9 @@ void loop(){
   delay(60000);
 }
 
+// Read Multiplexed Input
 int readMux(int channel){
   int controlPin[] = {s0, s1, s2, s3};
-
   int muxChannel[2][4]={
     {0,0,0,0}, //channel 0
     {1,0,0,0}, //channel 1
@@ -210,6 +212,7 @@ int readMux(int channel){
   return val;
 }
 
+// Calculate DSM501A readings
 float calculateConcentration(long lowpulseInMicroSeconds, long durationinSeconds){
   float ratio = (lowpulseInMicroSeconds/1000000.0)/30.0*100.0; //Calculate the ratio
   float concentration = 0.001915 * pow(ratio,2) + 0.09522 * ratio - 0.04884;//Calculate the mg/m3
