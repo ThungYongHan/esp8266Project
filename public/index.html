@@ -871,12 +871,15 @@
 
                 async function tallyDays() {
                     currentDateCount = firebaseDays.length;
+                    // check if previous firebaseDays array length is different to current firebaseDays array length
                     if (previousDateCount !== currentDateCount) {
+                        // refresh page
                         location.reload();
                     }
                 }
 
                 await loop10SecondDays();
+                // rerun function every 10 seconds
                 setInterval(function () {
                     loop10SecondDays();
                     tallyDays();
