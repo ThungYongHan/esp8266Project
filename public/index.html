@@ -226,8 +226,8 @@
         </div>
     </div>
 
-    <!--    modal for pm2.5 particles dashboard-->
-    <div id="dustModal" class="modal">
+    <!--    modal for pm2.5 particulate dashboard-->
+    <div id="PM25Modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>PM2.5 Particulate Dashboard</h2>
@@ -235,10 +235,10 @@
             </div>
 
             <div class="modal-body">
-                <label for="dustDateArray"></label>
-                <select class="btn-secondary dropdown-toggle" id="dustDateArray" onchange="selectDustOption()"></select>
-                <div id="dustChartContainer">
-                    <canvas id="dustChart"></canvas>
+                <label for="PM25DateArray"></label>
+                <select class="btn-secondary dropdown-toggle" id="PM25DateArray" onchange="selectPM25Option()"></select>
+                <div id="PM25ChartContainer">
+                    <canvas id="PM25Chart"></canvas>
                 </div>
                 <span style="color: #4CBB17">Below or Equals 4ppm = Safe Levels of Particulate Matter &#128516;</span>
                 <br>
@@ -253,19 +253,25 @@
         <div id="temperatureIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
           box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">Temperature &#127777;</h5>
+            <h5 style="color: #fff;">
+                Temperature &#127777;
+            </h5>
             <h1 id="latestTemperature" style="color: #fff;"></h1>
         </div>
         <div id="humidityIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
           box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">Humidity &#128167;</h5>
+            <h5 style="color: #fff;">
+                Humidity &#128167;
+            </h5>
             <h1 id="latestHumidity" style="color: #fff;"></h1>
         </div>
         <div id="airQualityIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
           box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">Carbon Dioxide &#128168;</h5>
+            <h5 style="color: #fff;">
+                Carbon Dioxide &#128168;
+            </h5>
             <h1 id="latestAirQuality" style="color: #fff;"></h1>
         </div>
     </div>
@@ -298,11 +304,13 @@
     </div>
 
     <div class="row mt-5">
-        <div id="dustIndicator" class="col-md-3" style="background-color:
+        <div id="PM25Indicator" class="col-md-3" style="background-color:
         #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
         box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">PM2.5 Particulate&#128173;</h5>
-            <h1 id="latestDust" style="color: #fff;"></h1>
+            <h5 style="color: #fff;">
+                PM2.5 Particulate&#128173;
+            </h5>
+            <h1 id="latestPM25" style="color: #fff;"></h1>
         </div>
     </div>
     <script>
@@ -697,42 +705,42 @@
             });
         }
 
-        function selectDustOption() {
-            var selectedDustDate = document.getElementById("dustDateArray").value;
-            let selectedDayDust = 'DSM501A/PM25/' + selectedDustDate;
-            firebase.database().ref(selectedDayDust).on('value', (snap) => {
-                var dustStr = snap.val();
-                var dustArray = [];
+        function selectPM25Option() {
+            var selectedPM25Date = document.getElementById("PM25DateArray").value;
+            let selectedDayPM25 = 'DSM501A/PM25/' + selectedPM25Date;
+            firebase.database().ref(selectedDayPM25).on('value', (snap) => {
+                var PM25Str = snap.val();
+                var PM25Array = [];
 
-                Object.keys(dustStr).forEach((key) => {
-                    dustArray.push({[key]: dustStr[key]});
+                Object.keys(PM25Str).forEach((key) => {
+                    PM25Array.push({[key]: PM25Str[key]});
                 });
 
-                var latestDust = dustArray[dustArray.length - 1];
-                var dustValue = Object.values(latestDust);
-                var jsonDustValue = JSON.stringify(dustValue);
+                var latestPM25 = PM25Array[PM25Array.length - 1];
+                var PM25Value = Object.values(latestPM25);
+                var jsonPM25Value = JSON.stringify(PM25Value);
 
-                jsonDustValue = jsonDustValue.split(":").pop();
-                jsonDustValue = jsonDustValue.replaceAll("\"", "");
-                jsonDustValue = jsonDustValue.replaceAll("}", "");
-                jsonDustValue = jsonDustValue.replaceAll("]", "");
+                jsonPM25Value = jsonPM25Value.split(":").pop();
+                jsonPM25Value = jsonPM25Value.replaceAll("\"", "");
+                jsonPM25Value = jsonPM25Value.replaceAll("}", "");
+                jsonPM25Value = jsonPM25Value.replaceAll("]", "");
 
-                var iterator = dustArray.values();
+                var iterator = PM25Array.values();
                 var dateArray = [];
-                var dustValueArray = [];
+                var PM25ValueArray = [];
                 for (let elements of iterator) {
                     dateArray.push(Object.keys(elements).toString());
-                    let cleanDust = JSON.stringify(Object.values(elements));
-                    cleanDust = cleanDust.split(":").pop();
-                    cleanDust = cleanDust.replaceAll("\"", "");
-                    cleanDust = cleanDust.replaceAll("}", "");
-                    cleanDust = cleanDust.replaceAll("]", "");
-                    dustValueArray.push(cleanDust);
+                    let cleanPM25 = JSON.stringify(Object.values(elements));
+                    cleanPM25 = cleanPM25.split(":").pop();
+                    cleanPM25 = cleanPM25.replaceAll("\"", "");
+                    cleanPM25 = cleanPM25.replaceAll("}", "");
+                    cleanPM25 = cleanPM25.replaceAll("]", "");
+                    PM25ValueArray.push(cleanPM25);
                 }
 
-                document.getElementById("dustChartContainer").innerHTML = "";
-                document.getElementById('dustChartContainer').innerHTML = "<canvas id=\"dustChart\"></canvas>";
-                new Chart("dustChart", {
+                document.getElementById("PM25ChartContainer").innerHTML = "";
+                document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
+                new Chart("PM25Chart", {
                     type: "line",
                     data: {
                         labels: dateArray,
@@ -741,7 +749,7 @@
                             lineTension: 0,
                             backgroundColor: "rgba(0,0,255,1.0)",
                             borderColor: "rgba(0,0,255,0.1)",
-                            data: dustValueArray
+                            data: PM25ValueArray
                         }]
                     },
                     options: {
@@ -765,12 +773,12 @@
                 var temperatureModal = document.getElementById("temperatureModal");
                 var humidityModal = document.getElementById("humidityModal");
                 var airQualityModal = document.getElementById("airQualityModal");
-                var dustModal = document.getElementById("dustModal");
+                var PM25Modal = document.getElementById("PM25Modal");
 
                 var temperatureBtn = document.getElementById("temperatureIndicator");
                 var humidityBtn = document.getElementById("humidityIndicator");
                 var airQualityBtn = document.getElementById("airQualityIndicator");
-                var dustBtn = document.getElementById("dustIndicator");
+                var PM25Btn = document.getElementById("PM25Indicator");
 
                 var smokeModal = document.getElementById("smokeModal");
                 var lpgModal = document.getElementById("lpgModal");
@@ -801,8 +809,8 @@
                     airQualityModal.style.display = "block";
                 }
 
-                dustBtn.onclick = function () {
-                    dustModal.style.display = "block";
+                PM25Btn.onclick = function () {
+                    PM25Modal.style.display = "block";
                 }
 
                 smokeBtn.onclick = function () {
@@ -843,7 +851,7 @@
                 }
 
                 span7.onclick = function () {
-                    dustModal.style.display = "none";
+                    PM25Modal.style.display = "none";
                 }
 
                 // close modal after clicking outside the modal
@@ -857,8 +865,8 @@
                     if (event.target === airQualityModal) {
                         airQualityModal.style.display = "none";
                     }
-                    if (event.target === dustModal) {
-                        dustModal.style.display = "none";
+                    if (event.target === PM25Modal) {
+                        PM25Modal.style.display = "none";
                     }
                     if (event.target === smokeModal) {
                         smokeModal.style.display = "none";
@@ -876,7 +884,7 @@
                 var temperatureDays;
                 var humidityDays;
                 var airDays;
-                var dustDays;
+                var PM25Days;
                 var LPGDays;
                 var smokeDays;
                 var CODays;
@@ -887,7 +895,7 @@
                 var smokeDateSelect = document.getElementById("SmokeDateArray");
                 var LPGDateSelect = document.getElementById("LPGDateArray");
                 var CODateSelect = document.getElementById("CODateArray");
-                var dustDateSelect = document.getElementById("dustDateArray");
+                var PM25DateSelect = document.getElementById("PM25DateArray");
 
                 var firebaseDays = document.getElementById("firebaseDateArray");
 
@@ -946,7 +954,7 @@
                 let currentDaySmoke = 'MQ2/Smoke/' + date;
                 let currentDayLPG = 'MQ2/LPG/' + date;
                 let currentDayCO = 'MQ2/CO/' + date;
-                let currentDayDust = 'DSM501A/PM25/' + date;
+                let currentDayPM25 = 'DSM501A/PM25/' + date;
 
                 var timeStr;
 
@@ -1207,64 +1215,64 @@
                 });
 
                 await firebase.database().ref('DSM501A/PM25/').once('value', (snap) => {
-                    dustDays = snap.val();
-                    dustDays = Object.keys(dustDays);
-                    dustDays.sort(dateComparison);
-                    for (var i = 0; i < dustDays.length; i++) {
-                        var option = dustDays[i];
+                    PM25Days = snap.val();
+                    PM25Days = Object.keys(PM25Days);
+                    PM25Days.sort(dateComparison);
+                    for (var i = 0; i < PM25Days.length; i++) {
+                        var option = PM25Days[i];
                         var element = document.createElement("option");
                         element.textContent = option;
                         element.value = option;
-                        dustDateSelect.prepend(element);
+                        PM25DateSelect.prepend(element);
                     }
-                    document.getElementById("dustDateArray").selectedIndex = "0";
+                    document.getElementById("PM25DateArray").selectedIndex = "0";
                 });
 
-                firebase.database().ref(currentDayDust).on('value', (snap) => {
-                    var dustStr = snap.val();
-                    var dustArray = [];
-                    Object.keys(dustStr).forEach((key) => {
-                        dustArray.push({[key]: dustStr[key]});
+                firebase.database().ref(currentDayPM25).on('value', (snap) => {
+                    var PM25Str = snap.val();
+                    var PM25Array = [];
+                    Object.keys(PM25Str).forEach((key) => {
+                        PM25Array.push({[key]: PM25Str[key]});
                     });
 
-                    var latestDust = dustArray[dustArray.length - 1];
-                    var dustValue = Object.values(latestDust);
-                    var jsonDustValue = JSON.stringify(dustValue);
+                    var latestPM25 = PM25Array[PM25Array.length - 1];
+                    var PM25Value = Object.values(latestPM25);
+                    var jsonPM25Value = JSON.stringify(PM25Value);
 
-                    jsonDustValue = jsonDustValue.split(":").pop();
-                    jsonDustValue = jsonDustValue.replaceAll("\"", "");
-                    jsonDustValue = jsonDustValue.replaceAll("}", "");
-                    jsonDustValue = jsonDustValue.replaceAll("]", "");
+                    jsonPM25Value = jsonPM25Value.split(":").pop();
+                    jsonPM25Value = jsonPM25Value.replaceAll("\"", "");
+                    jsonPM25Value = jsonPM25Value.replaceAll("}", "");
+                    jsonPM25Value = jsonPM25Value.replaceAll("]", "");
 
-                    if (jsonDustValue >= 8) {
-                        jsonDustValue = jsonDustValue + 'ppm' + '&#128128;';
-                        document.getElementById("dustIndicator").style.backgroundColor = "#bd1816";
+                    if (jsonPM25Value >= 8) {
+                        jsonPM25Value = jsonPM25Value + 'ppm' + '&#128128;';
+                        document.getElementById("PM25Indicator").style.backgroundColor = "#bd1816";
                     }
-                    if (jsonDustValue >= 5 && jsonDustValue <= 7) {
-                        jsonDustValue = jsonDustValue + 'ppm' + '&#128567;';
-                        document.getElementById("dustIndicator").style.backgroundColor = "#FFA500";
+                    if (jsonPM25Value >= 5 && jsonPM25Value <= 7) {
+                        jsonPM25Value = jsonPM25Value + 'ppm' + '&#128567;';
+                        document.getElementById("PM25Indicator").style.backgroundColor = "#FFA500";
                     }
-                    if (jsonDustValue <= 4) {
-                        jsonDustValue = jsonDustValue + 'ppm' + '&#128516;';
-                        document.getElementById("dustIndicator").style.backgroundColor = "#4CBB17";
+                    if (jsonPM25Value <= 4) {
+                        jsonPM25Value = jsonPM25Value + 'ppm' + '&#128516;';
+                        document.getElementById("PM25Indicator").style.backgroundColor = "#4CBB17";
                     }
 
-                    document.getElementById('latestDust').innerHTML = jsonDustValue;
+                    document.getElementById('latestPM25').innerHTML = jsonPM25Value;
 
-                    var iterator = dustArray.values();
+                    var iterator = PM25Array.values();
                     var dateArray = [];
-                    var dustValueArray = [];
+                    var PM25ValueArray = [];
                     for (let elements of iterator) {
                         dateArray.push(Object.keys(elements).toString());
-                        let cleanDust = JSON.stringify(Object.values(elements));
-                        cleanDust = cleanDust.split(":").pop();
-                        cleanDust = cleanDust.replaceAll("\"", "");
-                        cleanDust = cleanDust.replaceAll("}", "");
-                        cleanDust = cleanDust.replaceAll("]", "");
-                        dustValueArray.push(cleanDust);
+                        let cleanPM25 = JSON.stringify(Object.values(elements));
+                        cleanPM25 = cleanPM25.split(":").pop();
+                        cleanPM25 = cleanPM25.replaceAll("\"", "");
+                        cleanPM25 = cleanPM25.replaceAll("}", "");
+                        cleanPM25 = cleanPM25.replaceAll("]", "");
+                        PM25ValueArray.push(cleanPM25);
                     }
-                    if (document.getElementById("dustDateArray").value === date) {
-                        new Chart("dustChart", {
+                    if (document.getElementById("PM25DateArray").value === date) {
+                        new Chart("PM25Chart", {
                             type: "line",
                             data: {
                                 labels: dateArray,
@@ -1273,7 +1281,7 @@
                                     lineTension: 0,
                                     backgroundColor: "rgba(0,0,255,1.0)",
                                     borderColor: "rgba(0,0,255,0.1)",
-                                    data: dustValueArray
+                                    data: PM25ValueArray
                                 }]
                             },
                             options: {
