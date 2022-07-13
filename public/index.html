@@ -306,7 +306,7 @@
             return date1 - date2;
         }
 
-        // obtain historical temperature data after selecting date from drop-down menu
+        // obtain historical temperature data after selecting temperature date from drop-down menu
         function selectTemperatureOption() {
             // get selected temperature date
             var selectedTemperatureDate = document.getElementById("temperatureDateArray").value;
@@ -359,7 +359,7 @@
                         legend: {display: false},
                         scales: {
                             yAxes: [{ticks: {min: 10.00, max: 45.00}}],
-                            // limit x axes to 24 ticks
+                            // limit x axis to 24 ticks
                             xAxes: [{
                                 ticks: {
                                     display: true,
@@ -834,7 +834,9 @@
                 await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
                     temperatureDays = snap.val();
                     temperatureDays = Object.keys(temperatureDays);
+                    // sort temperature date array from latest to oldest
                     temperatureDays.sort(dateComparison);
+                    // load temperature date data into temperature date drop-down menu
                     for (var i = 0; i < temperatureDays.length; i++) {
                         var option = temperatureDays[i];
                         var element = document.createElement("option");
@@ -842,6 +844,7 @@
                         element.value = option;
                         temperatureDateSelect.prepend(element);
                     }
+                    // select latest temperature date by default
                     document.getElementById("temperatureDateArray").selectedIndex = "0";
                 });
 
@@ -849,6 +852,7 @@
                 var previousDateCount;
                 var currentDateCount;
 
+                // get previous firebaseDays array length
                 await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
                     firebaseDays = snap.val();
                     firebaseDays = Object.keys(firebaseDays);
@@ -856,6 +860,7 @@
                     previousDateCount = firebaseDays.length;
                 });
 
+                // get latest date (final firebaseDays array element)
                 async function loop10SecondDays() {
                     await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
                         firebaseDays = snap.val();
@@ -867,9 +872,10 @@
                 }
                 console.log(previousDateCount);
 
+                // get current firebaseDays array length and check if previous firebaseDays array length
+                // is different to current firebaseDays array length
                 async function tallyDays() {
                     currentDateCount = firebaseDays.length;
-                    // check if previous firebaseDays array length is different to current firebaseDays array length
                     if (previousDateCount !== currentDateCount) {
                         // refresh page
                         location.reload();
@@ -877,12 +883,14 @@
                 }
 
                 await loop10SecondDays();
+
                 // rerun function every 10 seconds
                 setInterval(function () {
                     loop10SecondDays();
                     tallyDays();
                 }, 10000);
 
+                // latest data (latest date)
                 let currentDayTemperature = 'DHT11/Temperature/' + date;
                 let currentDayHumidity = 'DHT11/Humidity/' + date;
                 let currentDayCO2 = 'MQ135/CO2/' + date;
@@ -897,20 +905,23 @@
                     var temperatureStr = snap.val();
                     var temperatureArray = [];
 
+                    // insert retrieved latest temperature data into temperature array
                     Object.keys(temperatureStr).forEach((key) => {
                         temperatureArray.push({[key]: temperatureStr[key]});
                     });
 
+                    // json converted to string for final (latest) temperature array element value
                     var latestTemperature = temperatureArray[temperatureArray.length - 1];
-                    timeStr = Object.keys(latestTemperature);
                     var temperatureValue = Object.values(latestTemperature);
                     var jsonTemperatureValue = JSON.stringify(temperatureValue);
 
+                    // remove unnecessary string data and be left with only actual latest temperature value
                     jsonTemperatureValue = jsonTemperatureValue.split(":").pop();
                     jsonTemperatureValue = jsonTemperatureValue.replaceAll("\"", "");
                     jsonTemperatureValue = jsonTemperatureValue.replaceAll("}", "");
                     jsonTemperatureValue = jsonTemperatureValue.replaceAll("]", "");
 
+                    // compare latest temperature value
                     if (jsonTemperatureValue > 26) {
                         jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#128293';
                         document.getElementById("temperatureIndicator").style.backgroundColor = "#bd1816";
@@ -924,24 +935,32 @@
                         document.getElementById("temperatureIndicator").style.backgroundColor = "#71A6D1";
                     }
 
+                    // latest temperature value
                     document.getElementById('latestTemperature').innerHTML = jsonTemperatureValue;
+                    // latest date
                     document.getElementById('currentDate').innerHTML = "Date: " + date;
+                    // latest time
+                    timeStr = Object.keys(latestTemperature);
                     document.getElementById('currentTime').innerHTML = "Time: " + timeStr;
 
                     var iterator = temperatureArray.values();
-
                     var timeArray = [];
                     var temperatureValueArray = [];
                     for (let elements of iterator) {
+                        // insert latest temperature array element keys (time) into time array
                         timeArray.push(Object.keys(elements).toString());
+                        // json converted to string for the latest temperature array element value (temperature)
                         let cleanTemperature = JSON.stringify(Object.values(elements));
+                        // remove unnecessary string data and be left with only actual temperature value
                         cleanTemperature = cleanTemperature.split(":").pop();
                         cleanTemperature = cleanTemperature.replaceAll("\"", "");
                         cleanTemperature = cleanTemperature.replaceAll("}", "");
                         cleanTemperature = cleanTemperature.replaceAll("]", "");
+                        // insert actual temperature value into temperature value array
                         temperatureValueArray.push(cleanTemperature);
                     }
 
+                    // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("temperatureDateArray").value === date) {
                         new Chart("temperatureChart", {
                             type: "line",
@@ -959,6 +978,7 @@
                                 legend: {display: false},
                                 scales: {
                                     yAxes: [{ticks: {min: 10.00, max: 45.00}}],
+                                    // limit x axis to 24 ticks
                                     xAxes: [{
                                         ticks: {
                                             display: true,
