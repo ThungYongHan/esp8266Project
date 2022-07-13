@@ -92,7 +92,6 @@
                 <h2>Temperature Dashboard</h2>
                 <span class="close">&times;</span>
             </div>
-
             <div class="modal-body">
                 <!-- temperature date drop-down menu -->
                 <label for="temperatureDateArray"></label>
@@ -111,6 +110,7 @@
         </div>
     </div>
 
+    <!-- hidden firebase (temperature) date drop-down menu (used for timed refresh array purposes only) -->
     <select hidden id="firebaseDateArray"></select>
 
     <!--    modal for humidity dashboard-->
@@ -143,9 +143,7 @@
                 <h2>Carbon Dioxide Dashboard</h2>
                 <span class="close">&times;</span>
             </div>
-
             <div class="modal-body">
-
                 <label for="airQualityDateArray"></label>
                 <select class="btn-secondary dropdown-toggle" id="airQualityDateArray"
                         onchange="selectCarbonDioxideOption()"></select>
@@ -168,7 +166,6 @@
                 <h2>Smoke Dashboard</h2>
                 <span class="close">&times;</span>
             </div>
-
             <div class="modal-body">
                 <label for="SmokeDateArray"></label>
                 <select class="btn-secondary dropdown-toggle" id="SmokeDateArray"
@@ -192,7 +189,6 @@
                 <h2>Liquefied Petroleum Gas Dashboard</h2>
                 <span class="close">&times;</span>
             </div>
-
             <div class="modal-body">
                 <label for="LPGDateArray"></label>
                 <select class="btn-secondary dropdown-toggle" id="LPGDateArray" onchange="selectLPGOption()"></select>
