@@ -332,6 +332,7 @@
             return date1 - date2;
         }
 
+        // obtain historical temperature data after selecting date from drop-down menu
         function selectTemperatureOption() {
             var selectedTemperatureDate = document.getElementById("temperatureDateArray").value;
             let selectedDayTemp = 'DHT11/Temperature/' + selectedTemperatureDate;
@@ -718,9 +719,7 @@
 
         function selectDustOption() {
             var selectedDustDate = document.getElementById("dustDateArray").value;
-            console.log(selectedDustDate);
             let selectedDayDust = 'DSM501A/PM25/' + selectedDustDate;
-            console.log(selectedDayDust);
             firebase.database().ref(selectedDayDust).on('value', (snap) => {
                 var dustStr = snap.val();
                 var dustArray = [];
@@ -809,6 +808,7 @@
                 var span6 = document.getElementsByClassName("close")[5];
                 var span7 = document.getElementsByClassName("close")[6];
 
+                // show modal after clicking data indicator
                 temperatureBtn.onclick = function () {
                     temperatureModal.style.display = "block";
                 }
@@ -837,6 +837,7 @@
                     coModal.style.display = "block";
                 }
 
+                // close modal after clicking "x" (close) modal button
                 span1.onclick = function () {
                     temperatureModal.style.display = "none";
                 }
@@ -848,7 +849,6 @@
                 span3.onclick = function () {
                     airQualityModal.style.display = "none";
                 }
-
 
                 span4.onclick = function () {
                     smokeModal.style.display = "none";
@@ -866,6 +866,7 @@
                     dustModal.style.display = "none";
                 }
 
+                // close modal after clicking outside the modal
                 window.onclick = function (event) {
                     if (event.target === temperatureModal) {
                         temperatureModal.style.display = "none";
@@ -891,8 +892,6 @@
                 }
 
                 document.querySelector('#load');
-                var today = new Date();
-                // var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
 
                 var temperatureDays;
                 var humidityDays;
@@ -947,18 +946,20 @@
                 }
 
                 console.log(previousDateCount);
-                    async function tallyDays(){
+
+                async function tallyDays() {
                     currentDateCount = firebaseDays.length;
-                    if (previousDateCount !== currentDateCount){
+                    if (previousDateCount !== currentDateCount) {
                         location.reload();
                     }
                 }
+
                 await loop10SecondDays();
                 setInterval(function () {
                     loop10SecondDays();
                     tallyDays();
                 }, 10000);
-                // date = firebaseDays[firebaseDays.length - 1];
+
                 let currentDayTemperature = 'DHT11/Temperature/' + date;
                 let currentDayHumidity = 'DHT11/Humidity/' + date;
                 let currentDayAirQuality = 'MQ135/CO2/' + date;
@@ -986,6 +987,7 @@
                     jsonTemperatureValue = jsonTemperatureValue.replaceAll("\"", "");
                     jsonTemperatureValue = jsonTemperatureValue.replaceAll("}", "");
                     jsonTemperatureValue = jsonTemperatureValue.replaceAll("]", "");
+
                     if (jsonTemperatureValue > 26) {
                         jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#128293';
                         document.getElementById("temperatureIndicator").style.backgroundColor = "#bd1816";
@@ -1016,8 +1018,7 @@
                         cleanTemperature = cleanTemperature.replaceAll("]", "");
                         temperatureValueArray.push(cleanTemperature);
                     }
-                    // console.log(document.getElementById("temperatureDateArray").selectedIndex);
-                    // console.log(document.getElementById("temperatureDateArray").value);
+
                     if (document.getElementById("temperatureDateArray").value === date) {
                         new Chart("temperatureChart", {
                             type: "line",
@@ -1579,7 +1580,6 @@
                 });
             }
         );
-
     </script>
 </div>
 </body>
