@@ -311,30 +311,25 @@
             // get selected temperature date
             var selectedTemperatureDate = document.getElementById("temperatureDateArray").value;
             let selectedDayTemperature = 'DHT11/Temperature/' + selectedTemperatureDate;
+
             // retrieve firebase realtime database data of the selected temperature date
             firebase.database().ref(selectedDayTemperature).on('value', (snap) => {
                 var temperatureStr = snap.val();
                 var temperatureArray = [];
 
+                // insert retrieved selected temperature date data into array
                 Object.keys(temperatureStr).forEach((key) => {
                     temperatureArray.push({[key]: temperatureStr[key]});
                 });
-
-                var latestTemperature = temperatureArray[temperatureArray.length - 1];
-                var temperatureValue = Object.values(latestTemperature);
-                var jsonTemperatureValue = JSON.stringify(temperatureValue);
-
-                jsonTemperatureValue = jsonTemperatureValue.split(":").pop();
-                jsonTemperatureValue = jsonTemperatureValue.replaceAll("\"", "");
-                jsonTemperatureValue = jsonTemperatureValue.replaceAll("}", "");
-                jsonTemperatureValue = jsonTemperatureValue.replaceAll("]", "");
-
+                
                 var iterator = temperatureArray.values();
                 var dateArray = [];
                 var temperatureValueArray = [];
                 for (let elements of iterator) {
                     dateArray.push(Object.keys(elements).toString());
                     let cleanTemperature = JSON.stringify(Object.values(elements));
+                    console.log(cleanTemperature)
+                    // remove unnecessary data and be left with only temperature value
                     cleanTemperature = cleanTemperature.split(":").pop();
                     cleanTemperature = cleanTemperature.replaceAll("\"", "");
                     cleanTemperature = cleanTemperature.replaceAll("}", "");
@@ -386,15 +381,6 @@
                 Object.keys(humidityStr).forEach((key) => {
                     humidityArray.push({[key]: humidityStr[key]});
                 });
-
-                var latestHumidity = humidityArray[humidityArray.length - 1];
-                var humidityValue = Object.values(latestHumidity);
-                var jsonHumidityValue = JSON.stringify(humidityValue);
-
-                jsonHumidityValue = jsonHumidityValue.split(":").pop();
-                jsonHumidityValue = jsonHumidityValue.replaceAll("\"", "");
-                jsonHumidityValue = jsonHumidityValue.replaceAll("}", "");
-                jsonHumidityValue = jsonHumidityValue.replaceAll("]", "");
 
                 var iterator = humidityArray.values();
                 var dateArray = [];
@@ -451,15 +437,6 @@
                     CO2Array.push({[key]: CO2Str[key]});
                 });
 
-                var latestCO2 = CO2Array[CO2Array.length - 1];
-                var CO2Value = Object.values(latestCO2);
-                var jsonCO2Value = JSON.stringify(CO2Value);
-
-                jsonCO2Value = jsonCO2Value.split(":").pop();
-                jsonCO2Value = jsonCO2Value.replaceAll("\"", "");
-                jsonCO2Value = jsonCO2Value.replaceAll("}", "");
-                jsonCO2Value = jsonCO2Value.replaceAll("]", "");
-
                 var iterator = CO2Array.values();
                 var dateArray = [];
                 var CO2ValueArray = [];
@@ -514,15 +491,6 @@
                 Object.keys(smokeStr).forEach((key) => {
                     smokeArray.push({[key]: smokeStr[key]});
                 });
-
-                var latestSmoke = smokeArray[smokeArray.length - 1];
-                var smokeValue = Object.values(latestSmoke);
-                var jsonSmokeValue = JSON.stringify(smokeValue);
-
-                jsonSmokeValue = jsonSmokeValue.split(":").pop();
-                jsonSmokeValue = jsonSmokeValue.replaceAll("\"", "");
-                jsonSmokeValue = jsonSmokeValue.replaceAll("}", "");
-                jsonSmokeValue = jsonSmokeValue.replaceAll("]", "");
 
                 var iterator = smokeArray.values();
                 var dateArray = [];
@@ -579,15 +547,6 @@
                     LPGArray.push({[key]: LPGStr[key]});
                 });
 
-                var latestLPG = LPGArray[LPGArray.length - 1];
-                var LPGValue = Object.values(latestLPG);
-                var jsonLPGValue = JSON.stringify(LPGValue);
-
-                jsonLPGValue = jsonLPGValue.split(":").pop();
-                jsonLPGValue = jsonLPGValue.replaceAll("\"", "");
-                jsonLPGValue = jsonLPGValue.replaceAll("}", "");
-                jsonLPGValue = jsonLPGValue.replaceAll("]", "");
-
                 var iterator = LPGArray.values();
                 var dateArray = [];
                 var LPGValueArray = [];
@@ -643,15 +602,6 @@
                     COArray.push({[key]: COStr[key]});
                 });
 
-                var latestCO = COArray[COArray.length - 1];
-                var COValue = Object.values(latestCO);
-                var jsonCOValue = JSON.stringify(COValue);
-
-                jsonCOValue = jsonCOValue.split(":").pop();
-                jsonCOValue = jsonCOValue.replaceAll("\"", "");
-                jsonCOValue = jsonCOValue.replaceAll("}", "");
-                jsonCOValue = jsonCOValue.replaceAll("]", "");
-
                 var iterator = COArray.values();
                 var dateArray = [];
                 var COValueArray = [];
@@ -706,15 +656,6 @@
                 Object.keys(PM25Str).forEach((key) => {
                     PM25Array.push({[key]: PM25Str[key]});
                 });
-
-                var latestPM25 = PM25Array[PM25Array.length - 1];
-                var PM25Value = Object.values(latestPM25);
-                var jsonPM25Value = JSON.stringify(PM25Value);
-
-                jsonPM25Value = jsonPM25Value.split(":").pop();
-                jsonPM25Value = jsonPM25Value.replaceAll("\"", "");
-                jsonPM25Value = jsonPM25Value.replaceAll("}", "");
-                jsonPM25Value = jsonPM25Value.replaceAll("]", "");
 
                 var iterator = PM25Array.values();
                 var dateArray = [];
