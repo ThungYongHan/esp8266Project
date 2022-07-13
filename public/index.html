@@ -321,19 +321,21 @@
                 Object.keys(temperatureStr).forEach((key) => {
                     temperatureArray.push({[key]: temperatureStr[key]});
                 });
-                
+
                 var iterator = temperatureArray.values();
-                var dateArray = [];
+                var timeArray = [];
                 var temperatureValueArray = [];
                 for (let elements of iterator) {
-                    dateArray.push(Object.keys(elements).toString());
+                    // insert selected temperature date data array element keys (time) into time array
+                    timeArray.push(Object.keys(elements).toString());
+                    // json converted to string for the selected temperature date data array element value (temperature)
                     let cleanTemperature = JSON.stringify(Object.values(elements));
-                    console.log(cleanTemperature)
-                    // remove unnecessary data and be left with only temperature value
+                    // remove unnecessary string data and be left with only actual temperature value
                     cleanTemperature = cleanTemperature.split(":").pop();
                     cleanTemperature = cleanTemperature.replaceAll("\"", "");
                     cleanTemperature = cleanTemperature.replaceAll("}", "");
                     cleanTemperature = cleanTemperature.replaceAll("]", "");
+                    // insert actual temperature value into temperature value array
                     temperatureValueArray.push(cleanTemperature);
                 }
 
@@ -344,7 +346,7 @@
                 new Chart("temperatureChart", {
                     type: "line",
                     data: {
-                        labels: dateArray,
+                        labels: timeArray,
                         datasets: [{
                             fill: false,
                             lineTension: 0,
@@ -383,10 +385,10 @@
                 });
 
                 var iterator = humidityArray.values();
-                var dateArray = [];
+                var timeArray = [];
                 var humidityValueArray = [];
                 for (let elements of iterator) {
-                    dateArray.push(Object.keys(elements).toString());
+                    timeArray.push(Object.keys(elements).toString());
                     let cleanHumidity = JSON.stringify(Object.values(elements));
                     cleanHumidity = cleanHumidity.split(":").pop();
                     cleanHumidity = cleanHumidity.replaceAll("\"", "");
@@ -400,7 +402,7 @@
                 new Chart("humidityChart", {
                     type: "line",
                     data: {
-                        labels: dateArray,
+                        labels: timeArray,
                         datasets: [{
                             fill: false,
                             lineTension: 0,
@@ -438,10 +440,10 @@
                 });
 
                 var iterator = CO2Array.values();
-                var dateArray = [];
+                var timeArray = [];
                 var CO2ValueArray = [];
                 for (let elements of iterator) {
-                    dateArray.push(Object.keys(elements).toString());
+                    timeArray.push(Object.keys(elements).toString());
                     let cleanCO2 = JSON.stringify(Object.values(elements));
                     cleanCO2 = cleanCO2.split(":").pop();
                     cleanCO2 = cleanCO2.replaceAll("\"", "");
@@ -455,7 +457,7 @@
                 new Chart("CO2Chart", {
                     type: "line",
                     data: {
-                        labels: dateArray,
+                        labels: timeArray,
                         datasets: [{
                             fill: false,
                             lineTension: 0,
@@ -493,10 +495,10 @@
                 });
 
                 var iterator = smokeArray.values();
-                var dateArray = [];
+                var timeArray = [];
                 var smokeValueArray = [];
                 for (let elements of iterator) {
-                    dateArray.push(Object.keys(elements).toString());
+                    timeArray.push(Object.keys(elements).toString());
                     let cleanSmoke = JSON.stringify(Object.values(elements));
                     cleanSmoke = cleanSmoke.split(":").pop();
                     cleanSmoke = cleanSmoke.replaceAll("\"", "");
@@ -510,7 +512,7 @@
                 new Chart("smokeChart", {
                     type: "line",
                     data: {
-                        labels: dateArray,
+                        labels: timeArray,
                         datasets: [{
                             fill: false,
                             lineTension: 0,
@@ -548,10 +550,10 @@
                 });
 
                 var iterator = LPGArray.values();
-                var dateArray = [];
+                var timeArray = [];
                 var LPGValueArray = [];
                 for (let elements of iterator) {
-                    dateArray.push(Object.keys(elements).toString());
+                    timeArray.push(Object.keys(elements).toString());
                     let cleanLPG = JSON.stringify(Object.values(elements));
                     cleanLPG = cleanLPG.split(":").pop();
                     cleanLPG = cleanLPG.replaceAll("\"", "");
@@ -565,7 +567,7 @@
                 new Chart("LPGChart", {
                     type: "line",
                     data: {
-                        labels: dateArray,
+                        labels: timeArray,
                         datasets: [{
                             fill: false,
                             lineTension: 0,
@@ -603,10 +605,10 @@
                 });
 
                 var iterator = COArray.values();
-                var dateArray = [];
+                var timeArray = [];
                 var COValueArray = [];
                 for (let elements of iterator) {
-                    dateArray.push(Object.keys(elements).toString());
+                    timeArray.push(Object.keys(elements).toString());
                     let cleanCO = JSON.stringify(Object.values(elements));
                     cleanCO = cleanCO.split(":").pop();
                     cleanCO = cleanCO.replaceAll("\"", "");
@@ -620,7 +622,7 @@
                 new Chart("COChart", {
                     type: "line",
                     data: {
-                        labels: dateArray,
+                        labels: timeArray,
                         datasets: [{
                             fill: false,
                             lineTension: 0,
@@ -658,10 +660,10 @@
                 });
 
                 var iterator = PM25Array.values();
-                var dateArray = [];
+                var timeArray = [];
                 var PM25ValueArray = [];
                 for (let elements of iterator) {
-                    dateArray.push(Object.keys(elements).toString());
+                    timeArray.push(Object.keys(elements).toString());
                     let cleanPM25 = JSON.stringify(Object.values(elements));
                     cleanPM25 = cleanPM25.split(":").pop();
                     cleanPM25 = cleanPM25.replaceAll("\"", "");
@@ -675,7 +677,7 @@
                 new Chart("PM25Chart", {
                     type: "line",
                     data: {
-                        labels: dateArray,
+                        labels: timeArray,
                         datasets: [{
                             fill: false,
                             lineTension: 0,
@@ -928,10 +930,10 @@
 
                     var iterator = temperatureArray.values();
 
-                    var dateArray = [];
+                    var timeArray = [];
                     var temperatureValueArray = [];
                     for (let elements of iterator) {
-                        dateArray.push(Object.keys(elements).toString());
+                        timeArray.push(Object.keys(elements).toString());
                         let cleanTemperature = JSON.stringify(Object.values(elements));
                         cleanTemperature = cleanTemperature.split(":").pop();
                         cleanTemperature = cleanTemperature.replaceAll("\"", "");
@@ -944,7 +946,7 @@
                         new Chart("temperatureChart", {
                             type: "line",
                             data: {
-                                labels: dateArray,
+                                labels: timeArray,
                                 datasets: [{
                                     fill: false,
                                     lineTension: 0,
@@ -1019,10 +1021,10 @@
                     document.getElementById('latestHumidity').innerHTML = jsonHumidityValue;
                     var iterator = humidityArray.values();
 
-                    var dateArray = [];
+                    var timeArray = [];
                     var humidityValueArray = [];
                     for (let elements of iterator) {
-                        dateArray.push(Object.keys(elements).toString());
+                        timeArray.push(Object.keys(elements).toString());
                         let cleanHumidity = JSON.stringify(Object.values(elements));
                         cleanHumidity = cleanHumidity.split(":").pop();
                         cleanHumidity = cleanHumidity.replaceAll("\"", "");
@@ -1034,7 +1036,7 @@
                         new Chart("humidityChart", {
                             type: "line",
                             data: {
-                                labels: dateArray,
+                                labels: timeArray,
                                 datasets: [{
                                     fill: false,
                                     lineTension: 0,
@@ -1106,10 +1108,10 @@
                     document.getElementById('latestCO2').innerHTML = jsonCO2Value;
                     var iterator = CO2Array.values();
 
-                    var dateArray = [];
+                    var timeArray = [];
                     var CO2ValueArray = [];
                     for (let elements of iterator) {
-                        dateArray.push(Object.keys(elements).toString());
+                        timeArray.push(Object.keys(elements).toString());
                         let cleanCO2 = JSON.stringify(Object.values(elements));
                         cleanCO2 = cleanCO2.split(":").pop();
                         cleanCO2 = cleanCO2.replaceAll("\"", "");
@@ -1121,7 +1123,7 @@
                         new Chart("CO2Chart", {
                             type: "line",
                             data: {
-                                labels: dateArray,
+                                labels: timeArray,
                                 datasets: [{
                                     fill: false,
                                     lineTension: 0,
@@ -1193,10 +1195,10 @@
                     document.getElementById('latestPM25').innerHTML = jsonPM25Value;
 
                     var iterator = PM25Array.values();
-                    var dateArray = [];
+                    var timeArray = [];
                     var PM25ValueArray = [];
                     for (let elements of iterator) {
-                        dateArray.push(Object.keys(elements).toString());
+                        timeArray.push(Object.keys(elements).toString());
                         let cleanPM25 = JSON.stringify(Object.values(elements));
                         cleanPM25 = cleanPM25.split(":").pop();
                         cleanPM25 = cleanPM25.replaceAll("\"", "");
@@ -1208,7 +1210,7 @@
                         new Chart("PM25Chart", {
                             type: "line",
                             data: {
-                                labels: dateArray,
+                                labels: timeArray,
                                 datasets: [{
                                     fill: false,
                                     lineTension: 0,
@@ -1281,10 +1283,10 @@
                     document.getElementById('latestSmoke').innerHTML = jsonSmokeValue;
                     var iterator = smokeArray.values();
 
-                    var dateArray = [];
+                    var timeArray = [];
                     var smokeValueArray = [];
                     for (let elements of iterator) {
-                        dateArray.push(Object.keys(elements).toString());
+                        timeArray.push(Object.keys(elements).toString());
                         let cleanSmoke = JSON.stringify(Object.values(elements));
                         cleanSmoke = cleanSmoke.split(":").pop();
                         cleanSmoke = cleanSmoke.replaceAll("\"", "");
@@ -1297,7 +1299,7 @@
                         new Chart("smokeChart", {
                             type: "line",
                             data: {
-                                labels: dateArray,
+                                labels: timeArray,
                                 datasets: [{
                                     fill: false,
                                     lineTension: 0,
@@ -1371,10 +1373,10 @@
                     var iterator = LPGArray.values();
 
 
-                    var dateArray = [];
+                    var timeArray = [];
                     var LPGValueArray = [];
                     for (let elements of iterator) {
-                        dateArray.push(Object.keys(elements).toString());
+                        timeArray.push(Object.keys(elements).toString());
                         let cleanLPG = JSON.stringify(Object.values(elements));
                         cleanLPG = cleanLPG.split(":").pop();
                         cleanLPG = cleanLPG.replaceAll("\"", "");
@@ -1386,7 +1388,7 @@
                         new Chart("LPGChart", {
                             type: "line",
                             data: {
-                                labels: dateArray,
+                                labels: timeArray,
                                 datasets: [{
                                     fill: false,
                                     lineTension: 0,
@@ -1459,10 +1461,10 @@
                     document.getElementById('latestCO').innerHTML = jsonCOValue;
                     var iterator = COArray.values();
 
-                    var dateArray = [];
+                    var timeArray = [];
                     var COValueArray = [];
                     for (let elements of iterator) {
-                        dateArray.push(Object.keys(elements).toString());
+                        timeArray.push(Object.keys(elements).toString());
                         let cleanCO = JSON.stringify(Object.values(elements));
                         cleanCO = cleanCO.split(":").pop();
                         cleanCO = cleanCO.replaceAll("\"", "");
@@ -1474,7 +1476,7 @@
                         new Chart("COChart", {
                             type: "line",
                             data: {
-                                labels: dateArray,
+                                labels: timeArray,
                                 datasets: [{
                                     fill: false,
                                     lineTension: 0,
