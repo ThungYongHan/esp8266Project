@@ -874,6 +874,10 @@
                 var smokeDays;
                 var CODays;
 
+                var date;
+                var previousDateCount;
+                var currentDateCount;
+
                 var temperatureDateSelect = document.getElementById("temperatureDateArray");
                 var humidityDateSelect = document.getElementById("humidityDateArray");
                 var CO2DateSelect = document.getElementById("airQualityDateArray");
@@ -897,9 +901,7 @@
                     }
                     document.getElementById("temperatureDateArray").selectedIndex = "0";
                 });
-                var date;
-                var previousDateCount;
-                var currentDateCount;
+
 
                 await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
                     firebaseDays = snap.val();
