@@ -414,7 +414,7 @@
                     options: {
                         legend: {display: false},
                         scales: {
-                            yAxes: [{ticks: {min: 20.00, max: 90.00}}],
+                            yAxes: [{ticks: {min: 0.00, max: 100.00}}],
                             xAxes: [{
                                 ticks: {
                                     display: true,
@@ -960,6 +960,10 @@
                         temperatureValueArray.push(cleanTemperature);
                     }
 
+                    // empty and reload the div to prevent old temperature chart data from from being shown
+                    // when hovering over temperature chart data points
+                    document.getElementById("temperatureChartContainer").innerHTML = "";
+                    document.getElementById('temperatureChartContainer').innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("temperatureDateArray").value === date) {
                         new Chart("temperatureChart", {
@@ -1052,6 +1056,8 @@
                         cleanHumidity = cleanHumidity.replaceAll("]", "");
                         humidityValueArray.push(cleanHumidity);
                     }
+                    document.getElementById('humidityChartContainer').innerHTML = "";
+                    document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
                     if (document.getElementById("humidityDateArray").value === date) {
                         new Chart("humidityChart", {
                             type: "line",
@@ -1068,7 +1074,7 @@
                             options: {
                                 legend: {display: false},
                                 scales: {
-                                    yAxes: [{ticks: {min: 20.00, max: 90.00}}],
+                                    yAxes: [{ticks: {min: 0.00, max: 100.00}}],
                                     xAxes: [{
                                         ticks: {
                                             display: true,
@@ -1139,6 +1145,8 @@
                         cleanCO2 = cleanCO2.replaceAll("]", "");
                         CO2ValueArray.push(cleanCO2);
                     }
+                    document.getElementById("CO2ChartContainer").innerHTML = "";
+                    document.getElementById('CO2ChartContainer').innerHTML = "<canvas id=\"CO2Chart\"></canvas>";
                     if (document.getElementById("CO2DateArray").value === date) {
                         new Chart("CO2Chart", {
                             type: "line",
@@ -1226,6 +1234,8 @@
                         cleanPM25 = cleanPM25.replaceAll("]", "");
                         PM25ValueArray.push(cleanPM25);
                     }
+                    document.getElementById("PM25ChartContainer").innerHTML = "";
+                    document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
                     if (document.getElementById("PM25DateArray").value === date) {
                         new Chart("PM25Chart", {
                             type: "line",
@@ -1315,6 +1325,8 @@
                         smokeValueArray.push(cleanSmoke);
                     }
 
+                    document.getElementById("smokeChartContainer").innerHTML = "";
+                    document.getElementById('smokeChartContainer').innerHTML = "<canvas id=\"smokeChart\"></canvas>";
                     if (document.getElementById("SmokeDateArray").value === date) {
                         new Chart("smokeChart", {
                             type: "line",
@@ -1404,6 +1416,8 @@
                         cleanLPG = cleanLPG.replaceAll("]", "");
                         LPGValueArray.push(cleanLPG);
                     }
+                    document.getElementById("LPGChartContainer").innerHTML = "";
+                    document.getElementById('LPGChartContainer').innerHTML = "<canvas id=\"LPGChart\"></canvas>";
                     if (document.getElementById("LPGDateArray").value === date) {
                         new Chart("LPGChart", {
                             type: "line",
@@ -1492,6 +1506,8 @@
                         cleanCO = cleanCO.replaceAll("]", "");
                         COValueArray.push(cleanCO);
                     }
+                    document.getElementById("COChartContainer").innerHTML = "";
+                    document.getElementById('COChartContainer').innerHTML = "<canvas id=\"COChart\"></canvas>";
                     if (document.getElementById("CODateArray").value === date) {
                         new Chart("COChart", {
                             type: "line",
