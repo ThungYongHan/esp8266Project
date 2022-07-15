@@ -101,11 +101,11 @@
                 <div id="temperatureChartContainer">
                     <canvas id="temperatureChart"></canvas>
                 </div>
-                <span style="color: #71A6D1">Below or Equals 22&#8451 = Low Temperature &#x2744;</span>
+                <span style="color: #71A6D1"><= 22&#8451: Low Temperature &#x2744;</span>
                 <br>
-                <span style="color: #FFA500">23&#8451 - 26&#8451 = Recommended Indoor Temperature &#127777;</span>
+                <span style="color: #FFA500">23&#8451 - 26&#8451: Recommended Indoor Temperature &#127777;</span>
                 <br>
-                <span style="color: #bd1816">Above 26&#8451 = High Temperature &#128293;</span>
+                <span style="color: #bd1816">> 26&#8451: High Temperature &#128293;</span>
             </div>
         </div>
     </div>
@@ -127,11 +127,11 @@
                 <div id="humidityChartContainer">
                     <canvas id="humidityChart"></canvas>
                 </div>
-                <span style="color: #4CBB17">0% - 59% = Low Risk of Mold Growth &#128516;</span>
+                <span style="color: #4CBB17">0% - 59%: Low Risk of Mold Growth &#128516;</span>
                 <br>
-                <span style="color: #FFA500">60% - 79% = Risk of Mold Growth &#128577;</span>
+                <span style="color: #FFA500">60% - 79%: Risk of Mold Growth &#128577;</span>
                 <br>
-                <span style="color: #bd1816">80% - 100% = High Risk of Mold Growth &#128543;</span>
+                <span style="color: #bd1816">80% - 100%: High Risk of Mold Growth &#128543;</span>
             </div>
         </div>
     </div>
@@ -150,11 +150,13 @@
                 <div id="CO2ChartContainer">
                     <canvas id="CO2Chart"></canvas>
                 </div>
-                <span style="color: #4CBB17">Below or Equals 599ppm = Safe Levels of CO2 &#128516;</span>
+                <span style="color: #4CBB17">< 1000ppm: Safe Levels of CO2 &#128516;</span>
                 <br>
-                <span style="color: #FFA500">600ppm - 799ppm = Alarming Levels of CO2 &#128567;</span>
+                <span style="color: #FFA500">1000ppm - 5000ppm: Permissible Levels of CO2 &#128577; (OSHA 8-hour Permissible Exposure Limit: 5000ppm)</span>
                 <br>
-                <span style="color: #bd1816">Above or Equals 800ppm = Hazardous Levels of CO2 &#128128;</span>
+                <span style="color: #bd1816">5001ppm - 39999ppm: Uncomfortable Levels of CO2 &#128567;</span>
+                <br>
+                <span style="color: #000000">>= 40000ppm: Hazardous Levels of CO2 &#128128;</span>
             </div>
         </div>
     </div>
@@ -469,7 +471,7 @@
                     options: {
                         legend: {display: false},
                         scales: {
-                            yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                            yAxes: [{ticks: {min: 0.00, max: 40000.00}}],
                             xAxes: [{
                                 ticks: {
                                     display: true,
@@ -960,12 +962,13 @@
                         temperatureValueArray.push(cleanTemperature);
                     }
 
-                    // empty and reload the div to prevent old temperature chart data from being shown
-                    // when hovering over temperature chart data points
-                    document.getElementById("temperatureChartContainer").innerHTML = "";
-                    document.getElementById('temperatureChartContainer').innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
+
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("temperatureDateArray").value === date) {
+                        // empty and reload the div to prevent old temperature chart data from being shown
+                        // when hovering over temperature chart data points
+                        document.getElementById("temperatureChartContainer").innerHTML = "";
+                        document.getElementById('temperatureChartContainer').innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
                         new Chart("temperatureChart", {
                             type: "line",
                             data: {
@@ -1056,9 +1059,10 @@
                         cleanHumidity = cleanHumidity.replaceAll("]", "");
                         humidityValueArray.push(cleanHumidity);
                     }
-                    document.getElementById('humidityChartContainer').innerHTML = "";
-                    document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
+
                     if (document.getElementById("humidityDateArray").value === date) {
+                        document.getElementById('humidityChartContainer').innerHTML = "";
+                        document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
                         new Chart("humidityChart", {
                             type: "line",
                             data: {
@@ -1118,15 +1122,32 @@
                     jsonCO2Value = jsonCO2Value.replaceAll("}", "");
                     jsonCO2Value = jsonCO2Value.replaceAll("]", "");
 
-                    if (jsonCO2Value >= 800) {
+                    // if (jsonCO2Value >= 800) {
+                    //     jsonCO2Value = jsonCO2Value + 'ppm' + '&#128128;';
+                    //     document.getElementById("CO2Indicator").style.backgroundColor = "#bd1816";
+                    // }
+                    // if (jsonCO2Value >= 600 && jsonCO2Value <= 799) {
+                    //     jsonCO2Value = jsonCO2Value + 'ppm' + '&#128567;';
+                    //     document.getElementById("CO2Indicator").style.backgroundColor = "#FFA500";
+                    // }
+                    // if (jsonCO2Value <= 599) {
+                    //     jsonCO2Value = jsonCO2Value + 'ppm' + '&#128516;';
+                    //     document.getElementById("CO2Indicator").style.backgroundColor = "#4CBB17";
+                    // }
+
+                    if (jsonCO2Value >= 40000) {
                         jsonCO2Value = jsonCO2Value + 'ppm' + '&#128128;';
+                        document.getElementById("CO2Indicator").style.backgroundColor = "#000000";
+                    }
+                    if (jsonCO2Value > 5000 && jsonCO2Value <= 39999) {
+                        jsonCO2Value = jsonCO2Value + 'ppm' + '&#128567;';
                         document.getElementById("CO2Indicator").style.backgroundColor = "#bd1816";
                     }
-                    if (jsonCO2Value >= 600 && jsonCO2Value <= 799) {
-                        jsonCO2Value = jsonCO2Value + 'ppm' + '&#128567;';
+                    if (jsonCO2Value >= 1000 && jsonCO2Value <= 5000) {
+                        jsonCO2Value = jsonCO2Value + 'ppm' + '&#128577;';
                         document.getElementById("CO2Indicator").style.backgroundColor = "#FFA500";
                     }
-                    if (jsonCO2Value <= 599) {
+                    if (jsonCO2Value < 1000) {
                         jsonCO2Value = jsonCO2Value + 'ppm' + '&#128516;';
                         document.getElementById("CO2Indicator").style.backgroundColor = "#4CBB17";
                     }
@@ -1145,9 +1166,10 @@
                         cleanCO2 = cleanCO2.replaceAll("]", "");
                         CO2ValueArray.push(cleanCO2);
                     }
-                    document.getElementById("CO2ChartContainer").innerHTML = "";
-                    document.getElementById('CO2ChartContainer').innerHTML = "<canvas id=\"CO2Chart\"></canvas>";
+
                     if (document.getElementById("CO2DateArray").value === date) {
+                        document.getElementById("CO2ChartContainer").innerHTML = "";
+                        document.getElementById('CO2ChartContainer').innerHTML = "<canvas id=\"CO2Chart\"></canvas>";
                         new Chart("CO2Chart", {
                             type: "line",
                             data: {
@@ -1163,7 +1185,7 @@
                             options: {
                                 legend: {display: false},
                                 scales: {
-                                    yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                                    yAxes: [{ticks: {min: 0.00, max: 40000.00}}],
                                     xAxes: [{
                                         ticks: {
                                             display: true,
@@ -1234,9 +1256,10 @@
                         cleanPM25 = cleanPM25.replaceAll("]", "");
                         PM25ValueArray.push(cleanPM25);
                     }
-                    document.getElementById("PM25ChartContainer").innerHTML = "";
-                    document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
+
                     if (document.getElementById("PM25DateArray").value === date) {
+                        document.getElementById("PM25ChartContainer").innerHTML = "";
+                        document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
                         new Chart("PM25Chart", {
                             type: "line",
                             data: {
@@ -1325,9 +1348,9 @@
                         smokeValueArray.push(cleanSmoke);
                     }
 
-                    document.getElementById("smokeChartContainer").innerHTML = "";
-                    document.getElementById('smokeChartContainer').innerHTML = "<canvas id=\"smokeChart\"></canvas>";
                     if (document.getElementById("SmokeDateArray").value === date) {
+                        document.getElementById("smokeChartContainer").innerHTML = "";
+                        document.getElementById('smokeChartContainer').innerHTML = "<canvas id=\"smokeChart\"></canvas>";
                         new Chart("smokeChart", {
                             type: "line",
                             data: {
@@ -1416,9 +1439,10 @@
                         cleanLPG = cleanLPG.replaceAll("]", "");
                         LPGValueArray.push(cleanLPG);
                     }
-                    document.getElementById("LPGChartContainer").innerHTML = "";
-                    document.getElementById('LPGChartContainer').innerHTML = "<canvas id=\"LPGChart\"></canvas>";
+
                     if (document.getElementById("LPGDateArray").value === date) {
+                        document.getElementById("LPGChartContainer").innerHTML = "";
+                        document.getElementById('LPGChartContainer').innerHTML = "<canvas id=\"LPGChart\"></canvas>";
                         new Chart("LPGChart", {
                             type: "line",
                             data: {
@@ -1506,9 +1530,10 @@
                         cleanCO = cleanCO.replaceAll("]", "");
                         COValueArray.push(cleanCO);
                     }
-                    document.getElementById("COChartContainer").innerHTML = "";
-                    document.getElementById('COChartContainer').innerHTML = "<canvas id=\"COChart\"></canvas>";
+
                     if (document.getElementById("CODateArray").value === date) {
+                        document.getElementById("COChartContainer").innerHTML = "";
+                        document.getElementById('COChartContainer').innerHTML = "<canvas id=\"COChart\"></canvas>";
                         new Chart("COChart", {
                             type: "line",
                             data: {
