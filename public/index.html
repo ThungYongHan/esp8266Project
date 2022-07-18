@@ -86,6 +86,9 @@
         <div class="col-md-3"></div>
     </div>
 
+    <!-- hidden firebase (temperature) date drop-down menu (used for timed refresh array purposes only) -->
+    <select hidden id="firebaseDateArray"></select>
+
     <!-- modal for temperature dashboard -->
     <div id="temperatureModal" class="modal">
         <div class="modal-content">
@@ -102,17 +105,17 @@
                 <div id="temperatureChartContainer">
                     <canvas id="temperatureChart"></canvas>
                 </div>
-                <span style="color: #71A6D1"><= 22&#8451: Low Temperature &#x2744;</span>
+                <span style="color: #00AEEF">< 23&#8451: Low Temperature &#129398;</span>
                 <br>
-                <span style="color: #FFA500">23&#8451 - 26&#8451: Recommended Indoor Temperature &#127777;</span>
+                <!--                <span style="color: #4CBB17">23&#8451 - 26&#8451: Recommended Indoor Temperature &#127777;</span>-->
+                <span style="color: #4CBB17">23&#8451 - 26&#8451: Recommended Indoor Temperature &#128516;</span>
                 <br>
-                <span style="color: #bd1816">> 26&#8451: High Temperature &#128293;</span>
+                <!--                <span style="color: #bd1816">> 26&#8451: High Temperature &#128293;</span>-->
+                <span style="color: #bd1816">> 26&#8451: High Temperature &#129397;</span>
+
             </div>
         </div>
     </div>
-
-    <!-- hidden firebase (temperature) date drop-down menu (used for timed refresh array purposes only) -->
-    <select hidden id="firebaseDateArray"></select>
 
     <!--    modal for humidity dashboard-->
     <div id="humidityModal" class="modal">
@@ -185,8 +188,31 @@
         </div>
     </div>
 
+    <!--    modal for acetone dashboard-->
+    <div id="acetoneModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Acetone Dashboard</h2>
+                <span class="close">&times;</span>
+            </div>
+            <div class="modal-body">
+                <label for="acetoneDateArray"></label>
+                <select class="btn-secondary dropdown-toggle" id="acetoneDateArray"
+                        onchange="selectAcetoneOption()"></select>
+                <div id="acetoneChartContainer">
+                    <canvas id="acetoneChart"></canvas>
+                </div>
+                <span style="color: #4CBB17">Below 400ppm = Safe Levels of Smoke &#128516;</span>
+                <br>
+                <span style="color: #FFA500">400ppm - 799ppm = Alarming Levels of Smoke &#128567;</span>
+                <br>
+                <span style="color: #bd1816">Above or Equals 800ppm = Hazardous Levels of Smoke &#128128;</span>
+            </div>
+        </div>
+    </div>
+
     <!--    modal for lpg dashboard-->
-    <div id="lpgModal" class="modal">
+    <div id="LPGModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Liquefied Petroleum Gas Dashboard</h2>
@@ -208,7 +234,7 @@
     </div>
 
     <!--    modal for carbon monoxide dashboard-->
-    <div id="coModal" class="modal">
+    <div id="COModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Carbon Monoxide Dashboard</h2>
@@ -254,7 +280,7 @@
     <div class="row" style="justify-content: space-between;">
         <div id="temperatureIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
-          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+          box-shadow: 5px 5px 5px grey; margin-right: 3%;">
             <h5 style="color: #fff;">Temperature &#127777;</h5>
             <h1 id="latestTemperature" style="color: #fff;"></h1>
         </div>
@@ -264,42 +290,55 @@
             <h5 style="color: #fff;">Humidity &#128167;</h5>
             <h1 id="latestHumidity" style="color: #fff;"></h1>
         </div>
-        <div id="alcoholIndicator" class="col-md-3" style="background-color:
-          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
-          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">Alcohol &#128168;</h5>
-            <h1 id="latestAlcohol" style="color: #fff;"></h1>
-        </div>
-    </div>
-
-    <div class="row mt-5" style="justify-content: space-between;">
-        <div id="ammoniaIndicator" class="col-md-3" style="background-color:
-          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
-          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">Ammonia &#128684;</h5>
-            <h1 id="latestAmmonia" style="color: #fff;"></h1>
-        </div>
-        <div id="lpgIndicator" class="col-md-3" style="background-color:
-          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
-          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">Liquefied Petroleum Gas &#9981;</h5>
-            <h1 id="latestLPG" style="color: #fff;"></h1>
-        </div>
-        <div id="COIndicator" class="col-md-3" style="background-color:
-          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
-          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">Carbon Monoxide &#128168;</h5>
-            <h1 id="latestCO" style="color: #fff;"></h1>
-        </div>
-    </div>
-
-    <div class="row mt-5">
         <div id="PM25Indicator" class="col-md-3" style="background-color:
         #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
         box-shadow: 5px 5px 5px grey; margin-right: 2%;">
             <h5 style="color: #fff;">PM2.5 Particulate&#128173;</h5>
             <h1 id="latestPM25" style="color: #fff;"></h1>
         </div>
+    </div>
+
+    <div class="row mt-5" style="justify-content: space-between;">
+        <div id="alcoholIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <!--            <h5 style="color: #fff;">Alcohol &#127866;</h5>-->
+            <h5 style="color: #fff;">Alcohol (C<sub>2</sub>H<sub>5</sub>OH)</h5>
+
+            <h1 id="latestAlcohol" style="color: #fff;"></h1>
+        </div>
+        <div id="ammoniaIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <h5 style="color: #fff;">Ammonia (NH<sub>3</sub>)</h5>
+<!--            <h5 style="color: #fff;">Ammonia &#128701;</h5>-->
+            <h1 id="latestAmmonia" style="color: #fff;"></h1>
+        </div>
+        <div id="acetoneIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <h5 style="color: #fff;">Acetone (C<sub>3</sub>H<sub>6</sub>O)</h5>
+            <h1 id="latestAcetone" style="color: #fff;"></h1>
+        </div>
+
+    </div>
+
+    <div class="row mt-5" style="justify-content: center;">
+        <div id="LPGIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 15%;">
+            <!--            <h5 style="color: #fff;">Liquefied Petroleum Gas &#9981;</h5>-->
+            <h5 style="color: #fff;">Liquefied Petroleum Gas (C<sub>3</sub>H<sub>8</sub>)</h5>
+
+            <h1 id="latestLPG" style="color: #fff;"></h1>
+        </div>
+        <div id="COIndicator" class="col-md-3" style="background-color:
+          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
+            <h5 style="color: #fff;">Carbon Monoxide (CO)</h5>
+            <h1 id="latestCO" style="color: #fff;"></h1>
+        </div>
+
     </div>
     <script>
         // sort(dateComparison) to sort date array from oldest to latest
@@ -541,6 +580,61 @@
             });
         }
 
+        function selectAcetoneOption() {
+            var selectedAcetoneDate = document.getElementById("acetoneDateArray").value;
+            let selectedDayAcetone = 'MQ135/Acetone/' + selectedAcetoneDate;
+            firebase.database().ref(selectedDayAcetone).on('value', (snap) => {
+                var acetoneStr = snap.val();
+                var acetoneArray = [];
+
+                Object.keys(acetoneStr).forEach((key) => {
+                    acetoneArray.push({[key]: acetoneStr[key]});
+                });
+
+                var iterator = acetoneArray.values();
+                var timeArray = [];
+                var acetoneValueArray = [];
+                for (let elements of iterator) {
+                    timeArray.push(Object.keys(elements).toString());
+                    let cleanAcetone = JSON.stringify(Object.values(elements));
+                    cleanAcetone = cleanAcetone.split(":").pop();
+                    cleanAcetone = cleanAcetone.replaceAll("\"", "");
+                    cleanAcetone = cleanAcetone.replaceAll("}", "");
+                    cleanAcetone = cleanAcetone.replaceAll("]", "");
+                    acetoneValueArray.push(cleanAcetone);
+                }
+
+                document.getElementById("acetoneChartContainer").innerHTML = "";
+                document.getElementById('acetoneChartContainer').innerHTML = "<canvas id=\"acetoneChart\"></canvas>";
+                new Chart("acetoneChart", {
+                    type: "line",
+                    data: {
+                        labels: timeArray,
+                        datasets: [{
+                            fill: false,
+                            lineTension: 0,
+                            backgroundColor: "rgba(0,0,255,1.0)",
+                            borderColor: "rgba(0,0,255,0.1)",
+                            data: acetoneValueArray
+                        }]
+                    },
+                    options: {
+                        legend: {display: false},
+                        scales: {
+                            yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                            xAxes: [{
+                                ticks: {
+                                    display: true,
+                                    autoSkip: true,
+                                    maxTicksLimit: 24
+                                }
+                            }],
+                        }
+                    }
+                });
+            });
+        }
+
         function selectLPGOption() {
             var selectedLPGDate = document.getElementById("LPGDateArray").value;
             let selectedDayLPG = 'MQ2/LPG/' + selectedLPGDate;
@@ -710,18 +804,20 @@
                 var temperatureModal = document.getElementById("temperatureModal");
                 var humidityModal = document.getElementById("humidityModal");
                 var alcoholModal = document.getElementById("alcoholModal");
-                var PM25Modal = document.getElementById("PM25Modal");
                 var ammoniaModal = document.getElementById("ammoniaModal");
-                var lpgModal = document.getElementById("lpgModal");
-                var coModal = document.getElementById("coModal");
+                var acetoneModal = document.getElementById("acetoneModal");
+                var LPGModal = document.getElementById("LPGModal");
+                var COModal = document.getElementById("COModal");
+                var PM25Modal = document.getElementById("PM25Modal");
 
                 var temperatureBtn = document.getElementById("temperatureIndicator");
                 var humidityBtn = document.getElementById("humidityIndicator");
                 var alcoholBtn = document.getElementById("alcoholIndicator");
-                var PM25Btn = document.getElementById("PM25Indicator");
                 var ammoniaBtn = document.getElementById("ammoniaIndicator");
-                var lpgBtn = document.getElementById("lpgIndicator");
-                var coBtn = document.getElementById("COIndicator");
+                var acetoneBtn = document.getElementById("acetoneIndicator");
+                var LPGBtn = document.getElementById("LPGIndicator");
+                var COBtn = document.getElementById("COIndicator");
+                var PM25Btn = document.getElementById("PM25Indicator");
 
                 var span1 = document.getElementsByClassName("close")[0];
                 var span2 = document.getElementsByClassName("close")[1];
@@ -730,8 +826,10 @@
                 var span5 = document.getElementsByClassName("close")[4];
                 var span6 = document.getElementsByClassName("close")[5];
                 var span7 = document.getElementsByClassName("close")[6];
+                var span8 = document.getElementsByClassName("close")[7];
 
-                // show modal after clicking data indicator
+
+            // show modal after clicking data indicator
                 temperatureBtn.onclick = function () {
                     temperatureModal.style.display = "block";
                 }
@@ -752,12 +850,16 @@
                     ammoniaModal.style.display = "block";
                 }
 
-                lpgBtn.onclick = function () {
-                    lpgModal.style.display = "block";
+                acetoneBtn.onclick = function () {
+                    acetoneModal.style.display = "block";
                 }
 
-                coBtn.onclick = function () {
-                    coModal.style.display = "block";
+                LPGBtn.onclick = function () {
+                    LPGModal.style.display = "block";
+                }
+
+                COBtn.onclick = function () {
+                    COModal.style.display = "block";
                 }
 
                 // close modal after clicking "x" (close) modal button
@@ -778,14 +880,18 @@
                 }
 
                 span5.onclick = function () {
-                    lpgModal.style.display = "none";
+                    acetoneModal.style.display = "none";
                 }
 
                 span6.onclick = function () {
-                    coModal.style.display = "none";
+                    LPGModal.style.display = "none";
                 }
 
                 span7.onclick = function () {
+                    COModal.style.display = "none";
+                }
+
+                span8.onclick = function () {
                     PM25Modal.style.display = "none";
                 }
 
@@ -806,11 +912,14 @@
                     if (event.target === ammoniaModal) {
                         ammoniaModal.style.display = "none";
                     }
-                    if (event.target === coModal) {
-                        coModal.style.display = "none";
+                    if (event.target === acetoneModal) {
+                        acetoneModal.style.display = "none";
                     }
-                    if (event.target === lpgModal) {
-                        lpgModal.style.display = "none";
+                    if (event.target === COModal) {
+                        COModal.style.display = "none";
+                    }
+                    if (event.target === LPGModal) {
+                        LPGModal.style.display = "none";
                     }
                 }
 
@@ -822,34 +931,18 @@
                 var PM25Days;
                 var LPGDays;
                 var ammoniaDays;
+                var acetoneDays;
                 var CODays;
+                var firebaseDays = document.getElementById("firebaseDateArray");
 
                 var temperatureDateSelect = document.getElementById("temperatureDateArray");
                 var humidityDateSelect = document.getElementById("humidityDateArray");
                 var alcoholDateSelect = document.getElementById("alcoholDateArray");
                 var ammoniaDateSelect = document.getElementById("ammoniaDateArray");
+                var acetoneDateSelect = document.getElementById("acetoneDateArray");
                 var LPGDateSelect = document.getElementById("LPGDateArray");
                 var CODateSelect = document.getElementById("CODateArray");
                 var PM25DateSelect = document.getElementById("PM25DateArray");
-
-                var firebaseDays = document.getElementById("firebaseDateArray");
-
-                await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
-                    temperatureDays = snap.val();
-                    temperatureDays = Object.keys(temperatureDays);
-                    // sort temperature date array from latest to oldest
-                    temperatureDays.sort(dateComparison);
-                    // load temperature date data into temperature date drop-down menu
-                    for (var i = 0; i < temperatureDays.length; i++) {
-                        var option = temperatureDays[i];
-                        var element = document.createElement("option");
-                        element.textContent = option;
-                        element.value = option;
-                        temperatureDateSelect.prepend(element);
-                    }
-                    // select latest temperature date by default
-                    document.getElementById("temperatureDateArray").selectedIndex = "0";
-                });
 
                 var date;
                 var previousDateCount;
@@ -898,11 +991,29 @@
                 let currentDayHumidity = 'DHT11/Humidity/' + date;
                 let currentDayAlcohol = 'MQ135/Alcohol/' + date;
                 let currentDayAmmonia = 'MQ135/Ammonia/' + date;
+                let currentDayAcetone = 'MQ135/Acetone/' + date;
                 let currentDayLPG = 'MQ2/LPG/' + date;
                 let currentDayCO = 'MQ2/CO/' + date;
                 let currentDayPM25 = 'DSM501A/PM25/' + date;
 
                 var timeStr;
+
+                await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
+                temperatureDays = snap.val();
+                temperatureDays = Object.keys(temperatureDays);
+                // sort temperature date array from latest to oldest
+                temperatureDays.sort(dateComparison);
+                // load temperature date data into temperature date drop-down menu
+                for (var i = 0; i < temperatureDays.length; i++) {
+                    var option = temperatureDays[i];
+                    var element = document.createElement("option");
+                    element.textContent = option;
+                    element.value = option;
+                    temperatureDateSelect.prepend(element);
+                }
+                // select latest temperature date by default
+                document.getElementById("temperatureDateArray").selectedIndex = "0";
+            });
 
                 firebase.database().ref(currentDayTemperature).on('value', (snap) => {
                     var temperatureStr = snap.val();
@@ -926,16 +1037,19 @@
 
                     // compare latest temperature value
                     if (jsonTemperatureValue > 26) {
-                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#128293';
+                        // jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#128293';
+                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#129397';
                         document.getElementById("temperatureIndicator").style.backgroundColor = "#bd1816";
                     }
                     if (jsonTemperatureValue >= 23 && jsonTemperatureValue <= 26) {
-                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#127777';
+                        // jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#127777';
+                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#128516';
                         document.getElementById("temperatureIndicator").style.backgroundColor = "#4CBB17";
                     }
-                    if (jsonTemperatureValue <= 22) {
-                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#x2744';
-                        document.getElementById("temperatureIndicator").style.backgroundColor = "#71A6D1";
+                    if (jsonTemperatureValue < 23) {
+                        // jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#x2744';
+                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#129398';
+                        document.getElementById("temperatureIndicator").style.backgroundColor = "#00AEEF";
                     }
 
                     // latest temperature value
@@ -985,6 +1099,7 @@
                             options: {
                                 legend: {display: false},
                                 scales: {
+                                    // 
                                     yAxes: [{ticks: {min: 10.00, max: 45.00}}],
                                     // limit x axis to 24 ticks
                                     xAxes: [{
@@ -1200,96 +1315,6 @@
                     }
                 });
 
-                await firebase.database().ref('DSM501A/PM25/').once('value', (snap) => {
-                    PM25Days = snap.val();
-                    PM25Days = Object.keys(PM25Days);
-                    PM25Days.sort(dateComparison);
-                    for (var i = 0; i < PM25Days.length; i++) {
-                        var option = PM25Days[i];
-                        var element = document.createElement("option");
-                        element.textContent = option;
-                        element.value = option;
-                        PM25DateSelect.prepend(element);
-                    }
-                    document.getElementById("PM25DateArray").selectedIndex = "0";
-                });
-
-                firebase.database().ref(currentDayPM25).on('value', (snap) => {
-                    var PM25Str = snap.val();
-                    var PM25Array = [];
-                    Object.keys(PM25Str).forEach((key) => {
-                        PM25Array.push({[key]: PM25Str[key]});
-                    });
-
-                    var latestPM25 = PM25Array[PM25Array.length - 1];
-                    var PM25Value = Object.values(latestPM25);
-                    var jsonPM25Value = JSON.stringify(PM25Value);
-
-                    jsonPM25Value = jsonPM25Value.split(":").pop();
-                    jsonPM25Value = jsonPM25Value.replaceAll("\"", "");
-                    jsonPM25Value = jsonPM25Value.replaceAll("}", "");
-                    jsonPM25Value = jsonPM25Value.replaceAll("]", "");
-
-                    if (jsonPM25Value >= 8) {
-                        jsonPM25Value = jsonPM25Value + 'ppm' + '&#128128;';
-                        document.getElementById("PM25Indicator").style.backgroundColor = "#bd1816";
-                    }
-                    if (jsonPM25Value >= 5 && jsonPM25Value <= 7) {
-                        jsonPM25Value = jsonPM25Value + 'ppm' + '&#128567;';
-                        document.getElementById("PM25Indicator").style.backgroundColor = "#FFA500";
-                    }
-                    if (jsonPM25Value <= 4) {
-                        jsonPM25Value = jsonPM25Value + 'ppm' + '&#128516;';
-                        document.getElementById("PM25Indicator").style.backgroundColor = "#4CBB17";
-                    }
-
-                    document.getElementById('latestPM25').innerHTML = jsonPM25Value;
-
-                    var iterator = PM25Array.values();
-                    var timeArray = [];
-                    var PM25ValueArray = [];
-                    for (let elements of iterator) {
-                        timeArray.push(Object.keys(elements).toString());
-                        let cleanPM25 = JSON.stringify(Object.values(elements));
-                        cleanPM25 = cleanPM25.split(":").pop();
-                        cleanPM25 = cleanPM25.replaceAll("\"", "");
-                        cleanPM25 = cleanPM25.replaceAll("}", "");
-                        cleanPM25 = cleanPM25.replaceAll("]", "");
-                        PM25ValueArray.push(cleanPM25);
-                    }
-
-                    if (document.getElementById("PM25DateArray").value === date) {
-                        document.getElementById("PM25ChartContainer").innerHTML = "";
-                        document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
-                        new Chart("PM25Chart", {
-                            type: "line",
-                            data: {
-                                labels: timeArray,
-                                datasets: [{
-                                    fill: false,
-                                    lineTension: 0,
-                                    backgroundColor: "rgba(0,0,255,1.0)",
-                                    borderColor: "rgba(0,0,255,0.1)",
-                                    data: PM25ValueArray
-                                }]
-                            },
-                            options: {
-                                legend: {display: false},
-                                scales: {
-                                    yAxes: [{ticks: {min: 0.00, max: 50.00}}],
-                                    xAxes: [{
-                                        ticks: {
-                                            display: true,
-                                            autoSkip: true,
-                                            maxTicksLimit: 24
-                                        }
-                                    }],
-                                }
-                            }
-                        });
-                    }
-                });
-
                 await firebase.database().ref('MQ135/Ammonia/').once('value', (snap) => {
                     ammoniaDays = snap.val();
                     ammoniaDays = Object.keys(ammoniaDays);
@@ -1381,6 +1406,97 @@
                     }
                 });
 
+                await firebase.database().ref('MQ135/Acetone/').once('value', (snap) => {
+                acetoneDays = snap.val();
+                acetoneDays = Object.keys(acetoneDays);
+                acetoneDays.sort(dateComparison);
+
+                for (var i = 0; i < acetoneDays.length; i++) {
+                    var option = acetoneDays[i];
+                    var element = document.createElement("option");
+                    element.textContent = option;
+                    element.value = option;
+                    acetoneDateSelect.prepend(element);
+                }
+                document.getElementById("acetoneDateArray").selectedIndex = "0";
+            });
+
+                firebase.database().ref(currentDayAcetone).on('value', (snap) => {
+                var acetoneStr = snap.val();
+                var acetoneArray = [];
+                Object.keys(acetoneStr).forEach((key) => {
+                    acetoneArray.push({[key]: acetoneStr[key]});
+                });
+
+                var latestAcetone = acetoneArray[acetoneArray.length - 1];
+                var acetoneValue = Object.values(latestAcetone);
+                var jsonAcetoneValue = JSON.stringify(acetoneValue);
+
+                jsonAcetoneValue = jsonAcetoneValue.split(":").pop();
+                jsonAcetoneValue = jsonAcetoneValue.replaceAll("\"", "");
+                jsonAcetoneValue = jsonAcetoneValue.replaceAll("}", "");
+                jsonAcetoneValue = jsonAcetoneValue.replaceAll("]", "");
+
+                if (jsonAcetoneValue >= 800) {
+                    jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128128;';
+                    document.getElementById("acetoneIndicator").style.backgroundColor = "#bd1816";
+                }
+                if (jsonAcetoneValue >= 400 && jsonAcetoneValue < 800) {
+                    jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128567;';
+                    document.getElementById("acetoneIndicator").style.backgroundColor = "	#FFA500";
+                }
+                if (jsonAcetoneValue < 400) {
+                    jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128516;';
+                    document.getElementById("acetoneIndicator").style.backgroundColor = "#4CBB17";
+                }
+
+                document.getElementById('latestAcetone').innerHTML = jsonAcetoneValue;
+                var iterator = acetoneArray.values();
+
+                var timeArray = [];
+                var acetoneValueArray = [];
+                for (let elements of iterator) {
+                    timeArray.push(Object.keys(elements).toString());
+                    let cleanAcetone = JSON.stringify(Object.values(elements));
+                    cleanAcetone = cleanAcetone.split(":").pop();
+                    cleanAcetone = cleanAcetone.replaceAll("\"", "");
+                    cleanAcetone = cleanAcetone.replaceAll("}", "");
+                    cleanAcetone = cleanAcetone.replaceAll("]", "");
+                    acetoneValueArray.push(cleanAcetone);
+                }
+
+                if (document.getElementById("acetoneDateArray").value === date) {
+                    document.getElementById("acetoneChartContainer").innerHTML = "";
+                    document.getElementById('acetoneChartContainer').innerHTML = "<canvas id=\"acetoneChart\"></canvas>";
+                    new Chart("acetoneChart", {
+                        type: "line",
+                        data: {
+                            labels: timeArray,
+                            datasets: [{
+                                fill: false,
+                                lineTension: 0,
+                                backgroundColor: "rgba(0,0,255,1.0)",
+                                borderColor: "rgba(0,0,255,0.1)",
+                                data: acetoneValueArray
+                            }]
+                        },
+                        options: {
+                            legend: {display: false},
+                            scales: {
+                                yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                                xAxes: [{
+                                    ticks: {
+                                        display: true,
+                                        autoSkip: true,
+                                        maxTicksLimit: 24
+                                    }
+                                }],
+                            }
+                        }
+                    });
+                }
+            });
+
                 await firebase.database().ref('MQ2/LPG/').once('value', (snap) => {
                     LPGDays = snap.val();
                     LPGDays = Object.keys(LPGDays);
@@ -1414,15 +1530,15 @@
 
                     if (jsonLPGValue >= 1000) {
                         jsonLPGValue = jsonLPGValue + 'ppm' + '&#128128;';
-                        document.getElementById("lpgIndicator").style.backgroundColor = "#bd1816";
+                        document.getElementById("LPGIndicator").style.backgroundColor = "#bd1816";
                     }
                     if (jsonLPGValue >= 500 && jsonLPGValue < 1000) {
                         jsonLPGValue = jsonLPGValue + 'ppm' + '&#128567;';
-                        document.getElementById("lpgIndicator").style.backgroundColor = "#FFA500";
+                        document.getElementById("LPGIndicator").style.backgroundColor = "#FFA500";
                     }
                     if (jsonLPGValue < 500) {
                         jsonLPGValue = jsonLPGValue + 'ppm' + '&#128516;';
-                        document.getElementById("lpgIndicator").style.backgroundColor = "#4CBB17";
+                        document.getElementById("LPGIndicator").style.backgroundColor = "#4CBB17";
                     }
 
                     document.getElementById('latestLPG').innerHTML = jsonLPGValue;
@@ -1563,6 +1679,96 @@
                         });
                     }
                 });
+
+                await firebase.database().ref('DSM501A/PM25/').once('value', (snap) => {
+                PM25Days = snap.val();
+                PM25Days = Object.keys(PM25Days);
+                PM25Days.sort(dateComparison);
+                for (var i = 0; i < PM25Days.length; i++) {
+                    var option = PM25Days[i];
+                    var element = document.createElement("option");
+                    element.textContent = option;
+                    element.value = option;
+                    PM25DateSelect.prepend(element);
+                }
+                document.getElementById("PM25DateArray").selectedIndex = "0";
+            });
+
+                firebase.database().ref(currentDayPM25).on('value', (snap) => {
+                var PM25Str = snap.val();
+                var PM25Array = [];
+                Object.keys(PM25Str).forEach((key) => {
+                    PM25Array.push({[key]: PM25Str[key]});
+                });
+
+                var latestPM25 = PM25Array[PM25Array.length - 1];
+                var PM25Value = Object.values(latestPM25);
+                var jsonPM25Value = JSON.stringify(PM25Value);
+
+                jsonPM25Value = jsonPM25Value.split(":").pop();
+                jsonPM25Value = jsonPM25Value.replaceAll("\"", "");
+                jsonPM25Value = jsonPM25Value.replaceAll("}", "");
+                jsonPM25Value = jsonPM25Value.replaceAll("]", "");
+
+                if (jsonPM25Value >= 8) {
+                    jsonPM25Value = jsonPM25Value + 'ppm' + '&#128128;';
+                    document.getElementById("PM25Indicator").style.backgroundColor = "#bd1816";
+                }
+                if (jsonPM25Value >= 5 && jsonPM25Value <= 7) {
+                    jsonPM25Value = jsonPM25Value + 'ppm' + '&#128567;';
+                    document.getElementById("PM25Indicator").style.backgroundColor = "#FFA500";
+                }
+                if (jsonPM25Value <= 4) {
+                    jsonPM25Value = jsonPM25Value + 'ppm' + '&#128516;';
+                    document.getElementById("PM25Indicator").style.backgroundColor = "#4CBB17";
+                }
+
+                document.getElementById('latestPM25').innerHTML = jsonPM25Value;
+
+                var iterator = PM25Array.values();
+                var timeArray = [];
+                var PM25ValueArray = [];
+                for (let elements of iterator) {
+                    timeArray.push(Object.keys(elements).toString());
+                    let cleanPM25 = JSON.stringify(Object.values(elements));
+                    cleanPM25 = cleanPM25.split(":").pop();
+                    cleanPM25 = cleanPM25.replaceAll("\"", "");
+                    cleanPM25 = cleanPM25.replaceAll("}", "");
+                    cleanPM25 = cleanPM25.replaceAll("]", "");
+                    PM25ValueArray.push(cleanPM25);
+                }
+
+                if (document.getElementById("PM25DateArray").value === date) {
+                    document.getElementById("PM25ChartContainer").innerHTML = "";
+                    document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
+                    new Chart("PM25Chart", {
+                        type: "line",
+                        data: {
+                            labels: timeArray,
+                            datasets: [{
+                                fill: false,
+                                lineTension: 0,
+                                backgroundColor: "rgba(0,0,255,1.0)",
+                                borderColor: "rgba(0,0,255,0.1)",
+                                data: PM25ValueArray
+                            }]
+                        },
+                        options: {
+                            legend: {display: false},
+                            scales: {
+                                yAxes: [{ticks: {min: 0.00, max: 50.00}}],
+                                xAxes: [{
+                                    ticks: {
+                                        display: true,
+                                        autoSkip: true,
+                                        maxTicksLimit: 24
+                                    }
+                                }],
+                            }
+                        }
+                    });
+                }
+            });
             }
         );
     </script>
