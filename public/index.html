@@ -137,19 +137,19 @@
         </div>
     </div>
 
-    <!--    modal for carbon dioxide dashboard-->
-    <div id="CO2Modal" class="modal">
+    <!--    modal for alcohol dashboard-->
+    <div id="alcoholModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Carbon Dioxide Dashboard</h2>
+                <h2>Alcohol Dashboard</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <label for="CO2DateArray"></label>
-                <select class="btn-secondary dropdown-toggle" id="CO2DateArray"
-                        onchange="selectCarbonDioxideOption()"></select>
-                <div id="CO2ChartContainer">
-                    <canvas id="CO2Chart"></canvas>
+                <label for="alcoholDateArray"></label>
+                <select class="btn-secondary dropdown-toggle" id="alcoholDateArray"
+                        onchange="selectAlcoholOption()"></select>
+                <div id="alcoholChartContainer">
+                    <canvas id="alcoholChart"></canvas>
                 </div>
                 <span style="color: #4CBB17">< 1000ppm: Safe Levels of CO2 &#128516;</span>
                 <br>
@@ -162,19 +162,19 @@
         </div>
     </div>
 
-    <!--    modal for smoke dashboard-->
-    <div id="smokeModal" class="modal">
+    <!--    modal for ammonia dashboard-->
+    <div id="ammoniaModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2>Smoke Dashboard</h2>
+                <h2>Ammonia Dashboard</h2>
                 <span class="close">&times;</span>
             </div>
             <div class="modal-body">
-                <label for="SmokeDateArray"></label>
-                <select class="btn-secondary dropdown-toggle" id="SmokeDateArray"
-                        onchange="selectSmokeOption()"></select>
-                <div id="smokeChartContainer">
-                    <canvas id="smokeChart"></canvas>
+                <label for="ammoniaDateArray"></label>
+                <select class="btn-secondary dropdown-toggle" id="ammoniaDateArray"
+                        onchange="selectAmmoniaOption()"></select>
+                <div id="ammoniaChartContainer">
+                    <canvas id="ammoniaChart"></canvas>
                 </div>
                 <span style="color: #4CBB17">Below 400ppm = Safe Levels of Smoke &#128516;</span>
                 <br>
@@ -264,20 +264,20 @@
             <h5 style="color: #fff;">Humidity &#128167;</h5>
             <h1 id="latestHumidity" style="color: #fff;"></h1>
         </div>
-        <div id="CO2Indicator" class="col-md-3" style="background-color:
+        <div id="alcoholIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
           box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">Carbon Dioxide &#128168;</h5>
-            <h1 id="latestCO2" style="color: #fff;"></h1>
+            <h5 style="color: #fff;">Alcohol &#128168;</h5>
+            <h1 id="latestAlcohol" style="color: #fff;"></h1>
         </div>
     </div>
 
     <div class="row mt-5" style="justify-content: space-between;">
-        <div id="smokeIndicator" class="col-md-3" style="background-color:
+        <div id="ammoniaIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
           box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">Smoke &#128684;</h5>
-            <h1 id="latestSmoke" style="color: #fff;"></h1>
+            <h5 style="color: #fff;">Ammonia &#128684;</h5>
+            <h1 id="latestAmmonia" style="color: #fff;"></h1>
         </div>
         <div id="lpgIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
@@ -302,7 +302,7 @@
         </div>
     </div>
     <script>
-        // sort(dateComparison) to sort date array from latest to oldest
+        // sort(dateComparison) to sort date array from oldest to latest
         function dateComparison(a, b) {
             const date1 = new Date(a)
             const date2 = new Date(b)
@@ -431,33 +431,33 @@
             });
         }
 
-        function selectCarbonDioxideOption() {
-            var selectedCO2Date = document.getElementById("CO2DateArray").value;
-            let selectedDayCO2 = 'MQ135/CO2/' + selectedCO2Date;
-            firebase.database().ref(selectedDayCO2).on('value', (snap) => {
-                var CO2Str = snap.val();
-                var CO2Array = [];
+        function selectAlcoholOption() {
+            var selectedAlcoholDate = document.getElementById("alcoholDateArray").value;
+            let selectedDayAlcohol = 'MQ135/Alcohol/' + selectedAlcoholDate;
+            firebase.database().ref(selectedDayAlcohol).on('value', (snap) => {
+                var alcoholStr = snap.val();
+                var alcoholArray = [];
 
-                Object.keys(CO2Str).forEach((key) => {
-                    CO2Array.push({[key]: CO2Str[key]});
+                Object.keys(alcoholStr).forEach((key) => {
+                    alcoholArray.push({[key]: alcoholStr[key]});
                 });
 
-                var iterator = CO2Array.values();
+                var iterator = alcoholArray.values();
                 var timeArray = [];
-                var CO2ValueArray = [];
+                var alcoholValueArray = [];
                 for (let elements of iterator) {
                     timeArray.push(Object.keys(elements).toString());
-                    let cleanCO2 = JSON.stringify(Object.values(elements));
-                    cleanCO2 = cleanCO2.split(":").pop();
-                    cleanCO2 = cleanCO2.replaceAll("\"", "");
-                    cleanCO2 = cleanCO2.replaceAll("}", "");
-                    cleanCO2 = cleanCO2.replaceAll("]", "");
-                    CO2ValueArray.push(cleanCO2);
+                    let cleanAlcohol = JSON.stringify(Object.values(elements));
+                    cleanAlcohol = cleanAlcohol.split(":").pop();
+                    cleanAlcohol = cleanAlcohol.replaceAll("\"", "");
+                    cleanAlcohol = cleanAlcohol.replaceAll("}", "");
+                    cleanAlcohol = cleanAlcohol.replaceAll("]", "");
+                    alcoholValueArray.push(cleanAlcohol);
                 }
 
-                document.getElementById("CO2ChartContainer").innerHTML = "";
-                document.getElementById('CO2ChartContainer').innerHTML = "<canvas id=\"CO2Chart\"></canvas>";
-                new Chart("CO2Chart", {
+                document.getElementById("alcoholChartContainer").innerHTML = "";
+                document.getElementById('alcoholChartContainer').innerHTML = "<canvas id=\"alcoholChart\"></canvas>";
+                new Chart("alcoholChart", {
                     type: "line",
                     data: {
                         labels: timeArray,
@@ -466,7 +466,7 @@
                             lineTension: 0,
                             backgroundColor: "rgba(0,0,255,1.0)",
                             borderColor: "rgba(0,0,255,0.1)",
-                            data: CO2ValueArray
+                            data: alcoholValueArray
                         }]
                     },
                     options: {
@@ -486,33 +486,33 @@
             });
         }
 
-        function selectSmokeOption() {
-            var selectedSmokeDate = document.getElementById("SmokeDateArray").value;
-            let selectedDaySmoke = 'MQ2/Smoke/' + selectedSmokeDate;
-            firebase.database().ref(selectedDaySmoke).on('value', (snap) => {
-                var smokeStr = snap.val();
-                var smokeArray = [];
+        function selectAmmoniaOption() {
+            var selectedAmmoniaDate = document.getElementById("ammoniaDateArray").value;
+            let selectedDayAmmonia = 'MQ135/Ammonia/' + selectedAmmoniaDate;
+            firebase.database().ref(selectedDayAmmonia).on('value', (snap) => {
+                var ammoniaStr = snap.val();
+                var ammoniaArray = [];
 
-                Object.keys(smokeStr).forEach((key) => {
-                    smokeArray.push({[key]: smokeStr[key]});
+                Object.keys(ammoniaStr).forEach((key) => {
+                    ammoniaArray.push({[key]: ammoniaStr[key]});
                 });
 
-                var iterator = smokeArray.values();
+                var iterator = ammoniaArray.values();
                 var timeArray = [];
-                var smokeValueArray = [];
+                var ammoniaValueArray = [];
                 for (let elements of iterator) {
                     timeArray.push(Object.keys(elements).toString());
-                    let cleanSmoke = JSON.stringify(Object.values(elements));
-                    cleanSmoke = cleanSmoke.split(":").pop();
-                    cleanSmoke = cleanSmoke.replaceAll("\"", "");
-                    cleanSmoke = cleanSmoke.replaceAll("}", "");
-                    cleanSmoke = cleanSmoke.replaceAll("]", "");
-                    smokeValueArray.push(cleanSmoke);
+                    let cleanAmmonia = JSON.stringify(Object.values(elements));
+                    cleanAmmonia = cleanAmmonia.split(":").pop();
+                    cleanAmmonia = cleanAmmonia.replaceAll("\"", "");
+                    cleanAmmonia = cleanAmmonia.replaceAll("}", "");
+                    cleanAmmonia = cleanAmmonia.replaceAll("]", "");
+                    ammoniaValueArray.push(cleanAmmonia);
                 }
 
-                document.getElementById("smokeChartContainer").innerHTML = "";
-                document.getElementById('smokeChartContainer').innerHTML = "<canvas id=\"smokeChart\"></canvas>";
-                new Chart("smokeChart", {
+                document.getElementById("ammoniaChartContainer").innerHTML = "";
+                document.getElementById('ammoniaChartContainer').innerHTML = "<canvas id=\"ammoniaChart\"></canvas>";
+                new Chart("ammoniaChart", {
                     type: "line",
                     data: {
                         labels: timeArray,
@@ -521,7 +521,7 @@
                             lineTension: 0,
                             backgroundColor: "rgba(0,0,255,1.0)",
                             borderColor: "rgba(0,0,255,0.1)",
-                            data: smokeValueArray
+                            data: ammoniaValueArray
                         }]
                     },
                     options: {
@@ -709,17 +709,17 @@
         document.addEventListener('DOMContentLoaded', async function () {
                 var temperatureModal = document.getElementById("temperatureModal");
                 var humidityModal = document.getElementById("humidityModal");
-                var CO2Modal = document.getElementById("CO2Modal");
+                var alcoholModal = document.getElementById("alcoholModal");
                 var PM25Modal = document.getElementById("PM25Modal");
-                var smokeModal = document.getElementById("smokeModal");
+                var ammoniaModal = document.getElementById("ammoniaModal");
                 var lpgModal = document.getElementById("lpgModal");
                 var coModal = document.getElementById("coModal");
 
                 var temperatureBtn = document.getElementById("temperatureIndicator");
                 var humidityBtn = document.getElementById("humidityIndicator");
-                var CO2Btn = document.getElementById("CO2Indicator");
+                var alcoholBtn = document.getElementById("alcoholIndicator");
                 var PM25Btn = document.getElementById("PM25Indicator");
-                var smokeBtn = document.getElementById("smokeIndicator");
+                var ammoniaBtn = document.getElementById("ammoniaIndicator");
                 var lpgBtn = document.getElementById("lpgIndicator");
                 var coBtn = document.getElementById("COIndicator");
 
@@ -740,16 +740,16 @@
                     humidityModal.style.display = "block";
                 }
 
-                CO2Btn.onclick = function () {
-                    CO2Modal.style.display = "block";
+                alcoholBtn.onclick = function () {
+                    alcoholModal.style.display = "block";
                 }
 
                 PM25Btn.onclick = function () {
                     PM25Modal.style.display = "block";
                 }
 
-                smokeBtn.onclick = function () {
-                    smokeModal.style.display = "block";
+                ammoniaBtn.onclick = function () {
+                    ammoniaModal.style.display = "block";
                 }
 
                 lpgBtn.onclick = function () {
@@ -770,11 +770,11 @@
                 }
 
                 span3.onclick = function () {
-                    CO2Modal.style.display = "none";
+                    alcoholModal.style.display = "none";
                 }
 
                 span4.onclick = function () {
-                    smokeModal.style.display = "none";
+                    ammoniaModal.style.display = "none";
                 }
 
                 span5.onclick = function () {
@@ -797,14 +797,14 @@
                     if (event.target === humidityModal) {
                         humidityModal.style.display = "none";
                     }
-                    if (event.target === CO2Modal) {
-                        CO2Modal.style.display = "none";
+                    if (event.target === alcoholModal) {
+                        alcoholModal.style.display = "none";
                     }
                     if (event.target === PM25Modal) {
                         PM25Modal.style.display = "none";
                     }
-                    if (event.target === smokeModal) {
-                        smokeModal.style.display = "none";
+                    if (event.target === ammoniaModal) {
+                        ammoniaModal.style.display = "none";
                     }
                     if (event.target === coModal) {
                         coModal.style.display = "none";
@@ -818,16 +818,16 @@
 
                 var temperatureDays;
                 var humidityDays;
-                var CO2Days;
+                var alcoholDays;
                 var PM25Days;
                 var LPGDays;
-                var smokeDays;
+                var ammoniaDays;
                 var CODays;
 
                 var temperatureDateSelect = document.getElementById("temperatureDateArray");
                 var humidityDateSelect = document.getElementById("humidityDateArray");
-                var CO2DateSelect = document.getElementById("CO2DateArray");
-                var smokeDateSelect = document.getElementById("SmokeDateArray");
+                var alcoholDateSelect = document.getElementById("alcoholDateArray");
+                var ammoniaDateSelect = document.getElementById("ammoniaDateArray");
                 var LPGDateSelect = document.getElementById("LPGDateArray");
                 var CODateSelect = document.getElementById("CODateArray");
                 var PM25DateSelect = document.getElementById("PM25DateArray");
@@ -896,8 +896,8 @@
                 // latest data (latest date)
                 let currentDayTemperature = 'DHT11/Temperature/' + date;
                 let currentDayHumidity = 'DHT11/Humidity/' + date;
-                let currentDayCO2 = 'MQ135/CO2/' + date;
-                let currentDaySmoke = 'MQ2/Smoke/' + date;
+                let currentDayAlcohol = 'MQ135/Alcohol/' + date;
+                let currentDayAmmonia = 'MQ135/Ammonia/' + date;
                 let currentDayLPG = 'MQ2/LPG/' + date;
                 let currentDayCO = 'MQ2/CO/' + date;
                 let currentDayPM25 = 'DSM501A/PM25/' + date;
@@ -1093,85 +1093,85 @@
                     }
                 });
 
-                await firebase.database().ref('MQ135/CO2/').once('value', (snap) => {
-                    CO2Days = snap.val();
-                    CO2Days = Object.keys(CO2Days);
-                    CO2Days.sort(dateComparison);
-                    for (var i = 0; i < CO2Days.length; i++) {
-                        var option = CO2Days[i];
+                await firebase.database().ref('MQ135/Alcohol/').once('value', (snap) => {
+                    alcoholDays = snap.val();
+                    alcoholDays = Object.keys(alcoholDays);
+                    alcoholDays.sort(dateComparison);
+                    for (var i = 0; i < alcoholDays.length; i++) {
+                        var option = alcoholDays[i];
                         var element = document.createElement("option");
                         element.textContent = option;
                         element.value = option;
-                        CO2DateSelect.prepend(element);
+                        alcoholDateSelect.prepend(element);
                     }
-                    document.getElementById("CO2DateArray").selectedIndex = "0";
+                    document.getElementById("alcoholDateArray").selectedIndex = "0";
                 });
 
-                firebase.database().ref(currentDayCO2).on('value', (snap) => {
-                    var CO2Str = snap.val();
-                    var CO2Array = [];
-                    Object.keys(CO2Str).forEach((key) => {
-                        CO2Array.push({[key]: CO2Str[key]});
+                firebase.database().ref(currentDayAlcohol).on('value', (snap) => {
+                    var alcoholStr = snap.val();
+                    var alcoholArray = [];
+                    Object.keys(alcoholStr).forEach((key) => {
+                        alcoholArray.push({[key]: alcoholStr[key]});
                     });
 
-                    var latestCO2 = CO2Array[CO2Array.length - 1];
-                    var CO2Value = Object.values(latestCO2);
-                    var jsonCO2Value = JSON.stringify(CO2Value);
+                    var latestAlcohol = alcoholArray[alcoholArray.length - 1];
+                    var alcoholValue = Object.values(latestAlcohol);
+                    var jsonAlcoholValue = JSON.stringify(alcoholValue);
 
-                    jsonCO2Value = jsonCO2Value.split(":").pop();
-                    jsonCO2Value = jsonCO2Value.replaceAll("\"", "");
-                    jsonCO2Value = jsonCO2Value.replaceAll("}", "");
-                    jsonCO2Value = jsonCO2Value.replaceAll("]", "");
+                    jsonAlcoholValue = jsonAlcoholValue.split(":").pop();
+                    jsonAlcoholValue = jsonAlcoholValue.replaceAll("\"", "");
+                    jsonAlcoholValue = jsonAlcoholValue.replaceAll("}", "");
+                    jsonAlcoholValue = jsonAlcoholValue.replaceAll("]", "");
 
                     // if (jsonCO2Value >= 800) {
                     //     jsonCO2Value = jsonCO2Value + 'ppm' + '&#128128;';
-                    //     document.getElementById("CO2Indicator").style.backgroundColor = "#bd1816";
+                    //     document.getElementById("alcoholIndicator").style.backgroundColor = "#bd1816";
                     // }
                     // if (jsonCO2Value >= 600 && jsonCO2Value <= 799) {
                     //     jsonCO2Value = jsonCO2Value + 'ppm' + '&#128567;';
-                    //     document.getElementById("CO2Indicator").style.backgroundColor = "#FFA500";
+                    //     document.getElementById("alcoholIndicator").style.backgroundColor = "#FFA500";
                     // }
                     // if (jsonCO2Value <= 599) {
                     //     jsonCO2Value = jsonCO2Value + 'ppm' + '&#128516;';
-                    //     document.getElementById("CO2Indicator").style.backgroundColor = "#4CBB17";
+                    //     document.getElementById("alcoholIndicator").style.backgroundColor = "#4CBB17";
                     // }
 
-                    if (jsonCO2Value >= 40000) {
-                        jsonCO2Value = jsonCO2Value + 'ppm' + '&#128128;';
-                        document.getElementById("CO2Indicator").style.backgroundColor = "#000000";
+                    if (jsonAlcoholValue >= 40000) {
+                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128128;';
+                        document.getElementById("alcoholIndicator").style.backgroundColor = "#000000";
                     }
-                    if (jsonCO2Value > 5000 && jsonCO2Value <= 39999) {
-                        jsonCO2Value = jsonCO2Value + 'ppm' + '&#128567;';
-                        document.getElementById("CO2Indicator").style.backgroundColor = "#bd1816";
+                    if (jsonAlcoholValue > 5000 && jsonAlcoholValue <= 39999) {
+                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128567;';
+                        document.getElementById("alcoholIndicator").style.backgroundColor = "#bd1816";
                     }
-                    if (jsonCO2Value >= 1000 && jsonCO2Value <= 5000) {
-                        jsonCO2Value = jsonCO2Value + 'ppm' + '&#128577;';
-                        document.getElementById("CO2Indicator").style.backgroundColor = "#FFA500";
+                    if (jsonAlcoholValue >= 1000 && jsonAlcoholValue <= 5000) {
+                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128577;';
+                        document.getElementById("alcoholIndicator").style.backgroundColor = "#FFA500";
                     }
-                    if (jsonCO2Value < 1000) {
-                        jsonCO2Value = jsonCO2Value + 'ppm' + '&#128516;';
-                        document.getElementById("CO2Indicator").style.backgroundColor = "#4CBB17";
+                    if (jsonAlcoholValue < 1000) {
+                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128516;';
+                        document.getElementById("alcoholIndicator").style.backgroundColor = "#4CBB17";
                     }
 
-                    document.getElementById('latestCO2').innerHTML = jsonCO2Value;
-                    var iterator = CO2Array.values();
+                    document.getElementById('latestAlcohol').innerHTML = jsonAlcoholValue;
+                    var iterator = alcoholArray.values();
 
                     var timeArray = [];
-                    var CO2ValueArray = [];
+                    var alcoholValueArray = [];
                     for (let elements of iterator) {
                         timeArray.push(Object.keys(elements).toString());
-                        let cleanCO2 = JSON.stringify(Object.values(elements));
-                        cleanCO2 = cleanCO2.split(":").pop();
-                        cleanCO2 = cleanCO2.replaceAll("\"", "");
-                        cleanCO2 = cleanCO2.replaceAll("}", "");
-                        cleanCO2 = cleanCO2.replaceAll("]", "");
-                        CO2ValueArray.push(cleanCO2);
+                        let cleanAlcohol = JSON.stringify(Object.values(elements));
+                        cleanAlcohol = cleanAlcohol.split(":").pop();
+                        cleanAlcohol = cleanAlcohol.replaceAll("\"", "");
+                        cleanAlcohol = cleanAlcohol.replaceAll("}", "");
+                        cleanAlcohol = cleanAlcohol.replaceAll("]", "");
+                        alcoholValueArray.push(cleanAlcohol);
                     }
 
-                    if (document.getElementById("CO2DateArray").value === date) {
-                        document.getElementById("CO2ChartContainer").innerHTML = "";
-                        document.getElementById('CO2ChartContainer').innerHTML = "<canvas id=\"CO2Chart\"></canvas>";
-                        new Chart("CO2Chart", {
+                    if (document.getElementById("alcoholDateArray").value === date) {
+                        document.getElementById("alcoholChartContainer").innerHTML = "";
+                        document.getElementById('alcoholChartContainer').innerHTML = "<canvas id=\"alcoholChart\"></canvas>";
+                        new Chart("alcoholChart", {
                             type: "line",
                             data: {
                                 labels: timeArray,
@@ -1180,7 +1180,7 @@
                                     lineTension: 0,
                                     backgroundColor: "rgba(0,0,255,1.0)",
                                     borderColor: "rgba(0,0,255,0.1)",
-                                    data: CO2ValueArray
+                                    data: alcoholValueArray
                                 }]
                             },
                             options: {
@@ -1290,69 +1290,69 @@
                     }
                 });
 
-                await firebase.database().ref('MQ2/Smoke/').once('value', (snap) => {
-                    smokeDays = snap.val();
-                    smokeDays = Object.keys(smokeDays);
-                    smokeDays.sort(dateComparison);
+                await firebase.database().ref('MQ135/Ammonia/').once('value', (snap) => {
+                    ammoniaDays = snap.val();
+                    ammoniaDays = Object.keys(ammoniaDays);
+                    ammoniaDays.sort(dateComparison);
 
-                    for (var i = 0; i < smokeDays.length; i++) {
-                        var option = smokeDays[i];
+                    for (var i = 0; i < ammoniaDays.length; i++) {
+                        var option = ammoniaDays[i];
                         var element = document.createElement("option");
                         element.textContent = option;
                         element.value = option;
-                        smokeDateSelect.prepend(element);
+                        ammoniaDateSelect.prepend(element);
                     }
-                    document.getElementById("SmokeDateArray").selectedIndex = "0";
+                    document.getElementById("ammoniaDateArray").selectedIndex = "0";
                 });
 
-                firebase.database().ref(currentDaySmoke).on('value', (snap) => {
-                    var smokeStr = snap.val();
-                    var smokeArray = [];
-                    Object.keys(smokeStr).forEach((key) => {
-                        smokeArray.push({[key]: smokeStr[key]});
+                firebase.database().ref(currentDayAmmonia).on('value', (snap) => {
+                    var ammoniaStr = snap.val();
+                    var ammoniaArray = [];
+                    Object.keys(ammoniaStr).forEach((key) => {
+                        ammoniaArray.push({[key]: ammoniaStr[key]});
                     });
 
-                    var latestSmoke = smokeArray[smokeArray.length - 1];
-                    var smokeValue = Object.values(latestSmoke);
-                    var jsonSmokeValue = JSON.stringify(smokeValue);
+                    var latestAmmonia = ammoniaArray[ammoniaArray.length - 1];
+                    var ammoniaValue = Object.values(latestAmmonia);
+                    var jsonAmmoniaValue = JSON.stringify(ammoniaValue);
 
-                    jsonSmokeValue = jsonSmokeValue.split(":").pop();
-                    jsonSmokeValue = jsonSmokeValue.replaceAll("\"", "");
-                    jsonSmokeValue = jsonSmokeValue.replaceAll("}", "");
-                    jsonSmokeValue = jsonSmokeValue.replaceAll("]", "");
+                    jsonAmmoniaValue = jsonAmmoniaValue.split(":").pop();
+                    jsonAmmoniaValue = jsonAmmoniaValue.replaceAll("\"", "");
+                    jsonAmmoniaValue = jsonAmmoniaValue.replaceAll("}", "");
+                    jsonAmmoniaValue = jsonAmmoniaValue.replaceAll("]", "");
 
-                    if (jsonSmokeValue >= 800) {
-                        jsonSmokeValue = jsonSmokeValue + 'ppm' + '&#128128;';
-                        document.getElementById("smokeIndicator").style.backgroundColor = "#bd1816";
+                    if (jsonAmmoniaValue >= 800) {
+                        jsonAmmoniaValue = jsonAmmoniaValue + 'ppm' + '&#128128;';
+                        document.getElementById("ammoniaIndicator").style.backgroundColor = "#bd1816";
                     }
-                    if (jsonSmokeValue >= 400 && jsonSmokeValue < 800) {
-                        jsonSmokeValue = jsonSmokeValue + 'ppm' + '&#128567;';
-                        document.getElementById("smokeIndicator").style.backgroundColor = "	#FFA500";
+                    if (jsonAmmoniaValue >= 400 && jsonAmmoniaValue < 800) {
+                        jsonAmmoniaValue = jsonAmmoniaValue + 'ppm' + '&#128567;';
+                        document.getElementById("ammoniaIndicator").style.backgroundColor = "	#FFA500";
                     }
-                    if (jsonSmokeValue < 400) {
-                        jsonSmokeValue = jsonSmokeValue + 'ppm' + '&#128516;';
-                        document.getElementById("smokeIndicator").style.backgroundColor = "#4CBB17";
+                    if (jsonAmmoniaValue < 400) {
+                        jsonAmmoniaValue = jsonAmmoniaValue + 'ppm' + '&#128516;';
+                        document.getElementById("ammoniaIndicator").style.backgroundColor = "#4CBB17";
                     }
 
-                    document.getElementById('latestSmoke').innerHTML = jsonSmokeValue;
-                    var iterator = smokeArray.values();
+                    document.getElementById('latestAmmonia').innerHTML = jsonAmmoniaValue;
+                    var iterator = ammoniaArray.values();
 
                     var timeArray = [];
-                    var smokeValueArray = [];
+                    var ammoniaValueArray = [];
                     for (let elements of iterator) {
                         timeArray.push(Object.keys(elements).toString());
-                        let cleanSmoke = JSON.stringify(Object.values(elements));
-                        cleanSmoke = cleanSmoke.split(":").pop();
-                        cleanSmoke = cleanSmoke.replaceAll("\"", "");
-                        cleanSmoke = cleanSmoke.replaceAll("}", "");
-                        cleanSmoke = cleanSmoke.replaceAll("]", "");
-                        smokeValueArray.push(cleanSmoke);
+                        let cleanAmmonia = JSON.stringify(Object.values(elements));
+                        cleanAmmonia = cleanAmmonia.split(":").pop();
+                        cleanAmmonia = cleanAmmonia.replaceAll("\"", "");
+                        cleanAmmonia = cleanAmmonia.replaceAll("}", "");
+                        cleanAmmonia = cleanAmmonia.replaceAll("]", "");
+                        ammoniaValueArray.push(cleanAmmonia);
                     }
 
-                    if (document.getElementById("SmokeDateArray").value === date) {
-                        document.getElementById("smokeChartContainer").innerHTML = "";
-                        document.getElementById('smokeChartContainer').innerHTML = "<canvas id=\"smokeChart\"></canvas>";
-                        new Chart("smokeChart", {
+                    if (document.getElementById("ammoniaDateArray").value === date) {
+                        document.getElementById("ammoniaChartContainer").innerHTML = "";
+                        document.getElementById('ammoniaChartContainer').innerHTML = "<canvas id=\"ammoniaChart\"></canvas>";
+                        new Chart("ammoniaChart", {
                             type: "line",
                             data: {
                                 labels: timeArray,
@@ -1361,7 +1361,7 @@
                                     lineTension: 0,
                                     backgroundColor: "rgba(0,0,255,1.0)",
                                     borderColor: "rgba(0,0,255,0.1)",
-                                    data: smokeValueArray
+                                    data: ammoniaValueArray
                                 }]
                             },
                             options: {
