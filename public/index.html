@@ -107,12 +107,15 @@
                 </div>
                 <span style="color: #00AEEF">< 23&#8451: Low Temperature &#129398;</span>
                 <br>
-                <!--                <span style="color: #4CBB17">23&#8451 - 26&#8451: Recommended Indoor Temperature &#127777;</span>-->
-                <span style="color: #4CBB17">23&#8451 - 26&#8451: Recommended Indoor Temperature &#128516;</span>
+                <span style="color: #4CBB17">23&#8451 - 26&#8451: Recommended Indoor Temperature &#128516; (Department of Standards Malaysia)</span>
                 <br>
-                <!--                <span style="color: #bd1816">> 26&#8451: High Temperature &#128293;</span>-->
                 <span style="color: #bd1816">> 26&#8451: High Temperature &#129397;</span>
-
+                <br>
+                <a href="http://www.mgbc.org.my/Downloads/08052018_MUIGBC2018_E-PROCEEDING_PAPER/20180508_3_Indoor_and_Outdoor_Environmental_Quality/8_Assessment_of_Indoor_Air_Temperature_of_a_Low_Cost_Single_Story_Detached_House.pdf">
+                <span style="color: #000000; margin-left: 69%">
+                    Department of Standards Malaysia &#128214;
+                </span>
+                </a>
             </div>
         </div>
     </div>
@@ -136,6 +139,12 @@
                 <span style="color: #FFA500">60% - 79%: Risk of Mold Growth &#128577;</span>
                 <br>
                 <span style="color: #bd1816">80% - 100%: High Risk of Mold Growth &#128543;</span>
+                <br>
+                <a href="https://indoorscience.com/blog/relative-humidity-and-mold/">
+                <span style="color: #000000; margin-left: 85%">
+                    IndoorScience &#128214;
+                </span>
+                </a>
             </div>
         </div>
     </div>
@@ -154,36 +163,19 @@
                 <div id="alcoholChartContainer">
                     <canvas id="alcoholChart"></canvas>
                 </div>
-                <span style="color: #4CBB17">< 1000ppm: Safe Levels of CO2 &#128516;</span>
+                <span style="color: #4CBB17">0ppm - 100ppm: Safe Levels of Alcohol &#128516;</span>
                 <br>
-                <span style="color: #FFA500">1000ppm - 5000ppm: Permissible Levels of CO2 &#128577; (OSHA 8-hour Permissible Exposure Limit: 5000ppm)</span>
+                <span style="color: #FFA500">> 100ppm - 200ppm: Permissible Levels of Alcohol &#128577; (ACGIH TLV - 8 Hours = 200ppm)</span>
                 <br>
-                <span style="color: #bd1816">5001ppm - 39999ppm: Uncomfortable Levels of CO2 &#128567;</span>
+                <span style="color: #bd1816">> 200ppm - 400ppm: Alarming Levels of Alcohol &#128567; (ACGIH TLV - 15 Minutes = 400ppm)</span>
                 <br>
-                <span style="color: #000000">>= 40000ppm: Hazardous Levels of CO2 &#128128;</span>
-            </div>
-        </div>
-    </div>
-
-    <!--    modal for ammonia dashboard-->
-    <div id="ammoniaModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Ammonia Dashboard</h2>
-                <span class="close">&times;</span>
-            </div>
-            <div class="modal-body">
-                <label for="ammoniaDateArray"></label>
-                <select class="btn-secondary dropdown-toggle" id="ammoniaDateArray"
-                        onchange="selectAmmoniaOption()"></select>
-                <div id="ammoniaChartContainer">
-                    <canvas id="ammoniaChart"></canvas>
-                </div>
-                <span style="color: #4CBB17">Below 400ppm = Safe Levels of Smoke &#128516;</span>
+                <span style="color: #000000">> 400ppm: Hazardous Levels of Alcohol &#128128;</span>
                 <br>
-                <span style="color: #FFA500">400ppm - 799ppm = Alarming Levels of Smoke &#128567;</span>
-                <br>
-                <span style="color: #bd1816">Above or Equals 800ppm = Hazardous Levels of Smoke &#128128;</span>
+                <a href="https://www.chemtronics.com/Content/Images/uploaded/documents/CW8300_United%20States%20(US)%20SDS%20HCS%202012_English%20(US).pdf">
+                <span style="color: #000000; margin-left: 72%">
+                    Chemtronics Safety Data Sheet &#128214;
+                </span>
+                </a>
             </div>
         </div>
     </div>
@@ -202,11 +194,19 @@
                 <div id="acetoneChartContainer">
                     <canvas id="acetoneChart"></canvas>
                 </div>
-                <span style="color: #4CBB17">Below 400ppm = Safe Levels of Smoke &#128516;</span>
+                <span style="color: #4CBB17">0ppm - 100ppm: Safe Levels of Acetone &#128516;</span>
                 <br>
-                <span style="color: #FFA500">400ppm - 799ppm = Alarming Levels of Smoke &#128567;</span>
+                <span style="color: #FFA500">> 100ppm - 250ppm: Permissible Levels of Acetone &#128577; (ACGIH TLV - 8 Hours = 250ppm)</span>
                 <br>
-                <span style="color: #bd1816">Above or Equals 800ppm = Hazardous Levels of Smoke &#128128;</span>
+                <span style="color: #bd1816">> 250ppm - 500ppm: Alarming Levels of Acetone &#128567; (ACGIH TLV - 15 Minutes = 500ppm)</span>
+                <br>
+                <span style="color: #000000">> 500ppm: Hazardous Levels of Acetone &#128128;</span>
+                <br>
+                <a href="https://www.ccohs.ca/oshanswers/chemicals/chem_profiles/acetone.html">
+                <span style="color: #000000; margin-left: 55%">
+                    Canadian Centre for Occupational Health and Safety &#128214;
+                </span>
+                </a>
             </div>
         </div>
     </div>
@@ -224,11 +224,19 @@
                 <div id="LPGChartContainer">
                     <canvas id="LPGChart"></canvas>
                 </div>
-                <span style="color: #4CBB17">Below 500ppm = Safe Levels of LPG &#128516;</span>
+                <span style="color: #4CBB17">0 - 500ppm: Safe Levels of LPG &#128516; </span>
                 <br>
-                <span style="color: #FFA500">500ppm - 999ppm = Alarming Levels of LPG &#128567;</span>
+                <span style="color: #FFA500">> 500ppm - 1000ppm: Permissible Levels of LPG &#128577; (ACGIH TLV - 8 Hours = 1000ppm)</span>
                 <br>
-                <span style="color: #bd1816">Above or Equals 1000ppm = Hazardous Levels of LPG &#128128;</span>
+                <span style="color: #bd1816">> 1000ppm - 1250ppm: Alarming Levels of LPG &#128567;</span>
+                <br>
+                <span style="color: #000000">> 1250ppm: Hazardous Levels of LPG &#128128;</span>
+                <br>
+                <a href="https://www.cdc.gov/niosh/idlh/68476857.html">
+                <span style="color: #000000; margin-left: 51%">
+                    The National Institute for Occupational Safety and Health &#128214;
+                </span>
+                </a>
             </div>
         </div>
     </div>
@@ -246,11 +254,19 @@
                 <div id="COChartContainer">
                     <canvas id="COChart"></canvas>
                 </div>
-                <span style="color: #4CBB17">Below 400ppm = Safe Levels of CO &#128516;</span>
+                <span style="color: #4CBB17">0ppm - 6ppm: Safe Levels of CO &#128516; (WHO 24 Hour Average = 6ppm)</span>
                 <br>
-                <span style="color: #FFA500">400ppm - 799ppm = Alarming Levels of CO &#128567;</span>
+                <span style="color: #FFA500">> 6ppm - 50ppm: Permissible Levels of CO &#128577; (OSHA PEL - 8 Hours = 50ppm)</span>
                 <br>
-                <span style="color: #bd1816">Above or Equals 800ppm = Hazardous Levels of CO &#128128;</span>
+                <span style="color: #bd1816">> 50ppm - 200ppm: Alarming Levels of CO &#128567; (NIOSH STEL - 15 Minutes = 200ppm)</span>
+                <br>
+                <span style="color: #000000">> 200 ppm: Hazardous Levels of CO &#128128;</span>
+                <br>
+                <a href="https://gaslab.com/blogs/articles/carbon-monoxide-levels-chart">
+                <span style="color: #000000; margin-left: 91%">
+                    GasLab &#128214;
+                </span>
+                </a>
             </div>
         </div>
     </div>
@@ -307,13 +323,6 @@
 
             <h1 id="latestAlcohol" style="color: #fff;"></h1>
         </div>
-        <div id="ammoniaIndicator" class="col-md-3" style="background-color:
-          #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
-          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <h5 style="color: #fff;">Ammonia (NH<sub>3</sub>)</h5>
-            <!--            <h5 style="color: #fff;">Ammonia &#128701;</h5>-->
-            <h1 id="latestAmmonia" style="color: #fff;"></h1>
-        </div>
         <div id="acetoneIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
           box-shadow: 5px 5px 5px grey; margin-right: 2%;">
@@ -321,17 +330,17 @@
             <h1 id="latestAcetone" style="color: #fff;"></h1>
         </div>
 
-    </div>
-
-    <div class="row mt-5" style="justify-content: center;">
         <div id="LPGIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
-          box-shadow: 5px 5px 5px grey; margin-right: 15%;">
+          box-shadow: 5px 5px 5px grey; margin-right: 2%;">
             <!--            <h5 style="color: #fff;">Liquefied Petroleum Gas &#9981;</h5>-->
             <h5 style="color: #fff;">Liquefied Petroleum Gas (C<sub>3</sub>H<sub>8</sub>)</h5>
 
             <h1 id="latestLPG" style="color: #fff;"></h1>
         </div>
+    </div>
+
+    <div class="row mt-5" style="justify-content: center;">
         <div id="COIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
           box-shadow: 5px 5px 5px grey; margin-right: 2%;">
@@ -341,6 +350,15 @@
 
     </div>
     <script>
+        // reload page once again on page load to prevent chart.js loading glitches
+        window.onload = function() {
+            if(!window.location.hash) {
+                window.location = window.location + '#loaded';
+                console.log("test");
+                window.location.reload();
+            }
+        }
+
         // dateArray.sort(compareDate) to sort date array from oldest to latest
         function compareDate(a, b) {
             const date1 = new Date(a)
@@ -348,7 +366,15 @@
             return date1 - date2;
         }
 
-        // findHighestInArray(array) to find highest value in an array
+        // convert array of strings to array of numbers
+        function convertStringToNumberArray(stringArray, numberArray) {
+            stringArray.forEach(str => {
+                numberArray.push(Number(str));
+            });
+            return numberArray;
+        }
+
+        // findHighestInArray(array) to find highest value in array
         function findHighestInArray(array) {
             let highest = array[0];
             for(let i = 0; i < array.length; i++) {
@@ -359,7 +385,7 @@
             return highest;
         }
 
-        // findLowestInArray(array) to find lowest value in an array
+        // findLowestInArray(array) to find lowest value in array
         function findLowestInArray(array) {
             let lowest = array[0];
             for(let i = 0; i < array.length; i++) {
@@ -368,13 +394,6 @@
                 }
             }
             return lowest;
-        }
-
-        function convertStringToNumberArray(stringArray, numberArray) {
-            stringArray.forEach(str => {
-                numberArray.push(Number(str));
-            });
-            return numberArray;
         }
 
         // obtain historical temperature data after selecting temperature date from drop-down menu
@@ -410,24 +429,31 @@
                     temperatureValueArray.push(cleanTemperature);
                 }
 
-
-
+                // dynamic chart y axis min max based on lowest and highest values
                 let temporaryNumberArray = [];
                 let temperatureValueNumberArray = convertStringToNumberArray(temperatureValueArray, temporaryNumberArray);
                 let lowestTemperature, highestTemperature;
                 lowestTemperature = findLowestInArray(temperatureValueNumberArray);
                 highestTemperature = findHighestInArray(temperatureValueNumberArray);
+                console.log(lowestTemperature);
+                console.log(highestTemperature);
                 let lowestTemperatureCeiling, highestTemperatureCeiling;
                 lowestTemperatureCeiling = Math.round((Math.round(lowestTemperature))/10) * 10;
                 highestTemperatureCeiling = Math.round((Math.round(highestTemperature))/10) * 10;
+
                 if (highestTemperatureCeiling === lowestTemperatureCeiling){
                     highestTemperatureCeiling = highestTemperatureCeiling + 10;
                 }
                 if (highestTemperature > highestTemperatureCeiling){
-                    highestTemperatureCeiling = highestTemperatureCeiling + 10;
+                    while (highestTemperature > highestTemperatureCeiling){
+                        highestTemperatureCeiling += 10;
+                    }
                 }
-                console.log(lowestTemperatureCeiling);
-                console.log(highestTemperatureCeiling);
+                if (lowestTemperature < lowestTemperatureCeiling){
+                    while (lowestTemperature < lowestTemperatureCeiling){
+                        lowestTemperatureCeiling -= 10;
+                    }
+                }
 
                 // empty and reload the div to prevent other temperature chart data from other days from being shown
                 // when hovering over temperature chart data points
@@ -443,7 +469,6 @@
                             lineTension: 0,
                             backgroundColor: "rgba(0,0,255,1.0)",
                             borderColor: "rgba(0,0,255,0.1)",
-                            // data: temperatureValueArray
                             data: temperatureValueNumberArray
 
                         }]
@@ -451,7 +476,6 @@
                     options: {
                         legend: {display: false},
                         scales: {
-                            // yAxes: [{ticks: {min: 10.00, max: 45.00}}],
                             yAxes: [{ticks: {min: lowestTemperatureCeiling, max: highestTemperatureCeiling}}],
                             // limit x axis to 24 ticks
                             xAxes: [{
@@ -547,8 +571,31 @@
                     alcoholValueArray.push(cleanAlcohol);
                 }
 
+                let temporaryNumberArray = [];
+                let alcoholValueNumberArray = convertStringToNumberArray(alcoholValueArray, temporaryNumberArray);
+                let lowestAlcohol, highestAlcohol;
+                lowestAlcohol = findLowestInArray(alcoholValueNumberArray);
+                highestAlcohol = findHighestInArray(alcoholValueNumberArray);
+                let lowestAlcoholCeiling, highestAlcoholCeiling;
+                lowestAlcoholCeiling = Math.round((Math.round(lowestAlcohol))/10) * 10;
+                highestAlcoholCeiling = Math.round((Math.round(highestAlcohol))/10) * 10;
+                if (highestAlcoholCeiling === lowestAlcoholCeiling){
+                    highestAlcoholCeiling = highestAlcoholCeiling + 10;
+                }
+                if (highestAlcohol > highestAlcoholCeiling){
+                    while (highestAlcohol > highestAlcoholCeiling){
+                        highestAlcoholCeiling += 10;
+                    }
+                }
+                if (lowestAlcohol < lowestAlcoholCeiling){
+                    while (lowestAlcohol < lowestAlcoholCeiling){
+                        lowestAlcoholCeiling -= 10;
+                    }
+                }
+
                 document.getElementById("alcoholChartContainer").innerHTML = "";
                 document.getElementById('alcoholChartContainer').innerHTML = "<canvas id=\"alcoholChart\"></canvas>";
+
                 new Chart("alcoholChart", {
                     type: "line",
                     data: {
@@ -558,68 +605,13 @@
                             lineTension: 0,
                             backgroundColor: "rgba(0,0,255,1.0)",
                             borderColor: "rgba(0,0,255,0.1)",
-                            data: alcoholValueArray
+                            data: alcoholValueNumberArray
                         }]
                     },
                     options: {
                         legend: {display: false},
                         scales: {
-                            yAxes: [{ticks: {min: 0.00, max: 40000.00}}],
-                            xAxes: [{
-                                ticks: {
-                                    display: true,
-                                    autoSkip: true,
-                                    maxTicksLimit: 24
-                                }
-                            }],
-                        }
-                    }
-                });
-            });
-        }
-
-        function selectAmmoniaOption() {
-            var selectedAmmoniaDate = document.getElementById("ammoniaDateArray").value;
-            let selectedDayAmmonia = 'MQ135/Ammonia/' + selectedAmmoniaDate;
-            firebase.database().ref(selectedDayAmmonia).on('value', (snap) => {
-                var ammoniaStr = snap.val();
-                var ammoniaArray = [];
-
-                Object.keys(ammoniaStr).forEach((key) => {
-                    ammoniaArray.push({[key]: ammoniaStr[key]});
-                });
-
-                var iterator = ammoniaArray.values();
-                var timeArray = [];
-                var ammoniaValueArray = [];
-                for (let elements of iterator) {
-                    timeArray.push(Object.keys(elements).toString());
-                    let cleanAmmonia = JSON.stringify(Object.values(elements));
-                    cleanAmmonia = cleanAmmonia.split(":").pop();
-                    cleanAmmonia = cleanAmmonia.replaceAll("\"", "");
-                    cleanAmmonia = cleanAmmonia.replaceAll("}", "");
-                    cleanAmmonia = cleanAmmonia.replaceAll("]", "");
-                    ammoniaValueArray.push(cleanAmmonia);
-                }
-
-                document.getElementById("ammoniaChartContainer").innerHTML = "";
-                document.getElementById('ammoniaChartContainer').innerHTML = "<canvas id=\"ammoniaChart\"></canvas>";
-                new Chart("ammoniaChart", {
-                    type: "line",
-                    data: {
-                        labels: timeArray,
-                        datasets: [{
-                            fill: false,
-                            lineTension: 0,
-                            backgroundColor: "rgba(0,0,255,1.0)",
-                            borderColor: "rgba(0,0,255,0.1)",
-                            data: ammoniaValueArray
-                        }]
-                    },
-                    options: {
-                        legend: {display: false},
-                        scales: {
-                            yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                            yAxes: [{ticks: {min: lowestAlcoholCeiling, max: highestAlcoholCeiling}}],
                             xAxes: [{
                                 ticks: {
                                     display: true,
@@ -657,8 +649,31 @@
                     acetoneValueArray.push(cleanAcetone);
                 }
 
+                let temporaryNumberArray = [];
+                let acetoneValueNumberArray = convertStringToNumberArray(acetoneValueArray, temporaryNumberArray);
+                let lowestAcetone, highestAcetone;
+                lowestAcetone = findLowestInArray(acetoneValueNumberArray);
+                highestAcetone = findHighestInArray(acetoneValueNumberArray);
+                let lowestAcetoneCeiling, highestAcetoneCeiling;
+                lowestAcetoneCeiling = Math.round((Math.round(lowestAcetone))/10) * 10;
+                highestAcetoneCeiling = Math.round((Math.round(highestAcetone))/10) * 10;
+                if (highestAcetoneCeiling === lowestAcetoneCeiling){
+                    highestAcetoneCeiling = highestAcetoneCeiling + 10;
+                }
+                if (highestAcetone > highestAcetoneCeiling){
+                    while (highestAcetone > highestAcetoneCeiling){
+                        highestAcetoneCeiling += 10;
+                    }
+                }
+                if (lowestAcetone < lowestAcetoneCeiling){
+                    while (lowestAcetone < lowestAcetoneCeiling){
+                        lowestAcetoneCeiling -= 10;
+                    }
+                }
+
                 document.getElementById("acetoneChartContainer").innerHTML = "";
                 document.getElementById('acetoneChartContainer').innerHTML = "<canvas id=\"acetoneChart\"></canvas>";
+
                 new Chart("acetoneChart", {
                     type: "line",
                     data: {
@@ -674,7 +689,7 @@
                     options: {
                         legend: {display: false},
                         scales: {
-                            yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                            yAxes: [{ticks: {min: lowestAcetoneCeiling, max: highestAcetoneCeiling}}],
                             xAxes: [{
                                 ticks: {
                                     display: true,
@@ -712,8 +727,31 @@
                     LPGValueArray.push(cleanLPG);
                 }
 
+                let temporaryNumberArray = [];
+                let LPGValueNumberArray = convertStringToNumberArray(LPGValueArray, temporaryNumberArray);
+                let lowestLPG, highestLPG;
+                lowestLPG = findLowestInArray(LPGValueNumberArray);
+                highestLPG = findHighestInArray(LPGValueNumberArray);
+                let lowestLPGCeiling, highestLPGCeiling;
+                lowestLPGCeiling = Math.round((Math.round(lowestLPG))/10) * 10;
+                highestLPGCeiling = Math.round((Math.round(highestLPG))/10) * 10;
+                if (highestLPGCeiling === lowestLPGCeiling){
+                    highestLPGCeiling = highestLPGCeiling + 10;
+                }
+                if (highestLPG > highestLPGCeiling){
+                    while (highestLPG > highestLPGCeiling){
+                        highestLPGCeiling += 10;
+                    }
+                }
+                if (lowestLPG < lowestLPGCeiling){
+                    while (lowestLPG < lowestLPGCeiling){
+                        lowestLPGCeiling -= 10;
+                    }
+                }
+
                 document.getElementById("LPGChartContainer").innerHTML = "";
                 document.getElementById('LPGChartContainer').innerHTML = "<canvas id=\"LPGChart\"></canvas>";
+
                 new Chart("LPGChart", {
                     type: "line",
                     data: {
@@ -729,7 +767,8 @@
                     options: {
                         legend: {display: false},
                         scales: {
-                            yAxes: [{ticks: {min: 0.00, max: 5000.00}}],
+                            yAxes: [{ticks: {min: lowestLPGCeiling, max: highestLPGCeiling}}],
+                            // yAxes: [{ticks: {min: 0.00, max: 5000.00}}],
                             xAxes: [{
                                 ticks: {
                                     display: true,
@@ -767,8 +806,31 @@
                     COValueArray.push(cleanCO);
                 }
 
+                let temporaryNumberArray = [];
+                let COValueNumberArray = convertStringToNumberArray(COValueArray, temporaryNumberArray);
+                let lowestCO, highestCO;
+                lowestCO = findLowestInArray(COValueNumberArray);
+                highestCO = findHighestInArray(COValueNumberArray);
+                let lowestCOCeiling, highestCOCeiling;
+                lowestCOCeiling = Math.round((Math.round(lowestCO))/10) * 10;
+                highestCOCeiling = Math.round((Math.round(highestCO))/10) * 10;
+                if (highestCOCeiling === lowestCOCeiling){
+                    highestCOCeiling = highestCOCeiling + 10;
+                }
+                if (highestCO > highestCOCeiling){
+                    while (highestCO > highestCOCeiling){
+                        highestCOCeiling += 10;
+                    }
+                }
+                if (lowestCO < lowestCOCeiling){
+                    while (lowestCO < lowestCOCeiling){
+                        lowestCOCeiling -= 10;
+                    }
+                }
+
                 document.getElementById("COChartContainer").innerHTML = "";
                 document.getElementById('COChartContainer').innerHTML = "<canvas id=\"COChart\"></canvas>";
+
                 new Chart("COChart", {
                     type: "line",
                     data: {
@@ -784,7 +846,8 @@
                     options: {
                         legend: {display: false},
                         scales: {
-                            yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                            yAxes: [{ticks: {min: lowestCOCeiling, max: highestCOCeiling}}],
+                            // yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
                             xAxes: [{
                                 ticks: {
                                     display: true,
@@ -857,7 +920,6 @@
                 var temperatureModal = document.getElementById("temperatureModal");
                 var humidityModal = document.getElementById("humidityModal");
                 var alcoholModal = document.getElementById("alcoholModal");
-                var ammoniaModal = document.getElementById("ammoniaModal");
                 var acetoneModal = document.getElementById("acetoneModal");
                 var LPGModal = document.getElementById("LPGModal");
                 var COModal = document.getElementById("COModal");
@@ -866,7 +928,6 @@
                 var temperatureBtn = document.getElementById("temperatureIndicator");
                 var humidityBtn = document.getElementById("humidityIndicator");
                 var alcoholBtn = document.getElementById("alcoholIndicator");
-                var ammoniaBtn = document.getElementById("ammoniaIndicator");
                 var acetoneBtn = document.getElementById("acetoneIndicator");
                 var LPGBtn = document.getElementById("LPGIndicator");
                 var COBtn = document.getElementById("COIndicator");
@@ -879,7 +940,6 @@
                 var span5 = document.getElementsByClassName("close")[4];
                 var span6 = document.getElementsByClassName("close")[5];
                 var span7 = document.getElementsByClassName("close")[6];
-                var span8 = document.getElementsByClassName("close")[7];
 
 
                 // show modal after clicking data indicator
@@ -897,10 +957,6 @@
 
                 PM25Btn.onclick = function () {
                     PM25Modal.style.display = "block";
-                }
-
-                ammoniaBtn.onclick = function () {
-                    ammoniaModal.style.display = "block";
                 }
 
                 acetoneBtn.onclick = function () {
@@ -929,22 +985,18 @@
                 }
 
                 span4.onclick = function () {
-                    ammoniaModal.style.display = "none";
-                }
-
-                span5.onclick = function () {
                     acetoneModal.style.display = "none";
                 }
 
-                span6.onclick = function () {
+                span5.onclick = function () {
                     LPGModal.style.display = "none";
                 }
 
-                span7.onclick = function () {
+                span6.onclick = function () {
                     COModal.style.display = "none";
                 }
 
-                span8.onclick = function () {
+                span7.onclick = function () {
                     PM25Modal.style.display = "none";
                 }
 
@@ -961,9 +1013,6 @@
                     }
                     if (event.target === PM25Modal) {
                         PM25Modal.style.display = "none";
-                    }
-                    if (event.target === ammoniaModal) {
-                        ammoniaModal.style.display = "none";
                     }
                     if (event.target === acetoneModal) {
                         acetoneModal.style.display = "none";
@@ -982,7 +1031,6 @@
                 var humidityDays;
                 var PM25Days;
                 var alcoholDays;
-                var ammoniaDays;
                 var acetoneDays;
                 var LPGDays;
                 var CODays;
@@ -991,7 +1039,6 @@
                 var temperatureDateSelect = document.getElementById("temperatureDateArray");
                 var humidityDateSelect = document.getElementById("humidityDateArray");
                 var alcoholDateSelect = document.getElementById("alcoholDateArray");
-                var ammoniaDateSelect = document.getElementById("ammoniaDateArray");
                 var acetoneDateSelect = document.getElementById("acetoneDateArray");
                 var LPGDateSelect = document.getElementById("LPGDateArray");
                 var CODateSelect = document.getElementById("CODateArray");
@@ -1044,7 +1091,6 @@
                 let currentDayTemperature = 'DHT11/Temperature/' + date;
                 let currentDayHumidity = 'DHT11/Humidity/' + date;
                 let currentDayAlcohol = 'MQ135/Alcohol/' + date;
-                let currentDayAmmonia = 'MQ135/Ammonia/' + date;
                 let currentDayAcetone = 'MQ135/Acetone/' + date;
                 let currentDayLPG = 'MQ2/LPG/' + date;
                 let currentDayCO = 'MQ2/CO/' + date;
@@ -1090,20 +1136,17 @@
                     jsonTemperatureValue = jsonTemperatureValue.replaceAll("]", "");
 
                     // compare latest temperature value
-                    if (jsonTemperatureValue > 26) {
-                        // jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#128293';
-                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#129397';
-                        document.getElementById("temperatureIndicator").style.backgroundColor = "#bd1816";
+                    if (jsonTemperatureValue < 23) {
+                        document.getElementById("temperatureIndicator").style.backgroundColor = "#00AEEF";
+                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#129398';
                     }
                     if (jsonTemperatureValue >= 23 && jsonTemperatureValue <= 26) {
-                        // jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#127777';
-                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#128516';
                         document.getElementById("temperatureIndicator").style.backgroundColor = "#4CBB17";
+                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#128516';
                     }
-                    if (jsonTemperatureValue < 23) {
-                        // jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#x2744';
-                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#129398';
-                        document.getElementById("temperatureIndicator").style.backgroundColor = "#00AEEF";
+                    if (jsonTemperatureValue > 26) {
+                        document.getElementById("temperatureIndicator").style.backgroundColor = "#bd1816";
+                        jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#129397';
                     }
 
                     // latest temperature value
@@ -1134,17 +1177,30 @@
 
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("temperatureDateArray").value === date) {
-                        
+                        // dynamic chart y axis min max based on lowest and highest values
                         let temporaryNumberArray = [];
                         let temperatureValueNumberArray = convertStringToNumberArray(temperatureValueArray, temporaryNumberArray);
                         let lowestTemperature, highestTemperature;
                         lowestTemperature = findLowestInArray(temperatureValueNumberArray);
                         highestTemperature = findHighestInArray(temperatureValueNumberArray);
+                        console.log(lowestTemperature);
+                        console.log(highestTemperature);
                         let lowestTemperatureCeiling, highestTemperatureCeiling;
                         lowestTemperatureCeiling = Math.round((Math.round(lowestTemperature))/10) * 10;
                         highestTemperatureCeiling = Math.round((Math.round(highestTemperature))/10) * 10;
+
                         if (highestTemperatureCeiling === lowestTemperatureCeiling){
                             highestTemperatureCeiling = highestTemperatureCeiling + 10;
+                        }
+                        if (highestTemperature > highestTemperatureCeiling){
+                            while (highestTemperature > highestTemperatureCeiling){
+                                highestTemperatureCeiling += 10;
+                            }
+                        }
+                        if (lowestTemperature < lowestTemperatureCeiling){
+                            while (lowestTemperature < lowestTemperatureCeiling){
+                                lowestTemperatureCeiling -= 10;
+                            }
                         }
 
                         // empty and reload the div to prevent old temperature chart data from being shown
@@ -1161,15 +1217,12 @@
                                     lineTension: 0,
                                     backgroundColor: "rgba(0,0,255,1.0)",
                                     borderColor: "rgba(0,0,255,0.1)",
-                                    // data: temperatureValueArray
                                     data: temperatureValueNumberArray
                                 }]
                             },
                             options: {
                                 legend: {display: false},
                                 scales: {
-                                    // yAxes: [{ticks: {min: 10.00, max: 45.00}}],
-                                    // yAxes: [{ticks: {min: 20.00, max: 30.00}}],
                                     yAxes: [{ticks: {min: lowestTemperatureCeiling, max: highestTemperatureCeiling}}],
                                     // limit x axis to 24 ticks
                                     xAxes: [{
@@ -1215,20 +1268,17 @@
                     jsonHumidityValue = jsonHumidityValue.replaceAll("}", "");
                     jsonHumidityValue = jsonHumidityValue.replaceAll("]", "");
 
-                    if (jsonHumidityValue >= 80) {
-                        jsonHumidityValue = jsonHumidityValue + "%" + '&#128543;';
-                        // worried 128543
-                        document.getElementById("humidityIndicator").style.backgroundColor = "#bd1816";
+                    if (jsonHumidityValue >= 0 && jsonHumidityValue < 60) {
+                        document.getElementById("humidityIndicator").style.backgroundColor = "#4CBB17";
+                        jsonHumidityValue = jsonHumidityValue + "%" + '&#128516;';
                     }
                     if (jsonHumidityValue >= 60 && jsonHumidityValue < 80) {
-                        jsonHumidityValue = jsonHumidityValue + "%" + '&#128577;';
-                        // frown 128577
                         document.getElementById("humidityIndicator").style.backgroundColor = "#FFA500";
+                        jsonHumidityValue = jsonHumidityValue + "%" + '&#128577;';
                     }
-                    if (jsonHumidityValue >= 0 && jsonHumidityValue < 60) {
-                        jsonHumidityValue = jsonHumidityValue + "%" + '&#128516;';
-                        //happy 128516
-                        document.getElementById("humidityIndicator").style.backgroundColor = "#4CBB17";
+                    if (jsonHumidityValue >= 80) {
+                        document.getElementById("humidityIndicator").style.backgroundColor = "#bd1816";
+                        jsonHumidityValue = jsonHumidityValue + "%" + '&#128543;';
                     }
 
                     document.getElementById('latestHumidity').innerHTML = jsonHumidityValue;
@@ -1308,34 +1358,21 @@
                     jsonAlcoholValue = jsonAlcoholValue.replaceAll("}", "");
                     jsonAlcoholValue = jsonAlcoholValue.replaceAll("]", "");
 
-                    // if (jsonCO2Value >= 800) {
-                    //     jsonCO2Value = jsonCO2Value + 'ppm' + '&#128128;';
-                    //     document.getElementById("alcoholIndicator").style.backgroundColor = "#bd1816";
-                    // }
-                    // if (jsonCO2Value >= 600 && jsonCO2Value <= 799) {
-                    //     jsonCO2Value = jsonCO2Value + 'ppm' + '&#128567;';
-                    //     document.getElementById("alcoholIndicator").style.backgroundColor = "#FFA500";
-                    // }
-                    // if (jsonCO2Value <= 599) {
-                    //     jsonCO2Value = jsonCO2Value + 'ppm' + '&#128516;';
-                    //     document.getElementById("alcoholIndicator").style.backgroundColor = "#4CBB17";
-                    // }
-
-                    if (jsonAlcoholValue >= 40000) {
-                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128128;';
-                        document.getElementById("alcoholIndicator").style.backgroundColor = "#000000";
-                    }
-                    if (jsonAlcoholValue > 5000 && jsonAlcoholValue <= 39999) {
-                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128567;';
-                        document.getElementById("alcoholIndicator").style.backgroundColor = "#bd1816";
-                    }
-                    if (jsonAlcoholValue >= 1000 && jsonAlcoholValue <= 5000) {
-                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128577;';
-                        document.getElementById("alcoholIndicator").style.backgroundColor = "#FFA500";
-                    }
-                    if (jsonAlcoholValue < 1000) {
-                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128516;';
+                    if (jsonAlcoholValue <= 100) {
                         document.getElementById("alcoholIndicator").style.backgroundColor = "#4CBB17";
+                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128516;';
+                    }
+                    if (jsonAlcoholValue > 100 && jsonAlcoholValue <= 200) {
+                        document.getElementById("alcoholIndicator").style.backgroundColor = "#FFA500";
+                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128577;';
+                    }
+                    if (jsonAlcoholValue > 200 && jsonAlcoholValue <= 400) {
+                        document.getElementById("alcoholIndicator").style.backgroundColor = "#bd1816";
+                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128567;';
+                    }
+                    if (jsonAlcoholValue > 400) {
+                        document.getElementById("alcoholIndicator").style.backgroundColor = "#000000";
+                        jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128128;';
                     }
 
                     document.getElementById('latestAlcohol').innerHTML = jsonAlcoholValue;
@@ -1354,8 +1391,31 @@
                     }
 
                     if (document.getElementById("alcoholDateArray").value === date) {
+                        let temporaryNumberArray = [];
+                        let alcoholValueNumberArray = convertStringToNumberArray(alcoholValueArray, temporaryNumberArray);
+                        let lowestAlcohol, highestAlcohol;
+                        lowestAlcohol = findLowestInArray(alcoholValueNumberArray);
+                        highestAlcohol = findHighestInArray(alcoholValueNumberArray);
+                        let lowestAlcoholCeiling, highestAlcoholCeiling;
+                        lowestAlcoholCeiling = Math.round((Math.round(lowestAlcohol))/10) * 10;
+                        highestAlcoholCeiling = Math.round((Math.round(highestAlcohol))/10) * 10;
+                        if (highestAlcoholCeiling === lowestAlcoholCeiling){
+                            highestAlcoholCeiling = highestAlcoholCeiling + 10;
+                        }
+                        if (highestAlcohol > highestAlcoholCeiling){
+                            while (highestAlcohol > highestAlcoholCeiling){
+                                highestAlcoholCeiling += 10;
+                            }
+                        }
+                        if (lowestAlcohol < lowestAlcoholCeiling){
+                            while (lowestAlcohol < lowestAlcoholCeiling){
+                                lowestAlcoholCeiling -= 10;
+                            }
+                        }
+
                         document.getElementById("alcoholChartContainer").innerHTML = "";
                         document.getElementById('alcoholChartContainer').innerHTML = "<canvas id=\"alcoholChart\"></canvas>";
+
                         new Chart("alcoholChart", {
                             type: "line",
                             data: {
@@ -1365,104 +1425,14 @@
                                     lineTension: 0,
                                     backgroundColor: "rgba(0,0,255,1.0)",
                                     borderColor: "rgba(0,0,255,0.1)",
-                                    data: alcoholValueArray
+                                    data: alcoholValueNumberArray
                                 }]
                             },
                             options: {
                                 legend: {display: false},
                                 scales: {
-                                    yAxes: [{ticks: {min: 0.00, max: 40000.00}}],
-                                    xAxes: [{
-                                        ticks: {
-                                            display: true,
-                                            autoSkip: true,
-                                            maxTicksLimit: 24
-                                        }
-                                    }],
-                                }
-                            }
-                        });
-                    }
-                });
-
-                await firebase.database().ref('MQ135/Ammonia/').once('value', (snap) => {
-                    ammoniaDays = snap.val();
-                    ammoniaDays = Object.keys(ammoniaDays);
-                    ammoniaDays.sort(compareDate);
-
-                    for (var i = 0; i < ammoniaDays.length; i++) {
-                        var option = ammoniaDays[i];
-                        var element = document.createElement("option");
-                        element.textContent = option;
-                        element.value = option;
-                        ammoniaDateSelect.prepend(element);
-                    }
-                    document.getElementById("ammoniaDateArray").selectedIndex = "0";
-                });
-
-                firebase.database().ref(currentDayAmmonia).on('value', (snap) => {
-                    var ammoniaStr = snap.val();
-                    var ammoniaArray = [];
-                    Object.keys(ammoniaStr).forEach((key) => {
-                        ammoniaArray.push({[key]: ammoniaStr[key]});
-                    });
-
-                    var latestAmmonia = ammoniaArray[ammoniaArray.length - 1];
-                    var ammoniaValue = Object.values(latestAmmonia);
-                    var jsonAmmoniaValue = JSON.stringify(ammoniaValue);
-
-                    jsonAmmoniaValue = jsonAmmoniaValue.split(":").pop();
-                    jsonAmmoniaValue = jsonAmmoniaValue.replaceAll("\"", "");
-                    jsonAmmoniaValue = jsonAmmoniaValue.replaceAll("}", "");
-                    jsonAmmoniaValue = jsonAmmoniaValue.replaceAll("]", "");
-
-                    if (jsonAmmoniaValue >= 800) {
-                        jsonAmmoniaValue = jsonAmmoniaValue + 'ppm' + '&#128128;';
-                        document.getElementById("ammoniaIndicator").style.backgroundColor = "#bd1816";
-                    }
-                    if (jsonAmmoniaValue >= 400 && jsonAmmoniaValue < 800) {
-                        jsonAmmoniaValue = jsonAmmoniaValue + 'ppm' + '&#128567;';
-                        document.getElementById("ammoniaIndicator").style.backgroundColor = "	#FFA500";
-                    }
-                    if (jsonAmmoniaValue < 400) {
-                        jsonAmmoniaValue = jsonAmmoniaValue + 'ppm' + '&#128516;';
-                        document.getElementById("ammoniaIndicator").style.backgroundColor = "#4CBB17";
-                    }
-
-                    document.getElementById('latestAmmonia').innerHTML = jsonAmmoniaValue;
-                    var iterator = ammoniaArray.values();
-
-                    var timeArray = [];
-                    var ammoniaValueArray = [];
-                    for (let elements of iterator) {
-                        timeArray.push(Object.keys(elements).toString());
-                        let cleanAmmonia = JSON.stringify(Object.values(elements));
-                        cleanAmmonia = cleanAmmonia.split(":").pop();
-                        cleanAmmonia = cleanAmmonia.replaceAll("\"", "");
-                        cleanAmmonia = cleanAmmonia.replaceAll("}", "");
-                        cleanAmmonia = cleanAmmonia.replaceAll("]", "");
-                        ammoniaValueArray.push(cleanAmmonia);
-                    }
-
-                    if (document.getElementById("ammoniaDateArray").value === date) {
-                        document.getElementById("ammoniaChartContainer").innerHTML = "";
-                        document.getElementById('ammoniaChartContainer').innerHTML = "<canvas id=\"ammoniaChart\"></canvas>";
-                        new Chart("ammoniaChart", {
-                            type: "line",
-                            data: {
-                                labels: timeArray,
-                                datasets: [{
-                                    fill: false,
-                                    lineTension: 0,
-                                    backgroundColor: "rgba(0,0,255,1.0)",
-                                    borderColor: "rgba(0,0,255,0.1)",
-                                    data: ammoniaValueArray
-                                }]
-                            },
-                            options: {
-                                legend: {display: false},
-                                scales: {
-                                    yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                                    // yAxes: [{ticks: {min: 0.00, max: 400.00}}],
+                                    yAxes: [{ticks: {min: lowestAlcoholCeiling, max: highestAlcoholCeiling}}],
                                     xAxes: [{
                                         ticks: {
                                             display: true,
@@ -1507,17 +1477,21 @@
                     jsonAcetoneValue = jsonAcetoneValue.replaceAll("}", "");
                     jsonAcetoneValue = jsonAcetoneValue.replaceAll("]", "");
 
-                    if (jsonAcetoneValue >= 800) {
-                        jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128128;';
-                        document.getElementById("acetoneIndicator").style.backgroundColor = "#bd1816";
-                    }
-                    if (jsonAcetoneValue >= 400 && jsonAcetoneValue < 800) {
-                        jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128567;';
-                        document.getElementById("acetoneIndicator").style.backgroundColor = "	#FFA500";
-                    }
-                    if (jsonAcetoneValue < 400) {
-                        jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128516;';
+                    if (jsonAcetoneValue <= 100) {
                         document.getElementById("acetoneIndicator").style.backgroundColor = "#4CBB17";
+                        jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128516;';
+                    }
+                    if (jsonAcetoneValue > 100 && jsonAcetoneValue < 250) {
+                        document.getElementById("acetoneIndicator").style.backgroundColor = "#FFA500";
+                        jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128577;';
+                    }
+                    if (jsonAcetoneValue > 250 && jsonAcetoneValue <= 500) {
+                        document.getElementById("acetoneIndicator").style.backgroundColor = "#bd1816";
+                        jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128567;';
+                    }
+                    if (jsonAcetoneValue > 500) {
+                        document.getElementById("acetoneIndicator").style.backgroundColor = "#000000";
+                        jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128128;';
                     }
 
                     document.getElementById('latestAcetone').innerHTML = jsonAcetoneValue;
@@ -1536,8 +1510,31 @@
                     }
 
                     if (document.getElementById("acetoneDateArray").value === date) {
+                        let temporaryNumberArray = [];
+                        let acetoneValueNumberArray = convertStringToNumberArray(acetoneValueArray, temporaryNumberArray);
+                        let lowestAcetone, highestAcetone;
+                        lowestAcetone = findLowestInArray(acetoneValueNumberArray);
+                        highestAcetone = findHighestInArray(acetoneValueNumberArray);
+                        let lowestAcetoneCeiling, highestAcetoneCeiling;
+                        lowestAcetoneCeiling = Math.round((Math.round(lowestAcetone))/10) * 10;
+                        highestAcetoneCeiling = Math.round((Math.round(highestAcetone))/10) * 10;
+                        if (highestAcetoneCeiling === lowestAcetoneCeiling){
+                            highestAcetoneCeiling = highestAcetoneCeiling + 10;
+                        }
+                        if (highestAcetone > highestAcetoneCeiling){
+                            while (highestAcetone > highestAcetoneCeiling){
+                                highestAcetoneCeiling += 10;
+                            }
+                        }
+                        if (lowestAcetone < lowestAcetoneCeiling){
+                            while (lowestAcetone < lowestAcetoneCeiling){
+                                lowestAcetoneCeiling -= 10;
+                            }
+                        }
+
                         document.getElementById("acetoneChartContainer").innerHTML = "";
                         document.getElementById('acetoneChartContainer').innerHTML = "<canvas id=\"acetoneChart\"></canvas>";
+
                         new Chart("acetoneChart", {
                             type: "line",
                             data: {
@@ -1553,7 +1550,8 @@
                             options: {
                                 legend: {display: false},
                                 scales: {
-                                    yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                                    // yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                                    yAxes: [{ticks: {min: lowestAcetoneCeiling, max: highestAcetoneCeiling}}],
                                     xAxes: [{
                                         ticks: {
                                             display: true,
@@ -1598,17 +1596,21 @@
                     jsonLPGValue = jsonLPGValue.replaceAll("}", "");
                     jsonLPGValue = jsonLPGValue.replaceAll("]", "");
 
-                    if (jsonLPGValue >= 1000) {
-                        jsonLPGValue = jsonLPGValue + 'ppm' + '&#128128;';
-                        document.getElementById("LPGIndicator").style.backgroundColor = "#bd1816";
-                    }
-                    if (jsonLPGValue >= 500 && jsonLPGValue < 1000) {
-                        jsonLPGValue = jsonLPGValue + 'ppm' + '&#128567;';
-                        document.getElementById("LPGIndicator").style.backgroundColor = "#FFA500";
-                    }
-                    if (jsonLPGValue < 500) {
-                        jsonLPGValue = jsonLPGValue + 'ppm' + '&#128516;';
+                    if (jsonLPGValue <= 500) {
                         document.getElementById("LPGIndicator").style.backgroundColor = "#4CBB17";
+                        jsonLPGValue = jsonLPGValue + 'ppm' + '&#128516;';
+                    }
+                    if (jsonLPGValue > 500 && jsonLPGValue <= 1000) {
+                        document.getElementById("LPGIndicator").style.backgroundColor = "#FFA500";
+                        jsonLPGValue = jsonLPGValue + 'ppm' + '&#128577;';
+                    }
+                    if (jsonLPGValue > 1000 && jsonLPGValue <= 1250) {
+                        document.getElementById("LPGIndicator").style.backgroundColor = "#bd1816";
+                        jsonLPGValue = jsonLPGValue + 'ppm' + '&#128567;';
+                    }
+                    if (jsonLPGValue > 1250) {
+                        document.getElementById("LPGIndicator").style.backgroundColor = "#000000";
+                        jsonLPGValue = jsonLPGValue + 'ppm' + '&#128128;';
                     }
 
                     document.getElementById('latestLPG').innerHTML = jsonLPGValue;
@@ -1628,8 +1630,31 @@
                     }
 
                     if (document.getElementById("LPGDateArray").value === date) {
+                        let temporaryNumberArray = [];
+                        let LPGValueNumberArray = convertStringToNumberArray(LPGValueArray, temporaryNumberArray);
+                        let lowestLPG, highestLPG;
+                        lowestLPG = findLowestInArray(LPGValueNumberArray);
+                        highestLPG = findHighestInArray(LPGValueNumberArray);
+                        let lowestLPGCeiling, highestLPGCeiling;
+                        lowestLPGCeiling = Math.round((Math.round(lowestLPG))/10) * 10;
+                        highestLPGCeiling = Math.round((Math.round(highestLPG))/10) * 10;
+                        if (highestLPGCeiling === lowestLPGCeiling){
+                            highestLPGCeiling = highestLPGCeiling + 10;
+                        }
+                        if (highestLPG > highestLPGCeiling){
+                            while (highestLPG > highestLPGCeiling){
+                                highestLPGCeiling += 10;
+                            }
+                        }
+                        if (lowestLPG < lowestLPGCeiling){
+                            while (lowestLPG < lowestLPGCeiling){
+                                lowestLPGCeiling -= 10;
+                            }
+                        }
+
                         document.getElementById("LPGChartContainer").innerHTML = "";
                         document.getElementById('LPGChartContainer').innerHTML = "<canvas id=\"LPGChart\"></canvas>";
+
                         new Chart("LPGChart", {
                             type: "line",
                             data: {
@@ -1645,7 +1670,8 @@
                             options: {
                                 legend: {display: false},
                                 scales: {
-                                    yAxes: [{ticks: {min: 0.00, max: 5000.00}}],
+                                    // yAxes: [{ticks: {min: 0.00, max: 5000.00}}],
+                                    yAxes: [{ticks: {min: lowestLPGCeiling, max: highestLPGCeiling}}],
                                     xAxes: [{
                                         ticks: {
                                             display: true,
@@ -1690,17 +1716,21 @@
                     jsonCOValue = jsonCOValue.replaceAll("}", "");
                     jsonCOValue = jsonCOValue.replaceAll("]", "");
 
-                    if (jsonCOValue >= 800) {
-                        jsonCOValue = jsonCOValue + 'ppm' + '&#128128;';
-                        document.getElementById("COIndicator").style.backgroundColor = "#bd1816";
-                    }
-                    if (jsonCOValue >= 400 && jsonCOValue < 800) {
-                        jsonCOValue = jsonCOValue + 'ppm' + '&#128567;';
-                        document.getElementById("COIndicator").style.backgroundColor = "#FFA500";
-                    }
-                    if (jsonCOValue < 400) {
+                    if (jsonCOValue <= 6) {
                         jsonCOValue = jsonCOValue + 'ppm' + '&#128516;';
                         document.getElementById("COIndicator").style.backgroundColor = "#4CBB17";
+                    }
+                    if (jsonCOValue > 6 && jsonCOValue <= 50) {
+                        jsonCOValue = jsonCOValue + 'ppm' + '&#128577;';
+                        document.getElementById("COIndicator").style.backgroundColor = "#FFA500";
+                    }
+                    if (jsonCOValue > 50 && jsonCOValue <= 200) {
+                        jsonCOValue = jsonCOValue + 'ppm' + '&#128567;';
+                        document.getElementById("COIndicator").style.backgroundColor = "#bd1816";
+                    }
+                    if (jsonCOValue > 200) {
+                        jsonCOValue = jsonCOValue + 'ppm' + '&#128128;';
+                        document.getElementById("COIndicator").style.backgroundColor = "#000000";
                     }
 
                     document.getElementById('latestCO').innerHTML = jsonCOValue;
@@ -1719,8 +1749,31 @@
                     }
 
                     if (document.getElementById("CODateArray").value === date) {
+                        let temporaryNumberArray = [];
+                        let COValueNumberArray = convertStringToNumberArray(COValueArray, temporaryNumberArray);
+                        let lowestCO, highestCO;
+                        lowestCO = findLowestInArray(COValueNumberArray);
+                        highestCO = findHighestInArray(COValueNumberArray);
+                        let lowestCOCeiling, highestCOCeiling;
+                        lowestCOCeiling = Math.round((Math.round(lowestCO))/10) * 10;
+                        highestCOCeiling = Math.round((Math.round(highestCO))/10) * 10;
+                        if (highestCOCeiling === lowestCOCeiling){
+                            highestCOCeiling = highestCOCeiling + 10;
+                        }
+                        if (highestCO > highestCOCeiling){
+                            while (highestCO > highestCOCeiling){
+                                highestCOCeiling += 10;
+                            }
+                        }
+                        if (lowestCO < lowestCOCeiling){
+                            while (lowestCO < lowestCOCeiling){
+                                lowestCOCeiling -= 10;
+                            }
+                        }
+
                         document.getElementById("COChartContainer").innerHTML = "";
                         document.getElementById('COChartContainer').innerHTML = "<canvas id=\"COChart\"></canvas>";
+
                         new Chart("COChart", {
                             type: "line",
                             data: {
@@ -1736,7 +1789,8 @@
                             options: {
                                 legend: {display: false},
                                 scales: {
-                                    yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
+                                    yAxes: [{ticks: {min: lowestCOCeiling, max: highestCOCeiling}}],
+                                    // yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
                                     xAxes: [{
                                         ticks: {
                                             display: true,
