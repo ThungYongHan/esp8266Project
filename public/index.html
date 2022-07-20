@@ -173,7 +173,7 @@
                 <br>
                 <a href="https://www.chemtronics.com/Content/Images/uploaded/documents/CW8300_United%20States%20(US)%20SDS%20HCS%202012_English%20(US).pdf">
                 <span style="float: right">
-                    Chemtronics Safety Data Sheet &#128214;
+                    Chemtronics &#128214;
                 </span>
                 </a>
             </div>
@@ -284,11 +284,19 @@
                 <div id="PM25ChartContainer">
                     <canvas id="PM25Chart"></canvas>
                 </div>
-                <span style="color: #4CBB17">Below or Equals 4ppm = Safe Levels of PM2.5 Particulate Matter &#128516;</span>
+                <span style="color: #4CBB17">0μg/m<sup>3</sup> - 12μg/m<sup>3</sup>: Safe Levels of PM2.5 Particulate Matter &#128516; (EPA Annual PM2.5 Standard = 12μg/m<sup>3</sup>)</span>
                 <br>
-                <span style="color: #FFA500">5ppm - 7ppm = Alarming Levels of PM2.5 Particulate Matter &#128567;</span>
+                <span style="color: #FFA500">> 12μg/m<sup>3</sup> - 35μg/m<sup>3</sup> = Permissible Levels of PM2.5 Particulate Matter &#128577; (EPA 24-Hour PM2.5 Standard = 35μg/m<sup>3</sup>)</span>
                 <br>
-                <span style="color: #bd1816">Above or Equals 8ppm = Hazardous Levels of PM2.5 Particulate Matter &#128128;</span>
+                <span style="color: #bd1816">> 35μg/m<sup>3</sup> - 55μg/m<sup>3</sup> = Alarming Levels of PM2.5 Particulate Matter &#128567;</span>
+                <br>
+                <span style="color: #000000">> 55μg/m<sup>3</sup> = Hazardous Levels of PM2.5 Particulate Matter &#128128;</span>
+                <br>
+                <a href="https://www.epa.gov/sites/default/files/2016-04/documents/2012_aqi_factsheet.pdf">
+                <span style="float: right">
+                    Environmental Protection Agency &#128214;
+                </span>
+                </a>
             </div>
         </div>
     </div>
@@ -351,8 +359,8 @@
     </div>
     <script>
         // reload page once again on page load to prevent chart.js loading glitches
-        window.onload = function() {
-            if(!window.location.hash) {
+        window.onload = function () {
+            if (!window.location.hash) {
                 window.location = window.location + '#loaded';
                 window.location.reload();
             }
@@ -376,8 +384,8 @@
         // findHighestInArray(array) to find highest value in array
         function findHighestInArray(array) {
             let highest = array[0];
-            for(let i = 0; i < array.length; i++) {
-                if(array[i] > highest) {
+            for (let i = 0; i < array.length; i++) {
+                if (array[i] > highest) {
                     highest = array[i];
                 }
             }
@@ -387,7 +395,7 @@
         // findLowestInArray(array) to find lowest value in array
         function findLowestInArray(array) {
             let lowest = array[0];
-            for(let i = 0; i < array.length; i++) {
+            for (let i = 0; i < array.length; i++) {
                 if (array[i] < lowest) {
                     lowest = array[i];
                 }
@@ -434,22 +442,20 @@
                 let lowestTemperature, highestTemperature;
                 lowestTemperature = findLowestInArray(temperatureValueNumberArray);
                 highestTemperature = findHighestInArray(temperatureValueNumberArray);
-                console.log(lowestTemperature);
-                console.log(highestTemperature);
                 let lowestTemperatureCeiling, highestTemperatureCeiling;
-                lowestTemperatureCeiling = Math.round((Math.round(lowestTemperature))/10) * 10;
-                highestTemperatureCeiling = Math.round((Math.round(highestTemperature))/10) * 10;
+                lowestTemperatureCeiling = Math.round((Math.round(lowestTemperature)) / 10) * 10;
+                highestTemperatureCeiling = Math.round((Math.round(highestTemperature)) / 10) * 10;
 
-                if (highestTemperatureCeiling === lowestTemperatureCeiling){
+                if (highestTemperatureCeiling === lowestTemperatureCeiling) {
                     highestTemperatureCeiling = highestTemperatureCeiling + 10;
                 }
-                if (highestTemperature > highestTemperatureCeiling){
-                    while (highestTemperature > highestTemperatureCeiling){
+                if (highestTemperature > highestTemperatureCeiling) {
+                    while (highestTemperature > highestTemperatureCeiling) {
                         highestTemperatureCeiling += 10;
                     }
                 }
-                if (lowestTemperature < lowestTemperatureCeiling){
-                    while (lowestTemperature < lowestTemperatureCeiling){
+                if (lowestTemperature < lowestTemperatureCeiling) {
+                    while (lowestTemperature < lowestTemperatureCeiling) {
                         lowestTemperatureCeiling -= 10;
                     }
                 }
@@ -576,18 +582,18 @@
                 lowestAlcohol = findLowestInArray(alcoholValueNumberArray);
                 highestAlcohol = findHighestInArray(alcoholValueNumberArray);
                 let lowestAlcoholCeiling, highestAlcoholCeiling;
-                lowestAlcoholCeiling = Math.round((Math.round(lowestAlcohol))/10) * 10;
-                highestAlcoholCeiling = Math.round((Math.round(highestAlcohol))/10) * 10;
-                if (highestAlcoholCeiling === lowestAlcoholCeiling){
+                lowestAlcoholCeiling = Math.round((Math.round(lowestAlcohol)) / 10) * 10;
+                highestAlcoholCeiling = Math.round((Math.round(highestAlcohol)) / 10) * 10;
+                if (highestAlcoholCeiling === lowestAlcoholCeiling) {
                     highestAlcoholCeiling = highestAlcoholCeiling + 10;
                 }
-                if (highestAlcohol > highestAlcoholCeiling){
-                    while (highestAlcohol > highestAlcoholCeiling){
+                if (highestAlcohol > highestAlcoholCeiling) {
+                    while (highestAlcohol > highestAlcoholCeiling) {
                         highestAlcoholCeiling += 10;
                     }
                 }
-                if (lowestAlcohol < lowestAlcoholCeiling){
-                    while (lowestAlcohol < lowestAlcoholCeiling){
+                if (lowestAlcohol < lowestAlcoholCeiling) {
+                    while (lowestAlcohol < lowestAlcoholCeiling) {
                         lowestAlcoholCeiling -= 10;
                     }
                 }
@@ -654,18 +660,18 @@
                 lowestAcetone = findLowestInArray(acetoneValueNumberArray);
                 highestAcetone = findHighestInArray(acetoneValueNumberArray);
                 let lowestAcetoneCeiling, highestAcetoneCeiling;
-                lowestAcetoneCeiling = Math.round((Math.round(lowestAcetone))/10) * 10;
-                highestAcetoneCeiling = Math.round((Math.round(highestAcetone))/10) * 10;
-                if (highestAcetoneCeiling === lowestAcetoneCeiling){
+                lowestAcetoneCeiling = Math.round((Math.round(lowestAcetone)) / 10) * 10;
+                highestAcetoneCeiling = Math.round((Math.round(highestAcetone)) / 10) * 10;
+                if (highestAcetoneCeiling === lowestAcetoneCeiling) {
                     highestAcetoneCeiling = highestAcetoneCeiling + 10;
                 }
-                if (highestAcetone > highestAcetoneCeiling){
-                    while (highestAcetone > highestAcetoneCeiling){
+                if (highestAcetone > highestAcetoneCeiling) {
+                    while (highestAcetone > highestAcetoneCeiling) {
                         highestAcetoneCeiling += 10;
                     }
                 }
-                if (lowestAcetone < lowestAcetoneCeiling){
-                    while (lowestAcetone < lowestAcetoneCeiling){
+                if (lowestAcetone < lowestAcetoneCeiling) {
+                    while (lowestAcetone < lowestAcetoneCeiling) {
                         lowestAcetoneCeiling -= 10;
                     }
                 }
@@ -732,18 +738,18 @@
                 lowestLPG = findLowestInArray(LPGValueNumberArray);
                 highestLPG = findHighestInArray(LPGValueNumberArray);
                 let lowestLPGCeiling, highestLPGCeiling;
-                lowestLPGCeiling = Math.round((Math.round(lowestLPG))/10) * 10;
-                highestLPGCeiling = Math.round((Math.round(highestLPG))/10) * 10;
-                if (highestLPGCeiling === lowestLPGCeiling){
+                lowestLPGCeiling = Math.round((Math.round(lowestLPG)) / 10) * 10;
+                highestLPGCeiling = Math.round((Math.round(highestLPG)) / 10) * 10;
+                if (highestLPGCeiling === lowestLPGCeiling) {
                     highestLPGCeiling = highestLPGCeiling + 10;
                 }
-                if (highestLPG > highestLPGCeiling){
-                    while (highestLPG > highestLPGCeiling){
+                if (highestLPG > highestLPGCeiling) {
+                    while (highestLPG > highestLPGCeiling) {
                         highestLPGCeiling += 10;
                     }
                 }
-                if (lowestLPG < lowestLPGCeiling){
-                    while (lowestLPG < lowestLPGCeiling){
+                if (lowestLPG < lowestLPGCeiling) {
+                    while (lowestLPG < lowestLPGCeiling) {
                         lowestLPGCeiling -= 10;
                     }
                 }
@@ -811,18 +817,18 @@
                 lowestCO = findLowestInArray(COValueNumberArray);
                 highestCO = findHighestInArray(COValueNumberArray);
                 let lowestCOCeiling, highestCOCeiling;
-                lowestCOCeiling = Math.round((Math.round(lowestCO))/10) * 10;
-                highestCOCeiling = Math.round((Math.round(highestCO))/10) * 10;
-                if (highestCOCeiling === lowestCOCeiling){
+                lowestCOCeiling = Math.round((Math.round(lowestCO)) / 10) * 10;
+                highestCOCeiling = Math.round((Math.round(highestCO)) / 10) * 10;
+                if (highestCOCeiling === lowestCOCeiling) {
                     highestCOCeiling = highestCOCeiling + 10;
                 }
-                if (highestCO > highestCOCeiling){
-                    while (highestCO > highestCOCeiling){
+                if (highestCO > highestCOCeiling) {
+                    while (highestCO > highestCOCeiling) {
                         highestCOCeiling += 10;
                     }
                 }
-                if (lowestCO < lowestCOCeiling){
-                    while (lowestCO < lowestCOCeiling){
+                if (lowestCO < lowestCOCeiling) {
+                    while (lowestCO < lowestCOCeiling) {
                         lowestCOCeiling -= 10;
                     }
                 }
@@ -884,8 +890,31 @@
                     PM25ValueArray.push(cleanPM25);
                 }
 
+                let temporaryNumberArray = [];
+                let PM25ValueNumberArray = convertStringToNumberArray(PM25ValueArray, temporaryNumberArray);
+                let lowestPM25, highestPM25;
+                lowestPM25 = findLowestInArray(PM25ValueNumberArray);
+                highestPM25 = findHighestInArray(PM25ValueNumberArray);
+                let lowestPM25Ceiling, highestPM25Ceiling;
+                lowestPM25Ceiling = Math.round((Math.round(lowestPM25)) / 10) * 10;
+                highestPM25Ceiling = Math.round((Math.round(highestPM25)) / 10) * 10;
+                if (highestPM25Ceiling === lowestPM25Ceiling) {
+                    highestPM25Ceiling = highestPM25Ceiling + 10;
+                }
+                if (highestPM25 > highestPM25Ceiling) {
+                    while (highestPM25 > highestPM25Ceiling) {
+                        highestPM25Ceiling += 10;
+                    }
+                }
+                if (lowestPM25 < lowestPM25Ceiling) {
+                    while (lowestPM25 < lowestPM25Ceiling) {
+                        lowestPM25Ceiling -= 10;
+                    }
+                }
+
                 document.getElementById("PM25ChartContainer").innerHTML = "";
                 document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
+
                 new Chart("PM25Chart", {
                     type: "line",
                     data: {
@@ -901,7 +930,7 @@
                     options: {
                         legend: {display: false},
                         scales: {
-                            yAxes: [{ticks: {min: 0.00, max: 50.00}}],
+                            yAxes: [{ticks: {min: lowestPM25Ceiling, max: highestPM25Ceiling}}],
                             xAxes: [{
                                 ticks: {
                                     display: true,
@@ -1185,19 +1214,19 @@
                         console.log(lowestTemperature);
                         console.log(highestTemperature);
                         let lowestTemperatureCeiling, highestTemperatureCeiling;
-                        lowestTemperatureCeiling = Math.round((Math.round(lowestTemperature))/10) * 10;
-                        highestTemperatureCeiling = Math.round((Math.round(highestTemperature))/10) * 10;
+                        lowestTemperatureCeiling = Math.round((Math.round(lowestTemperature)) / 10) * 10;
+                        highestTemperatureCeiling = Math.round((Math.round(highestTemperature)) / 10) * 10;
 
-                        if (highestTemperatureCeiling === lowestTemperatureCeiling){
+                        if (highestTemperatureCeiling === lowestTemperatureCeiling) {
                             highestTemperatureCeiling = highestTemperatureCeiling + 10;
                         }
-                        if (highestTemperature > highestTemperatureCeiling){
-                            while (highestTemperature > highestTemperatureCeiling){
+                        if (highestTemperature > highestTemperatureCeiling) {
+                            while (highestTemperature > highestTemperatureCeiling) {
                                 highestTemperatureCeiling += 10;
                             }
                         }
-                        if (lowestTemperature < lowestTemperatureCeiling){
-                            while (lowestTemperature < lowestTemperatureCeiling){
+                        if (lowestTemperature < lowestTemperatureCeiling) {
+                            while (lowestTemperature < lowestTemperatureCeiling) {
                                 lowestTemperatureCeiling -= 10;
                             }
                         }
@@ -1396,18 +1425,18 @@
                         lowestAlcohol = findLowestInArray(alcoholValueNumberArray);
                         highestAlcohol = findHighestInArray(alcoholValueNumberArray);
                         let lowestAlcoholCeiling, highestAlcoholCeiling;
-                        lowestAlcoholCeiling = Math.round((Math.round(lowestAlcohol))/10) * 10;
-                        highestAlcoholCeiling = Math.round((Math.round(highestAlcohol))/10) * 10;
-                        if (highestAlcoholCeiling === lowestAlcoholCeiling){
+                        lowestAlcoholCeiling = Math.round((Math.round(lowestAlcohol)) / 10) * 10;
+                        highestAlcoholCeiling = Math.round((Math.round(highestAlcohol)) / 10) * 10;
+                        if (highestAlcoholCeiling === lowestAlcoholCeiling) {
                             highestAlcoholCeiling = highestAlcoholCeiling + 10;
                         }
-                        if (highestAlcohol > highestAlcoholCeiling){
-                            while (highestAlcohol > highestAlcoholCeiling){
+                        if (highestAlcohol > highestAlcoholCeiling) {
+                            while (highestAlcohol > highestAlcoholCeiling) {
                                 highestAlcoholCeiling += 10;
                             }
                         }
-                        if (lowestAlcohol < lowestAlcoholCeiling){
-                            while (lowestAlcohol < lowestAlcoholCeiling){
+                        if (lowestAlcohol < lowestAlcoholCeiling) {
+                            while (lowestAlcohol < lowestAlcoholCeiling) {
                                 lowestAlcoholCeiling -= 10;
                             }
                         }
@@ -1515,18 +1544,18 @@
                         lowestAcetone = findLowestInArray(acetoneValueNumberArray);
                         highestAcetone = findHighestInArray(acetoneValueNumberArray);
                         let lowestAcetoneCeiling, highestAcetoneCeiling;
-                        lowestAcetoneCeiling = Math.round((Math.round(lowestAcetone))/10) * 10;
-                        highestAcetoneCeiling = Math.round((Math.round(highestAcetone))/10) * 10;
-                        if (highestAcetoneCeiling === lowestAcetoneCeiling){
+                        lowestAcetoneCeiling = Math.round((Math.round(lowestAcetone)) / 10) * 10;
+                        highestAcetoneCeiling = Math.round((Math.round(highestAcetone)) / 10) * 10;
+                        if (highestAcetoneCeiling === lowestAcetoneCeiling) {
                             highestAcetoneCeiling = highestAcetoneCeiling + 10;
                         }
-                        if (highestAcetone > highestAcetoneCeiling){
-                            while (highestAcetone > highestAcetoneCeiling){
+                        if (highestAcetone > highestAcetoneCeiling) {
+                            while (highestAcetone > highestAcetoneCeiling) {
                                 highestAcetoneCeiling += 10;
                             }
                         }
-                        if (lowestAcetone < lowestAcetoneCeiling){
-                            while (lowestAcetone < lowestAcetoneCeiling){
+                        if (lowestAcetone < lowestAcetoneCeiling) {
+                            while (lowestAcetone < lowestAcetoneCeiling) {
                                 lowestAcetoneCeiling -= 10;
                             }
                         }
@@ -1635,18 +1664,18 @@
                         lowestLPG = findLowestInArray(LPGValueNumberArray);
                         highestLPG = findHighestInArray(LPGValueNumberArray);
                         let lowestLPGCeiling, highestLPGCeiling;
-                        lowestLPGCeiling = Math.round((Math.round(lowestLPG))/10) * 10;
-                        highestLPGCeiling = Math.round((Math.round(highestLPG))/10) * 10;
-                        if (highestLPGCeiling === lowestLPGCeiling){
+                        lowestLPGCeiling = Math.round((Math.round(lowestLPG)) / 10) * 10;
+                        highestLPGCeiling = Math.round((Math.round(highestLPG)) / 10) * 10;
+                        if (highestLPGCeiling === lowestLPGCeiling) {
                             highestLPGCeiling = highestLPGCeiling + 10;
                         }
-                        if (highestLPG > highestLPGCeiling){
-                            while (highestLPG > highestLPGCeiling){
+                        if (highestLPG > highestLPGCeiling) {
+                            while (highestLPG > highestLPGCeiling) {
                                 highestLPGCeiling += 10;
                             }
                         }
-                        if (lowestLPG < lowestLPGCeiling){
-                            while (lowestLPG < lowestLPGCeiling){
+                        if (lowestLPG < lowestLPGCeiling) {
+                            while (lowestLPG < lowestLPGCeiling) {
                                 lowestLPGCeiling -= 10;
                             }
                         }
@@ -1754,18 +1783,18 @@
                         lowestCO = findLowestInArray(COValueNumberArray);
                         highestCO = findHighestInArray(COValueNumberArray);
                         let lowestCOCeiling, highestCOCeiling;
-                        lowestCOCeiling = Math.round((Math.round(lowestCO))/10) * 10;
-                        highestCOCeiling = Math.round((Math.round(highestCO))/10) * 10;
-                        if (highestCOCeiling === lowestCOCeiling){
+                        lowestCOCeiling = Math.round((Math.round(lowestCO)) / 10) * 10;
+                        highestCOCeiling = Math.round((Math.round(highestCO)) / 10) * 10;
+                        if (highestCOCeiling === lowestCOCeiling) {
                             highestCOCeiling = highestCOCeiling + 10;
                         }
-                        if (highestCO > highestCOCeiling){
-                            while (highestCO > highestCOCeiling){
+                        if (highestCO > highestCOCeiling) {
+                            while (highestCO > highestCOCeiling) {
                                 highestCOCeiling += 10;
                             }
                         }
-                        if (lowestCO < lowestCOCeiling){
-                            while (lowestCO < lowestCOCeiling){
+                        if (lowestCO < lowestCOCeiling) {
+                            while (lowestCO < lowestCOCeiling) {
                                 lowestCOCeiling -= 10;
                             }
                         }
@@ -1833,19 +1862,22 @@
                     jsonPM25Value = jsonPM25Value.replaceAll("}", "");
                     jsonPM25Value = jsonPM25Value.replaceAll("]", "");
 
-                    if (jsonPM25Value >= 8) {
-                        jsonPM25Value = jsonPM25Value + 'ppm' + '&#128128;';
-                        document.getElementById("PM25Indicator").style.backgroundColor = "#bd1816";
-                    }
-                    if (jsonPM25Value >= 5 && jsonPM25Value <= 7) {
-                        jsonPM25Value = jsonPM25Value + 'ppm' + '&#128567;';
-                        document.getElementById("PM25Indicator").style.backgroundColor = "#FFA500";
-                    }
-                    if (jsonPM25Value <= 4) {
-                        jsonPM25Value = jsonPM25Value + 'ppm' + '&#128516;';
+                    if (jsonPM25Value <= 12) {
+                        jsonPM25Value = jsonPM25Value + 'µg/m<sup>3</sup>' + '&#128516;';
                         document.getElementById("PM25Indicator").style.backgroundColor = "#4CBB17";
                     }
-
+                    if (jsonPM25Value > 12 && jsonPM25Value <= 35) {
+                        jsonPM25Value = jsonPM25Value + 'µg/m<sup>3</sup>' + '&#128577;';
+                        document.getElementById("PM25Indicator").style.backgroundColor = "#FFA500";
+                    }
+                    if (jsonPM25Value > 35 && jsonPM25Value <= 55) {
+                        jsonPM25Value = jsonPM25Value + 'µg/m<sup>3</sup>' + '&#128567;';
+                        document.getElementById("PM25Indicator").style.backgroundColor = "#bd1816";
+                    }
+                    if (jsonPM25Value > 55) {
+                        jsonPM25Value = jsonPM25Value + 'µg/m<sup>3</sup>' + '&#128128;';
+                        document.getElementById("PM25Indicator").style.backgroundColor = "#000000";
+                    }
                     document.getElementById('latestPM25').innerHTML = jsonPM25Value;
 
                     var iterator = PM25Array.values();
@@ -1862,8 +1894,31 @@
                     }
 
                     if (document.getElementById("PM25DateArray").value === date) {
+                        let temporaryNumberArray = [];
+                        let PM25ValueNumberArray = convertStringToNumberArray(PM25ValueArray, temporaryNumberArray);
+                        let lowestPM25, highestPM25;
+                        lowestPM25 = findLowestInArray(PM25ValueNumberArray);
+                        highestPM25 = findHighestInArray(PM25ValueNumberArray);
+                        let lowestPM25Ceiling, highestPM25Ceiling;
+                        lowestPM25Ceiling = Math.round((Math.round(lowestPM25)) / 10) * 10;
+                        highestPM25Ceiling = Math.round((Math.round(highestPM25)) / 10) * 10;
+                        if (highestPM25Ceiling === lowestPM25Ceiling) {
+                            highestPM25Ceiling = highestPM25Ceiling + 10;
+                        }
+                        if (highestPM25 > highestPM25Ceiling) {
+                            while (highestPM25 > highestPM25Ceiling) {
+                                highestPM25Ceiling += 10;
+                            }
+                        }
+                        if (lowestPM25 < lowestPM25Ceiling) {
+                            while (lowestPM25 < lowestPM25Ceiling) {
+                                lowestPM25Ceiling -= 10;
+                            }
+                        }
+
                         document.getElementById("PM25ChartContainer").innerHTML = "";
                         document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
+
                         new Chart("PM25Chart", {
                             type: "line",
                             data: {
@@ -1879,7 +1934,7 @@
                             options: {
                                 legend: {display: false},
                                 scales: {
-                                    yAxes: [{ticks: {min: 0.00, max: 50.00}}],
+                                    yAxes: [{ticks: {min: lowestPM25Ceiling, max: highestPM25Ceiling}}],
                                     xAxes: [{
                                         ticks: {
                                             display: true,
