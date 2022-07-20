@@ -520,6 +520,28 @@
                     humidityValueArray.push(cleanHumidity);
                 }
 
+                let temporaryNumberArray = [];
+                let humidityValueNumberArray = convertStringToNumberArray(humidityValueArray, temporaryNumberArray);
+                let lowestHumidity, highestHumidity;
+                lowestHumidity = findLowestInArray(humidityValueNumberArray);
+                highestHumidity = findHighestInArray(humidityValueNumberArray);
+                let lowestHumidityCeiling, highestHumidityCeiling;
+                lowestHumidityCeiling = Math.round((Math.round(lowestHumidity)) / 10) * 10;
+                highestHumidityCeiling = Math.round((Math.round(highestHumidity)) / 10) * 10;
+                if (highestHumidityCeiling === lowestHumidityCeiling) {
+                    highestHumidityCeiling = highestHumidityCeiling + 10;
+                }
+                if (highestHumidity > highestHumidityCeiling) {
+                    while (highestHumidity > highestHumidityCeiling) {
+                        highestHumidityCeiling += 10;
+                    }
+                }
+                if (lowestHumidity < lowestHumidityCeiling) {
+                    while (lowestHumidity < lowestHumidityCeiling) {
+                        lowestHumidityCeiling -= 10;
+                    }
+                }
+
                 document.getElementById('humidityChartContainer').innerHTML = "";
                 document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
 
@@ -538,7 +560,7 @@
                     options: {
                         legend: {display: false},
                         scales: {
-                            yAxes: [{ticks: {min: 0.00, max: 100.00}}],
+                            yAxes: [{ticks: {min: lowestHumidityCeiling, max: highestHumidityCeiling}}],
                             xAxes: [{
                                 ticks: {
                                     display: true,
@@ -1325,8 +1347,31 @@
                     }
 
                     if (document.getElementById("humidityDateArray").value === date) {
+                        let temporaryNumberArray = [];
+                        let humidityValueNumberArray = convertStringToNumberArray(humidityValueArray, temporaryNumberArray);
+                        let lowestHumidity, highestHumidity;
+                        lowestHumidity = findLowestInArray(humidityValueNumberArray);
+                        highestHumidity = findHighestInArray(humidityValueNumberArray);
+                        let lowestHumidityCeiling, highestHumidityCeiling;
+                        lowestHumidityCeiling = Math.round((Math.round(lowestHumidity)) / 10) * 10;
+                        highestHumidityCeiling = Math.round((Math.round(highestHumidity)) / 10) * 10;
+                        if (highestHumidityCeiling === lowestHumidityCeiling) {
+                            highestHumidityCeiling = highestHumidityCeiling + 10;
+                        }
+                        if (highestHumidity > highestHumidityCeiling) {
+                            while (highestHumidity > highestHumidityCeiling) {
+                                highestHumidityCeiling += 10;
+                            }
+                        }
+                        if (lowestHumidity < lowestHumidityCeiling) {
+                            while (lowestHumidity < lowestHumidityCeiling) {
+                                lowestHumidityCeiling -= 10;
+                            }
+                        }
+
                         document.getElementById('humidityChartContainer').innerHTML = "";
                         document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
+
                         new Chart("humidityChart", {
                             type: "line",
                             data: {
@@ -1342,7 +1387,7 @@
                             options: {
                                 legend: {display: false},
                                 scales: {
-                                    yAxes: [{ticks: {min: 0.00, max: 100.00}}],
+                                    yAxes: [{ticks: {min: lowestHumidityCeiling, max: highestHumidityCeiling}}],
                                     xAxes: [{
                                         ticks: {
                                             display: true,
