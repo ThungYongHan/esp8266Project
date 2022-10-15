@@ -401,6 +401,42 @@
             return lowest;
         }
 
+        // function generateChart(parameterChartContainer, parameterChart, chartName, timeArray, parameterValueNumberArray, lowestParameterCeiling, highestParameterCeiling) {
+        function generateChart(chartName, timeArray, parameterValueNumberArray, lowestParameterCeiling, highestParameterCeiling) {
+            // document.getElementById(parameterChartContainer).innerHTML = "";
+            // // document.getElementById(parameterChartContainer).innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
+            // var test = "<canvas id=\"" + parameterChart + "\"></canvas>";
+            // document.getElementById(parameterChartContainer).innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
+            new Chart(chartName, {
+                type: "line",
+                data: {
+                    labels: timeArray,
+                    datasets: [{
+                        fill: false,
+                        lineTension: 0,
+                        backgroundColor: "rgba(0,0,255,1.0)",
+                        borderColor: "rgba(0,0,255,0.1)",
+                        data: parameterValueNumberArray
+
+                    }]
+                },
+                options: {
+                    legend: {display: false},
+                    scales: {
+                        yAxes: [{ticks: {min: lowestParameterCeiling, max: highestParameterCeiling}}],
+                        // limit x axis to 24 ticks
+                        xAxes: [{
+                            ticks: {
+                                display: true,
+                                autoSkip: true,
+                                maxTicksLimit: 24
+                            }
+                        }],
+                    }
+                }
+            });
+        }
+
         // obtain historical temperature data after selecting temperature date from drop-down menu
         function selectTemperatureOption() {
             // get selected temperature date
@@ -462,35 +498,7 @@
                 // when hovering over temperature chart data points
                 document.getElementById("temperatureChartContainer").innerHTML = "";
                 document.getElementById('temperatureChartContainer').innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
-
-                new Chart("temperatureChart", {
-                    type: "line",
-                    data: {
-                        labels: timeArray,
-                        datasets: [{
-                            fill: false,
-                            lineTension: 0,
-                            backgroundColor: "rgba(0,0,255,1.0)",
-                            borderColor: "rgba(0,0,255,0.1)",
-                            data: temperatureValueNumberArray
-
-                        }]
-                    },
-                    options: {
-                        legend: {display: false},
-                        scales: {
-                            yAxes: [{ticks: {min: lowestTemperatureCeiling, max: highestTemperatureCeiling}}],
-                            // limit x axis to 24 ticks
-                            xAxes: [{
-                                ticks: {
-                                    display: true,
-                                    autoSkip: true,
-                                    maxTicksLimit: 24
-                                }
-                            }],
-                        }
-                    }
-                });
+                generateChart("temperatureChart", timeArray, temperatureValueNumberArray, lowestTemperatureCeiling, highestTemperatureCeiling);
             });
         }
 
@@ -542,33 +550,7 @@
 
                 document.getElementById('humidityChartContainer').innerHTML = "";
                 document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
-
-                new Chart("humidityChart", {
-                    type: "line",
-                    data: {
-                        labels: timeArray,
-                        datasets: [{
-                            fill: false,
-                            lineTension: 0,
-                            backgroundColor: "rgba(0,0,255,1.0)",
-                            borderColor: "rgba(0,0,255,0.1)",
-                            data: humidityValueArray
-                        }]
-                    },
-                    options: {
-                        legend: {display: false},
-                        scales: {
-                            yAxes: [{ticks: {min: lowestHumidityCeiling, max: highestHumidityCeiling}}],
-                            xAxes: [{
-                                ticks: {
-                                    display: true,
-                                    autoSkip: true,
-                                    maxTicksLimit: 24
-                                }
-                            }],
-                        }
-                    }
-                });
+                generateChart("humidityChart", timeArray, humidityValueNumberArray, lowestHumidityCeiling, highestHumidityCeiling);
             });
         }
 
@@ -620,33 +602,7 @@
 
                 document.getElementById("alcoholChartContainer").innerHTML = "";
                 document.getElementById('alcoholChartContainer').innerHTML = "<canvas id=\"alcoholChart\"></canvas>";
-
-                new Chart("alcoholChart", {
-                    type: "line",
-                    data: {
-                        labels: timeArray,
-                        datasets: [{
-                            fill: false,
-                            lineTension: 0,
-                            backgroundColor: "rgba(0,0,255,1.0)",
-                            borderColor: "rgba(0,0,255,0.1)",
-                            data: alcoholValueNumberArray
-                        }]
-                    },
-                    options: {
-                        legend: {display: false},
-                        scales: {
-                            yAxes: [{ticks: {min: lowestAlcoholCeiling, max: highestAlcoholCeiling}}],
-                            xAxes: [{
-                                ticks: {
-                                    display: true,
-                                    autoSkip: true,
-                                    maxTicksLimit: 24
-                                }
-                            }],
-                        }
-                    }
-                });
+                generateChart("alcoholChart", timeArray, alcoholValueNumberArray, lowestAlcoholCeiling, highestAlcoholCeiling);
             });
         }
 
@@ -698,33 +654,7 @@
 
                 document.getElementById("acetoneChartContainer").innerHTML = "";
                 document.getElementById('acetoneChartContainer').innerHTML = "<canvas id=\"acetoneChart\"></canvas>";
-
-                new Chart("acetoneChart", {
-                    type: "line",
-                    data: {
-                        labels: timeArray,
-                        datasets: [{
-                            fill: false,
-                            lineTension: 0,
-                            backgroundColor: "rgba(0,0,255,1.0)",
-                            borderColor: "rgba(0,0,255,0.1)",
-                            data: acetoneValueArray
-                        }]
-                    },
-                    options: {
-                        legend: {display: false},
-                        scales: {
-                            yAxes: [{ticks: {min: lowestAcetoneCeiling, max: highestAcetoneCeiling}}],
-                            xAxes: [{
-                                ticks: {
-                                    display: true,
-                                    autoSkip: true,
-                                    maxTicksLimit: 24
-                                }
-                            }],
-                        }
-                    }
-                });
+                generateChart("acetoneChart", timeArray, acetoneValueNumberArray, lowestAcetoneCeiling, highestAcetoneCeiling);
             });
         }
 
@@ -776,34 +706,7 @@
 
                 document.getElementById("LPGChartContainer").innerHTML = "";
                 document.getElementById('LPGChartContainer').innerHTML = "<canvas id=\"LPGChart\"></canvas>";
-
-                new Chart("LPGChart", {
-                    type: "line",
-                    data: {
-                        labels: timeArray,
-                        datasets: [{
-                            fill: false,
-                            lineTension: 0,
-                            backgroundColor: "rgba(0,0,255,1.0)",
-                            borderColor: "rgba(0,0,255,0.1)",
-                            data: LPGValueArray
-                        }]
-                    },
-                    options: {
-                        legend: {display: false},
-                        scales: {
-                            yAxes: [{ticks: {min: lowestLPGCeiling, max: highestLPGCeiling}}],
-                            // yAxes: [{ticks: {min: 0.00, max: 5000.00}}],
-                            xAxes: [{
-                                ticks: {
-                                    display: true,
-                                    autoSkip: true,
-                                    maxTicksLimit: 24
-                                }
-                            }],
-                        }
-                    }
-                });
+                generateChart("LPGChart", timeArray, LPGValueNumberArray, lowestLPGCeiling, highestLPGCeiling);
             });
         }
 
@@ -855,34 +758,7 @@
 
                 document.getElementById("COChartContainer").innerHTML = "";
                 document.getElementById('COChartContainer').innerHTML = "<canvas id=\"COChart\"></canvas>";
-
-                new Chart("COChart", {
-                    type: "line",
-                    data: {
-                        labels: timeArray,
-                        datasets: [{
-                            fill: false,
-                            lineTension: 0,
-                            backgroundColor: "rgba(0,0,255,1.0)",
-                            borderColor: "rgba(0,0,255,0.1)",
-                            data: COValueArray
-                        }]
-                    },
-                    options: {
-                        legend: {display: false},
-                        scales: {
-                            yAxes: [{ticks: {min: lowestCOCeiling, max: highestCOCeiling}}],
-                            // yAxes: [{ticks: {min: 0.00, max: 10000.00}}],
-                            xAxes: [{
-                                ticks: {
-                                    display: true,
-                                    autoSkip: true,
-                                    maxTicksLimit: 24
-                                }
-                            }],
-                        }
-                    }
-                });
+                generateChart("COChart", timeArray, COValueNumberArray, lowestCOCeiling, highestCOCeiling);
             });
         }
 
@@ -934,33 +810,7 @@
 
                 document.getElementById("PM25ChartContainer").innerHTML = "";
                 document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
-
-                new Chart("PM25Chart", {
-                    type: "line",
-                    data: {
-                        labels: timeArray,
-                        datasets: [{
-                            fill: false,
-                            lineTension: 0,
-                            backgroundColor: "rgba(0,0,255,1.0)",
-                            borderColor: "rgba(0,0,255,0.1)",
-                            data: PM25ValueArray
-                        }]
-                    },
-                    options: {
-                        legend: {display: false},
-                        scales: {
-                            yAxes: [{ticks: {min: lowestPM25Ceiling, max: highestPM25Ceiling}}],
-                            xAxes: [{
-                                ticks: {
-                                    display: true,
-                                    autoSkip: true,
-                                    maxTicksLimit: 24
-                                }
-                            }],
-                        }
-                    }
-                });
+                generateChart("PM25Chart", timeArray, PM25ValueNumberArray, lowestPM25Ceiling, highestPM25Ceiling);
             });
         }
 
