@@ -326,7 +326,6 @@
         <div id="alcoholIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
           box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <!--            <h5 style="color: #fff;">Alcohol &#127866;</h5>-->
             <h5 style="color: #fff;">Alcohol (C<sub>2</sub>H<sub>5</sub>OH)</h5>
 
             <h1 id="latestAlcohol" style="color: #fff;"></h1>
@@ -341,7 +340,6 @@
         <div id="LPGIndicator" class="col-md-3" style="background-color:
           #23408e; text-align: center; padding: 15px 0; border-radius: 30px;
           box-shadow: 5px 5px 5px grey; margin-right: 2%;">
-            <!--            <h5 style="color: #fff;">Liquefied Petroleum Gas &#9981;</h5>-->
             <h5 style="color: #fff;">Liquefied Petroleum Gas (C<sub>3</sub>H<sub>8</sub>)</h5>
 
             <h1 id="latestLPG" style="color: #fff;"></h1>
@@ -1077,13 +1075,7 @@
 
                 document.querySelector('#load');
 
-                var temperatureDays;
-                var humidityDays;
-                var PM25Days;
-                var alcoholDays;
-                var acetoneDays;
-                var LPGDays;
-                var CODays;
+                var temperatureDays, humidityDays, PM25Days, alcoholDays, acetoneDays, LPGDays, CODays;
                 var firebaseDays = document.getElementById("firebaseDateArray");
 
                 var temperatureDateSelect = document.getElementById("temperatureDateArray");
@@ -1094,9 +1086,7 @@
                 var CODateSelect = document.getElementById("CODateArray");
                 var PM25DateSelect = document.getElementById("PM25DateArray");
 
-                var date;
-                var previousDateCount;
-                var currentDateCount;
+                var date, previousDateCount, currentDateCount;
 
                 // get previous firebaseDays array length
                 await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
