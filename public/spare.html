@@ -470,6 +470,29 @@
                     parameterValueArray.push(cleanParameter);
                 }
 
+                // // dynamic chart y axis min max based on lowest and highest values
+                // let temporaryNumberArray = [];
+                // parameterValueNumberArray = convertStringToNumberArray(parameterValueArray, temporaryNumberArray);
+                // let lowestParameter, highestParameter;
+                // lowestParameter = findLowestInArray(parameterValueNumberArray);
+                // highestParameter = findHighestInArray(parameterValueNumberArray);
+                // lowestParameterCeiling = Math.round((Math.round(lowestParameter)) / 10) * 10;
+                // highestParameterCeiling = Math.round((Math.round(highestParameter)) / 10) * 10;
+                //
+                // if (highestParameterCeiling === lowestParameterCeiling) {
+                //     highestParameterCeiling = highestParameterCeiling + 10;
+                // }
+                // if (highestParameter > highestParameterCeiling) {
+                //     while (highestParameter > highestParameterCeiling) {
+                //         highestParameterCeiling += 10;
+                //     }
+                // }
+                // if (lowestParameter < lowestParameterCeiling) {
+                //     while (lowestParameter < lowestParameterCeiling) {
+                //         lowestParameterCeiling -= 10;
+                //     }
+                // }
+
                 let yAxisValues = dynamicYAxis(parameterValueArray)
                 parameterValueNumberArray = yAxisValues[0];
                 lowestParameterCeiling = yAxisValues[1];
@@ -477,30 +500,6 @@
             });
             return [timeArray, parameterValueNumberArray, lowestParameterCeiling, highestParameterCeiling];
         }
-
-
-        function cleanParameterPush(parameterArray){
-            var iterator = parameterArray.values();
-            var timeArray = [];
-            var parameterValueArray = [];
-
-            for (let elements of iterator) {
-                // insert latest temperature array element keys (time) into time array
-                timeArray.push(Object.keys(elements).toString());
-                // json converted to string for the latest temperature array element value (temperature)
-                let cleanParameter = JSON.stringify(Object.values(elements));
-                // remove unnecessary string data and be left with only actual temperature value
-                cleanParameter = cleanParameter.split(":").pop();
-                cleanParameter = cleanParameter.replaceAll("\"", "");
-                cleanParameter = cleanParameter.replaceAll("}", "");
-                cleanParameter = cleanParameter.replaceAll("]", "");
-                // insert actual temperature value into temperature value array
-                parameterValueArray.push(cleanParameter);
-            }
-
-            return [timeArray, parameterValueArray];
-        }
-
 
         function jsonParameterReturnCompare(parameterStr) {
             var parameterArray = [];
@@ -524,7 +523,7 @@
             return [parameterArray, jsonParameterValue];
         }
 
-        function dynamicYAxis(parameterValueArray) {
+        function dynamicYAxis(parameterValueArray){
             // dynamic chart y axis min max based on lowest and highest values
             let temporaryNumberArray = [];
             let parameterValueNumberArray = convertStringToNumberArray(parameterValueArray, temporaryNumberArray);
@@ -789,9 +788,32 @@
 
                 await firebase.database().ref(currentDayTemperature).on('value', (snap) => {
                     var temperatureStr = snap.val();
+
                     var jsonReturnedParameter = jsonParameterReturnCompare(temperatureStr);
+                    // //
+                    // var temperatureArray = [];
+                    //
+                    // // insert retrieved latest temperature data into temperature array
+                    // Object.keys(temperatureStr).forEach((key) => {
+                    //     temperatureArray.push({[key]: temperatureStr[key]});
+                    // });
+                    //
+                    // // json converted to string for final (latest) temperature array element value
+                    // var latestTemperature = temperatureArray[temperatureArray.length - 1];
+                    // var temperatureValue = Object.values(latestTemperature);
+                    // var jsonTemperatureValue = JSON.stringify(temperatureValue);
+                    //
+                    // // remove unnecessary string data and be left with only actual latest temperature value
+                    // jsonTemperatureValue = jsonTemperatureValue.split(":").pop();
+                    // jsonTemperatureValue = jsonTemperatureValue.replaceAll("\"", "");
+                    // jsonTemperatureValue = jsonTemperatureValue.replaceAll("}", "");
+                    // jsonTemperatureValue = jsonTemperatureValue.replaceAll("]", "");
+                    //
+                    // //
+
                     var jsonTemperatureValue = jsonReturnedParameter[1];
                     var temperatureArray = jsonReturnedParameter[0];
+
 
                     // compare latest temperature value
                     if (jsonTemperatureValue < 23) {
@@ -807,31 +829,56 @@
                         jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#129397';
                     }
 
-                    let timeAndParameterValueArray = cleanParameterPush(temperatureArray);
-                    // var iterator = temperatureArray.values();
-                    // var timeArray = [];
-                    // var temperatureValueArray = [];
-                    //
-                    // for (let elements of iterator) {
-                    //     // insert latest temperature array element keys (time) into time array
-                    //     timeArray.push(Object.keys(elements).toString());
-                    //     // json converted to string for the latest temperature array element value (temperature)
-                    //     let cleanTemperature = JSON.stringify(Object.values(elements));
-                    //     // remove unnecessary string data and be left with only actual temperature value
-                    //     cleanTemperature = cleanTemperature.split(":").pop();
-                    //     cleanTemperature = cleanTemperature.replaceAll("\"", "");
-                    //     cleanTemperature = cleanTemperature.replaceAll("}", "");
-                    //     cleanTemperature = cleanTemperature.replaceAll("]", "");
-                    //     // insert actual temperature value into temperature value array
-                    //     temperatureValueArray.push(cleanTemperature);
-                    // }
+                    var iterator = temperatureArray.values();
+                    var timeArray = [];
+                    var temperatureValueArray = [];
+
+
+                    for (let elements of iterator) {
+                        // insert latest temperature array element keys (time) into time array
+                        timeArray.push(Object.keys(elements).toString());
+                        // json converted to string for the latest temperature array element value (temperature)
+                        let cleanTemperature = JSON.stringify(Object.values(elements));
+                        // remove unnecessary string data and be left with only actual temperature value
+                        cleanTemperature = cleanTemperature.split(":").pop();
+                        cleanTemperature = cleanTemperature.replaceAll("\"", "");
+                        cleanTemperature = cleanTemperature.replaceAll("}", "");
+                        cleanTemperature = cleanTemperature.replaceAll("]", "");
+                        // insert actual temperature value into temperature value array
+                        temperatureValueArray.push(cleanTemperature);
+                    }
+
 
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("temperatureDateArray").value === date) {
-                        let yAxisValues = dynamicYAxis(timeAndParameterValueArray[1])
+                        // // dynamic chart y axis min max based on lowest and highest values
+                        // let temporaryNumberArray = [];
+                        // let temperatureValueNumberArray = convertStringToNumberArray(temperatureValueArray, temporaryNumberArray);
+                        // let lowestTemperature, highestTemperature;
+                        // lowestTemperature = findLowestInArray(temperatureValueNumberArray);
+                        // highestTemperature = findHighestInArray(temperatureValueNumberArray);
+                        // let lowestTemperatureCeiling, highestTemperatureCeiling;
+                        // lowestTemperatureCeiling = Math.round((Math.round(lowestTemperature)) / 10) * 10;
+                        // highestTemperatureCeiling = Math.round((Math.round(highestTemperature)) / 10) * 10;
+                        //
+                        // if (highestTemperatureCeiling === lowestTemperatureCeiling) {
+                        //     highestTemperatureCeiling = highestTemperatureCeiling + 10;
+                        // }
+                        // if (highestTemperature > highestTemperatureCeiling) {
+                        //     while (highestTemperature > highestTemperatureCeiling) {
+                        //         highestTemperatureCeiling += 10;
+                        //     }
+                        // }
+                        // if (lowestTemperature < lowestTemperatureCeiling) {
+                        //     while (lowestTemperature < lowestTemperatureCeiling) {
+                        //         lowestTemperatureCeiling -= 10;
+                        //     }
+                        // }
+
+                        let yAxisValues = dynamicYAxis(temperatureValueArray)
 
                         generateChart("temperatureChartContainer", "<canvas id=\"temperatureChart\"></canvas>", "temperatureChart",
-                            timeAndParameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
+                            timeArray, yAxisValues[0], yAxisValues[1], yAxisValues[2]);
                     }
 
                     // latest temperature value
