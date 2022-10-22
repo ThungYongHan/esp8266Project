@@ -401,11 +401,11 @@
             return lowest;
         }
 
-        function generateChart(parameterChartContainer, canvasChart, chartName, timeArray, parameterValueNumberArray, lowestParameterCeiling, highestParameterCeiling) {
-            // empty and reload the div to prevent other parameter chart data from other days from being shown
-            // when hovering over parameter chart data points
-            document.getElementById(parameterChartContainer.toString()).innerHTML = "";
-            document.getElementById(parameterChartContainer.toString()).innerHTML = canvasChart.toString();
+        function generateChart(chartName, timeArray, parameterValueNumberArray, lowestParameterCeiling, highestParameterCeiling) {
+            // document.getElementById(parameterChartContainer).innerHTML = "";
+            // // document.getElementById(parameterChartContainer).innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
+            // var test = "<canvas id=\"" + parameterChart + "\"></canvas>";
+            // document.getElementById(parameterChartContainer).innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
             new Chart(chartName, {
                 type: "line",
                 data: {
@@ -436,163 +436,381 @@
             });
         }
 
-        function selectParameterOption(parameterDateArray, sensorParameter) {
-            // get selected parameter date
-            let selectedParameterDate = document.getElementById(parameterDateArray.toString()).value;
-            let selectedDayParameter = sensorParameter.toString() + selectedParameterDate;
-            let timeArray = [];
-            let parameterArray = [];
-            let parameterValueNumberArray, lowestParameterCeiling, highestParameterCeiling;
-
-            // retrieve firebase realtime database data of the selected parameter date
-            firebase.database().ref(selectedDayParameter).on('value', (snap) => {
-                let parameterStr = snap.val();
-                let parameterValueArray = [];
-
-                // insert retrieved selected parameter date data into array
-                Object.keys(parameterStr).forEach((key) => {
-                    parameterArray.push({[key]: parameterStr[key]});
-                });
-
-                let iterator = parameterArray.values();
-
-                for (let elements of iterator) {
-                    // insert selected parameter date data array element keys (time) into time array
-                    timeArray.push(Object.keys(elements).toString());
-                    // json converted to string for the selected parameter date data array element value (parameter)
-                    let cleanParameter = JSON.stringify(Object.values(elements));
-                    // remove unnecessary string data and be left with only actual parameter value
-                    cleanParameter = cleanParameter.split(":").pop();
-                    cleanParameter = cleanParameter.replaceAll("\"", "");
-                    cleanParameter = cleanParameter.replaceAll("}", "");
-                    cleanParameter = cleanParameter.replaceAll("]", "");
-                    // insert actual parameter value into parameter value array
-                    parameterValueArray.push(cleanParameter);
-                }
-
-                let yAxisValues = dynamicYAxis(parameterValueArray)
-                parameterValueNumberArray = yAxisValues[0];
-                lowestParameterCeiling = yAxisValues[1];
-                highestParameterCeiling = yAxisValues[2];
-            });
-            return [timeArray, parameterValueNumberArray, lowestParameterCeiling, highestParameterCeiling];
-        }
-
-
-        function cleanParameterPush(parameterArray){
-            var iterator = parameterArray.values();
-            var timeArray = [];
-            var parameterValueArray = [];
-
-            for (let elements of iterator) {
-                // insert latest temperature array element keys (time) into time array
-                timeArray.push(Object.keys(elements).toString());
-                // json converted to string for the latest temperature array element value (temperature)
-                let cleanParameter = JSON.stringify(Object.values(elements));
-                // remove unnecessary string data and be left with only actual temperature value
-                cleanParameter = cleanParameter.split(":").pop();
-                cleanParameter = cleanParameter.replaceAll("\"", "");
-                cleanParameter = cleanParameter.replaceAll("}", "");
-                cleanParameter = cleanParameter.replaceAll("]", "");
-                // insert actual temperature value into temperature value array
-                parameterValueArray.push(cleanParameter);
-            }
-
-            return [timeArray, parameterValueArray];
-        }
-
-
-        function jsonParameterReturnCompare(parameterStr) {
-            var parameterArray = [];
-
-            // insert retrieved latest temperature data into temperature array
-            Object.keys(parameterStr).forEach((key) => {
-                parameterArray.push({[key]: parameterStr[key]});
-            });
-
-            // json converted to string for final (latest) temperature array element value
-            var latestParameter = parameterArray[parameterArray.length - 1];
-            var parameterValue = Object.values(latestParameter);
-            var jsonParameterValue = JSON.stringify(parameterValue);
-
-            // remove unnecessary string data and be left with only actual latest temperature value
-            jsonParameterValue = jsonParameterValue.split(":").pop();
-            jsonParameterValue = jsonParameterValue.replaceAll("\"", "");
-            jsonParameterValue = jsonParameterValue.replaceAll("}", "");
-            jsonParameterValue = jsonParameterValue.replaceAll("]", "");
-
-            return [parameterArray, jsonParameterValue];
-        }
-
-        function dynamicYAxis(parameterValueArray) {
-            // dynamic chart y axis min max based on lowest and highest values
-            let temporaryNumberArray = [];
-            let parameterValueNumberArray = convertStringToNumberArray(parameterValueArray, temporaryNumberArray);
-            let lowestParameter, highestParameter;
-            lowestParameter = findLowestInArray(parameterValueNumberArray);
-            highestParameter = findHighestInArray(parameterValueNumberArray);
-            let lowestParameterCeiling = Math.round((Math.round(lowestParameter)) / 10) * 10;
-            let highestParameterCeiling = Math.round((Math.round(highestParameter)) / 10) * 10;
-
-            if (highestParameterCeiling === lowestParameterCeiling) {
-                highestParameterCeiling = highestParameterCeiling + 10;
-            }
-            if (highestParameter > highestParameterCeiling) {
-                while (highestParameter > highestParameterCeiling) {
-                    highestParameterCeiling += 10;
-                }
-            }
-            if (lowestParameter < lowestParameterCeiling) {
-                while (lowestParameter < lowestParameterCeiling) {
-                    lowestParameterCeiling -= 10;
-                }
-            }
-
-            return [parameterValueNumberArray, lowestParameterCeiling, highestParameterCeiling];
-        }
-
         // obtain historical temperature data after selecting temperature date from drop-down menu
         function selectTemperatureOption() {
-            let parameterArray = selectParameterOption("temperatureDateArray", 'DHT11/Temperature/');
-            console.log(parameterArray);
-            generateChart("temperatureChartContainer", "<canvas id=\"temperatureChart\"></canvas>", "temperatureChart",
-                parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+            // get selected temperature date
+            var selectedTemperatureDate = document.getElementById("temperatureDateArray").value;
+            let selectedDayTemperature = 'DHT11/Temperature/' + selectedTemperatureDate;
+
+            // retrieve firebase realtime database data of the selected temperature date
+            firebase.database().ref(selectedDayTemperature).on('value', (snap) => {
+                var temperatureStr = snap.val();
+                var temperatureArray = [];
+
+                // insert retrieved selected temperature date data into array
+                Object.keys(temperatureStr).forEach((key) => {
+                    temperatureArray.push({[key]: temperatureStr[key]});
+                });
+
+                var iterator = temperatureArray.values();
+                var timeArray = [];
+                var temperatureValueArray = [];
+                for (let elements of iterator) {
+                    // insert selected temperature date data array element keys (time) into time array
+                    timeArray.push(Object.keys(elements).toString());
+                    // json converted to string for the selected temperature date data array element value (temperature)
+                    let cleanTemperature = JSON.stringify(Object.values(elements));
+                    // remove unnecessary string data and be left with only actual temperature value
+                    cleanTemperature = cleanTemperature.split(":").pop();
+                    cleanTemperature = cleanTemperature.replaceAll("\"", "");
+                    cleanTemperature = cleanTemperature.replaceAll("}", "");
+                    cleanTemperature = cleanTemperature.replaceAll("]", "");
+                    // insert actual temperature value into temperature value array
+                    temperatureValueArray.push(cleanTemperature);
+                }
+
+                // dynamic chart y axis min max based on lowest and highest values
+                let temporaryNumberArray = [];
+                let temperatureValueNumberArray = convertStringToNumberArray(temperatureValueArray, temporaryNumberArray);
+                let lowestTemperature, highestTemperature;
+                lowestTemperature = findLowestInArray(temperatureValueNumberArray);
+                highestTemperature = findHighestInArray(temperatureValueNumberArray);
+                let lowestTemperatureCeiling, highestTemperatureCeiling;
+                lowestTemperatureCeiling = Math.round((Math.round(lowestTemperature)) / 10) * 10;
+                highestTemperatureCeiling = Math.round((Math.round(highestTemperature)) / 10) * 10;
+
+                if (highestTemperatureCeiling === lowestTemperatureCeiling) {
+                    highestTemperatureCeiling = highestTemperatureCeiling + 10;
+                }
+                if (highestTemperature > highestTemperatureCeiling) {
+                    while (highestTemperature > highestTemperatureCeiling) {
+                        highestTemperatureCeiling += 10;
+                    }
+                }
+                if (lowestTemperature < lowestTemperatureCeiling) {
+                    while (lowestTemperature < lowestTemperatureCeiling) {
+                        lowestTemperatureCeiling -= 10;
+                    }
+                }
+
+                // empty and reload the div to prevent other temperature chart data from other days from being shown
+                // when hovering over temperature chart data points
+                document.getElementById("temperatureChartContainer").innerHTML = "";
+                document.getElementById('temperatureChartContainer').innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
+                generateChart("temperatureChart", timeArray, temperatureValueNumberArray, lowestTemperatureCeiling, highestTemperatureCeiling);
+            });
         }
 
         function selectHumidityOption() {
-            let parameterArray = selectParameterOption("humidityDateArray", 'DHT11/Humidity/');
-            generateChart("humidityChartContainer", "<canvas id=\"humidityChart\"></canvas>", "humidityChart",
-                parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+            var selectedHumidityDate = document.getElementById("humidityDateArray").value;
+            let selectedDayHumidity = 'DHT11/Humidity/' + selectedHumidityDate;
+            firebase.database().ref(selectedDayHumidity).on('value', (snap) => {
+                var humidityStr = snap.val();
+                var humidityArray = [];
+
+                Object.keys(humidityStr).forEach((key) => {
+                    humidityArray.push({[key]: humidityStr[key]});
+                });
+
+                var iterator = humidityArray.values();
+                var timeArray = [];
+                var humidityValueArray = [];
+                for (let elements of iterator) {
+                    timeArray.push(Object.keys(elements).toString());
+                    let cleanHumidity = JSON.stringify(Object.values(elements));
+                    cleanHumidity = cleanHumidity.split(":").pop();
+                    cleanHumidity = cleanHumidity.replaceAll("\"", "");
+                    cleanHumidity = cleanHumidity.replaceAll("}", "");
+                    cleanHumidity = cleanHumidity.replaceAll("]", "");
+                    humidityValueArray.push(cleanHumidity);
+                }
+
+                let temporaryNumberArray = [];
+                let humidityValueNumberArray = convertStringToNumberArray(humidityValueArray, temporaryNumberArray);
+                let lowestHumidity, highestHumidity;
+                lowestHumidity = findLowestInArray(humidityValueNumberArray);
+                highestHumidity = findHighestInArray(humidityValueNumberArray);
+                let lowestHumidityCeiling, highestHumidityCeiling;
+                lowestHumidityCeiling = Math.round((Math.round(lowestHumidity)) / 10) * 10;
+                highestHumidityCeiling = Math.round((Math.round(highestHumidity)) / 10) * 10;
+                if (highestHumidityCeiling === lowestHumidityCeiling) {
+                    highestHumidityCeiling = highestHumidityCeiling + 10;
+                }
+                if (highestHumidity > highestHumidityCeiling) {
+                    while (highestHumidity > highestHumidityCeiling) {
+                        highestHumidityCeiling += 10;
+                    }
+                }
+                if (lowestHumidity < lowestHumidityCeiling) {
+                    while (lowestHumidity < lowestHumidityCeiling) {
+                        lowestHumidityCeiling -= 10;
+                    }
+                }
+
+                document.getElementById('humidityChartContainer').innerHTML = "";
+                document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
+                generateChart("humidityChart", timeArray, humidityValueNumberArray, lowestHumidityCeiling, highestHumidityCeiling);
+            });
         }
 
         function selectAlcoholOption() {
-            let parameterArray = selectParameterOption("alcoholDateArray", 'MQ135/Alcohol/');
-            generateChart("alcoholChartContainer", "<canvas id=\"alcoholChart\"></canvas>", "alcoholChart",
-                parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+            var selectedAlcoholDate = document.getElementById("alcoholDateArray").value;
+            let selectedDayAlcohol = 'MQ135/Alcohol/' + selectedAlcoholDate;
+            firebase.database().ref(selectedDayAlcohol).on('value', (snap) => {
+                var alcoholStr = snap.val();
+                var alcoholArray = [];
+
+                Object.keys(alcoholStr).forEach((key) => {
+                    alcoholArray.push({[key]: alcoholStr[key]});
+                });
+
+                var iterator = alcoholArray.values();
+                var timeArray = [];
+                var alcoholValueArray = [];
+                for (let elements of iterator) {
+                    timeArray.push(Object.keys(elements).toString());
+                    let cleanAlcohol = JSON.stringify(Object.values(elements));
+                    cleanAlcohol = cleanAlcohol.split(":").pop();
+                    cleanAlcohol = cleanAlcohol.replaceAll("\"", "");
+                    cleanAlcohol = cleanAlcohol.replaceAll("}", "");
+                    cleanAlcohol = cleanAlcohol.replaceAll("]", "");
+                    alcoholValueArray.push(cleanAlcohol);
+                }
+
+                let temporaryNumberArray = [];
+                let alcoholValueNumberArray = convertStringToNumberArray(alcoholValueArray, temporaryNumberArray);
+                let lowestAlcohol, highestAlcohol;
+                lowestAlcohol = findLowestInArray(alcoholValueNumberArray);
+                highestAlcohol = findHighestInArray(alcoholValueNumberArray);
+                let lowestAlcoholCeiling, highestAlcoholCeiling;
+                lowestAlcoholCeiling = Math.round((Math.round(lowestAlcohol)) / 10) * 10;
+                highestAlcoholCeiling = Math.round((Math.round(highestAlcohol)) / 10) * 10;
+                if (highestAlcoholCeiling === lowestAlcoholCeiling) {
+                    highestAlcoholCeiling = highestAlcoholCeiling + 10;
+                }
+                if (highestAlcohol > highestAlcoholCeiling) {
+                    while (highestAlcohol > highestAlcoholCeiling) {
+                        highestAlcoholCeiling += 10;
+                    }
+                }
+                if (lowestAlcohol < lowestAlcoholCeiling) {
+                    while (lowestAlcohol < lowestAlcoholCeiling) {
+                        lowestAlcoholCeiling -= 10;
+                    }
+                }
+
+                document.getElementById("alcoholChartContainer").innerHTML = "";
+                document.getElementById('alcoholChartContainer').innerHTML = "<canvas id=\"alcoholChart\"></canvas>";
+                generateChart("alcoholChart", timeArray, alcoholValueNumberArray, lowestAlcoholCeiling, highestAlcoholCeiling);
+            });
         }
 
         function selectAcetoneOption() {
-            let parameterArray = selectParameterOption("acetoneDateArray", 'MQ135/Acetone/');
-            generateChart("acetoneChartContainer", "<canvas id=\"acetoneChart\"></canvas>", "acetoneChart",
-                parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+            var selectedAcetoneDate = document.getElementById("acetoneDateArray").value;
+            let selectedDayAcetone = 'MQ135/Acetone/' + selectedAcetoneDate;
+            firebase.database().ref(selectedDayAcetone).on('value', (snap) => {
+                var acetoneStr = snap.val();
+                var acetoneArray = [];
+
+                Object.keys(acetoneStr).forEach((key) => {
+                    acetoneArray.push({[key]: acetoneStr[key]});
+                });
+
+                var iterator = acetoneArray.values();
+                var timeArray = [];
+                var acetoneValueArray = [];
+                for (let elements of iterator) {
+                    timeArray.push(Object.keys(elements).toString());
+                    let cleanAcetone = JSON.stringify(Object.values(elements));
+                    cleanAcetone = cleanAcetone.split(":").pop();
+                    cleanAcetone = cleanAcetone.replaceAll("\"", "");
+                    cleanAcetone = cleanAcetone.replaceAll("}", "");
+                    cleanAcetone = cleanAcetone.replaceAll("]", "");
+                    acetoneValueArray.push(cleanAcetone);
+                }
+
+                let temporaryNumberArray = [];
+                let acetoneValueNumberArray = convertStringToNumberArray(acetoneValueArray, temporaryNumberArray);
+                let lowestAcetone, highestAcetone;
+                lowestAcetone = findLowestInArray(acetoneValueNumberArray);
+                highestAcetone = findHighestInArray(acetoneValueNumberArray);
+                let lowestAcetoneCeiling, highestAcetoneCeiling;
+                lowestAcetoneCeiling = Math.round((Math.round(lowestAcetone)) / 10) * 10;
+                highestAcetoneCeiling = Math.round((Math.round(highestAcetone)) / 10) * 10;
+                if (highestAcetoneCeiling === lowestAcetoneCeiling) {
+                    highestAcetoneCeiling = highestAcetoneCeiling + 10;
+                }
+                if (highestAcetone > highestAcetoneCeiling) {
+                    while (highestAcetone > highestAcetoneCeiling) {
+                        highestAcetoneCeiling += 10;
+                    }
+                }
+                if (lowestAcetone < lowestAcetoneCeiling) {
+                    while (lowestAcetone < lowestAcetoneCeiling) {
+                        lowestAcetoneCeiling -= 10;
+                    }
+                }
+
+                document.getElementById("acetoneChartContainer").innerHTML = "";
+                document.getElementById('acetoneChartContainer').innerHTML = "<canvas id=\"acetoneChart\"></canvas>";
+                generateChart("acetoneChart", timeArray, acetoneValueNumberArray, lowestAcetoneCeiling, highestAcetoneCeiling);
+            });
         }
 
         function selectLPGOption() {
-            let parameterArray = selectParameterOption("LPGateArray", 'MQ2/LPG/');
-            generateChart("LPGChartContainer", "<canvas id=\"LPGChart\"></canvas>", "LPGChart",
-                parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+            var selectedLPGDate = document.getElementById("LPGDateArray").value;
+            let selectedDayLPG = 'MQ2/LPG/' + selectedLPGDate;
+            firebase.database().ref(selectedDayLPG).on('value', (snap) => {
+                var LPGStr = snap.val();
+                var LPGArray = [];
+
+                Object.keys(LPGStr).forEach((key) => {
+                    LPGArray.push({[key]: LPGStr[key]});
+                });
+
+                var iterator = LPGArray.values();
+                var timeArray = [];
+                var LPGValueArray = [];
+                for (let elements of iterator) {
+                    timeArray.push(Object.keys(elements).toString());
+                    let cleanLPG = JSON.stringify(Object.values(elements));
+                    cleanLPG = cleanLPG.split(":").pop();
+                    cleanLPG = cleanLPG.replaceAll("\"", "");
+                    cleanLPG = cleanLPG.replaceAll("}", "");
+                    cleanLPG = cleanLPG.replaceAll("]", "");
+                    LPGValueArray.push(cleanLPG);
+                }
+
+                let temporaryNumberArray = [];
+                let LPGValueNumberArray = convertStringToNumberArray(LPGValueArray, temporaryNumberArray);
+                let lowestLPG, highestLPG;
+                lowestLPG = findLowestInArray(LPGValueNumberArray);
+                highestLPG = findHighestInArray(LPGValueNumberArray);
+                let lowestLPGCeiling, highestLPGCeiling;
+                lowestLPGCeiling = Math.round((Math.round(lowestLPG)) / 10) * 10;
+                highestLPGCeiling = Math.round((Math.round(highestLPG)) / 10) * 10;
+                if (highestLPGCeiling === lowestLPGCeiling) {
+                    highestLPGCeiling = highestLPGCeiling + 10;
+                }
+                if (highestLPG > highestLPGCeiling) {
+                    while (highestLPG > highestLPGCeiling) {
+                        highestLPGCeiling += 10;
+                    }
+                }
+                if (lowestLPG < lowestLPGCeiling) {
+                    while (lowestLPG < lowestLPGCeiling) {
+                        lowestLPGCeiling -= 10;
+                    }
+                }
+
+                document.getElementById("LPGChartContainer").innerHTML = "";
+                document.getElementById('LPGChartContainer').innerHTML = "<canvas id=\"LPGChart\"></canvas>";
+                generateChart("LPGChart", timeArray, LPGValueNumberArray, lowestLPGCeiling, highestLPGCeiling);
+            });
         }
 
         function selectCOOption() {
-            let parameterArray = selectParameterOption("CODateArray", 'MQ2/CO/');
-            generateChart("COChartContainer", "<canvas id=\"COChart\"></canvas>", "COChart",
-                parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+            var selectedCODate = document.getElementById("CODateArray").value;
+            let selectedDayCO = 'MQ2/CO/' + selectedCODate;
+            firebase.database().ref(selectedDayCO).on('value', (snap) => {
+                var COStr = snap.val();
+                var COArray = [];
+
+                Object.keys(COStr).forEach((key) => {
+                    COArray.push({[key]: COStr[key]});
+                });
+
+                var iterator = COArray.values();
+                var timeArray = [];
+                var COValueArray = [];
+                for (let elements of iterator) {
+                    timeArray.push(Object.keys(elements).toString());
+                    let cleanCO = JSON.stringify(Object.values(elements));
+                    cleanCO = cleanCO.split(":").pop();
+                    cleanCO = cleanCO.replaceAll("\"", "");
+                    cleanCO = cleanCO.replaceAll("}", "");
+                    cleanCO = cleanCO.replaceAll("]", "");
+                    COValueArray.push(cleanCO);
+                }
+
+                let temporaryNumberArray = [];
+                let COValueNumberArray = convertStringToNumberArray(COValueArray, temporaryNumberArray);
+                let lowestCO, highestCO;
+                lowestCO = findLowestInArray(COValueNumberArray);
+                highestCO = findHighestInArray(COValueNumberArray);
+                let lowestCOCeiling, highestCOCeiling;
+                lowestCOCeiling = Math.round((Math.round(lowestCO)) / 10) * 10;
+                highestCOCeiling = Math.round((Math.round(highestCO)) / 10) * 10;
+                if (highestCOCeiling === lowestCOCeiling) {
+                    highestCOCeiling = highestCOCeiling + 10;
+                }
+                if (highestCO > highestCOCeiling) {
+                    while (highestCO > highestCOCeiling) {
+                        highestCOCeiling += 10;
+                    }
+                }
+                if (lowestCO < lowestCOCeiling) {
+                    while (lowestCO < lowestCOCeiling) {
+                        lowestCOCeiling -= 10;
+                    }
+                }
+
+                document.getElementById("COChartContainer").innerHTML = "";
+                document.getElementById('COChartContainer').innerHTML = "<canvas id=\"COChart\"></canvas>";
+                generateChart("COChart", timeArray, COValueNumberArray, lowestCOCeiling, highestCOCeiling);
+            });
         }
 
         function selectPM25Option() {
-            let parameterArray = selectParameterOption("PM25DateArray", 'DSM501A/PM25/');
-            generateChart("PM25ChartContainer", "<canvas id=\"PM25Chart\"></canvas>", "PM25Chart",
-                parameterArray[0], parameterArray[1], parameterArray[2], parameterArray[3]);
+            var selectedPM25Date = document.getElementById("PM25DateArray").value;
+            let selectedDayPM25 = 'DSM501A/PM25/' + selectedPM25Date;
+            firebase.database().ref(selectedDayPM25).on('value', (snap) => {
+                var PM25Str = snap.val();
+                var PM25Array = [];
+
+                Object.keys(PM25Str).forEach((key) => {
+                    PM25Array.push({[key]: PM25Str[key]});
+                });
+
+                var iterator = PM25Array.values();
+                var timeArray = [];
+                var PM25ValueArray = [];
+                for (let elements of iterator) {
+                    timeArray.push(Object.keys(elements).toString());
+                    let cleanPM25 = JSON.stringify(Object.values(elements));
+                    cleanPM25 = cleanPM25.split(":").pop();
+                    cleanPM25 = cleanPM25.replaceAll("\"", "");
+                    cleanPM25 = cleanPM25.replaceAll("}", "");
+                    cleanPM25 = cleanPM25.replaceAll("]", "");
+                    PM25ValueArray.push(cleanPM25);
+                }
+
+                let temporaryNumberArray = [];
+                let PM25ValueNumberArray = convertStringToNumberArray(PM25ValueArray, temporaryNumberArray);
+                let lowestPM25, highestPM25;
+                lowestPM25 = findLowestInArray(PM25ValueNumberArray);
+                highestPM25 = findHighestInArray(PM25ValueNumberArray);
+                let lowestPM25Ceiling, highestPM25Ceiling;
+                lowestPM25Ceiling = Math.round((Math.round(lowestPM25)) / 10) * 10;
+                highestPM25Ceiling = Math.round((Math.round(highestPM25)) / 10) * 10;
+                if (highestPM25Ceiling === lowestPM25Ceiling) {
+                    highestPM25Ceiling = highestPM25Ceiling + 10;
+                }
+                if (highestPM25 > highestPM25Ceiling) {
+                    while (highestPM25 > highestPM25Ceiling) {
+                        highestPM25Ceiling += 10;
+                    }
+                }
+                if (lowestPM25 < lowestPM25Ceiling) {
+                    while (lowestPM25 < lowestPM25Ceiling) {
+                        lowestPM25Ceiling -= 10;
+                    }
+                }
+
+                document.getElementById("PM25ChartContainer").innerHTML = "";
+                document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
+                generateChart("PM25Chart", timeArray, PM25ValueNumberArray, lowestPM25Ceiling, highestPM25Ceiling);
+            });
         }
 
         document.addEventListener('DOMContentLoaded', async function () {
@@ -706,6 +924,7 @@
 
                 document.querySelector('#load');
 
+                var temperatureDays, humidityDays, PM25Days, alcoholDays, acetoneDays, LPGDays, CODays;
                 var firebaseDays = document.getElementById("firebaseDateArray");
 
                 var temperatureDateSelect = document.getElementById("temperatureDateArray");
@@ -737,6 +956,8 @@
                     });
                 }
 
+                console.log(previousDateCount);
+
                 // get current firebaseDays array length
                 // check if previous firebaseDays array length is different to current firebaseDays array length
                 async function tallyDays() {
@@ -766,32 +987,42 @@
 
                 var timeStr;
 
-                async function RefDHT(DHTParameter, parameterDateSelect, parameterDateArray) {
-                    await firebase.database().ref(DHTParameter.toString()).once('value', (snap) => {
-                        let parameterDays = snap.val();
-                        parameterDays = Object.keys(parameterDays);
-                        // sort parameter date array from oldest to latest
-                        parameterDays.sort(compareDate);
-                        // load parameter date data into parameter date drop-down menu
-                        for (var i = 0; i < parameterDays.length; i++) {
-                            var option = parameterDays[i];
-                            var element = document.createElement("option");
-                            element.textContent = option;
-                            element.value = option;
-                            parameterDateSelect.prepend(element);
-                        }
-                        // select latest parameter date by default
-                        document.getElementById(parameterDateArray.toString()).selectedIndex = "0";
-                    });
-                }
+                await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
+                    temperatureDays = snap.val();
+                    temperatureDays = Object.keys(temperatureDays);
+                    // sort temperature date array from oldest to latest
+                    temperatureDays.sort(compareDate);
+                    // load temperature date data into temperature date drop-down menu
+                    for (var i = 0; i < temperatureDays.length; i++) {
+                        var option = temperatureDays[i];
+                        var element = document.createElement("option");
+                        element.textContent = option;
+                        element.value = option;
+                        temperatureDateSelect.prepend(element);
+                    }
+                    // select latest temperature date by default
+                    document.getElementById("temperatureDateArray").selectedIndex = "0";
+                });
 
-                await RefDHT("DHT11/Temperature/", temperatureDateSelect, "temperatureDateArray");
-
-                await firebase.database().ref(currentDayTemperature).on('value', (snap) => {
+                firebase.database().ref(currentDayTemperature).on('value', (snap) => {
                     var temperatureStr = snap.val();
-                    var jsonReturnedParameter = jsonParameterReturnCompare(temperatureStr);
-                    var jsonTemperatureValue = jsonReturnedParameter[1];
-                    var temperatureArray = jsonReturnedParameter[0];
+                    var temperatureArray = [];
+
+                    // insert retrieved latest temperature data into temperature array
+                    Object.keys(temperatureStr).forEach((key) => {
+                        temperatureArray.push({[key]: temperatureStr[key]});
+                    });
+
+                    // json converted to string for final (latest) temperature array element value
+                    var latestTemperature = temperatureArray[temperatureArray.length - 1];
+                    var temperatureValue = Object.values(latestTemperature);
+                    var jsonTemperatureValue = JSON.stringify(temperatureValue);
+
+                    // remove unnecessary string data and be left with only actual latest temperature value
+                    jsonTemperatureValue = jsonTemperatureValue.split(":").pop();
+                    jsonTemperatureValue = jsonTemperatureValue.replaceAll("\"", "");
+                    jsonTemperatureValue = jsonTemperatureValue.replaceAll("}", "");
+                    jsonTemperatureValue = jsonTemperatureValue.replaceAll("]", "");
 
                     // compare latest temperature value
                     if (jsonTemperatureValue < 23) {
@@ -807,33 +1038,6 @@
                         jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#129397';
                     }
 
-                    let timeAndParameterValueArray = cleanParameterPush(temperatureArray);
-                    // var iterator = temperatureArray.values();
-                    // var timeArray = [];
-                    // var temperatureValueArray = [];
-                    //
-                    // for (let elements of iterator) {
-                    //     // insert latest temperature array element keys (time) into time array
-                    //     timeArray.push(Object.keys(elements).toString());
-                    //     // json converted to string for the latest temperature array element value (temperature)
-                    //     let cleanTemperature = JSON.stringify(Object.values(elements));
-                    //     // remove unnecessary string data and be left with only actual temperature value
-                    //     cleanTemperature = cleanTemperature.split(":").pop();
-                    //     cleanTemperature = cleanTemperature.replaceAll("\"", "");
-                    //     cleanTemperature = cleanTemperature.replaceAll("}", "");
-                    //     cleanTemperature = cleanTemperature.replaceAll("]", "");
-                    //     // insert actual temperature value into temperature value array
-                    //     temperatureValueArray.push(cleanTemperature);
-                    // }
-
-                    // load chart if latest date is equal to selected temperature date in drop-down menu
-                    if (document.getElementById("temperatureDateArray").value === date) {
-                        let yAxisValues = dynamicYAxis(timeAndParameterValueArray[1])
-
-                        generateChart("temperatureChartContainer", "<canvas id=\"temperatureChart\"></canvas>", "temperatureChart",
-                            timeAndParameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
-                    }
-
                     // latest temperature value
                     document.getElementById('latestTemperature').innerHTML = jsonTemperatureValue;
                     // latest date
@@ -841,9 +1045,75 @@
                     // latest time
                     timeStr = Object.keys(latestTemperature);
                     document.getElementById('currentTime').innerHTML = "Time: " + timeStr;
+
+                    var iterator = temperatureArray.values();
+                    var timeArray = [];
+                    var temperatureValueArray = [];
+                    for (let elements of iterator) {
+                        // insert latest temperature array element keys (time) into time array
+                        timeArray.push(Object.keys(elements).toString());
+                        // json converted to string for the latest temperature array element value (temperature)
+                        let cleanTemperature = JSON.stringify(Object.values(elements));
+                        // remove unnecessary string data and be left with only actual temperature value
+                        cleanTemperature = cleanTemperature.split(":").pop();
+                        cleanTemperature = cleanTemperature.replaceAll("\"", "");
+                        cleanTemperature = cleanTemperature.replaceAll("}", "");
+                        cleanTemperature = cleanTemperature.replaceAll("]", "");
+                        // insert actual temperature value into temperature value array
+                        temperatureValueArray.push(cleanTemperature);
+                    }
+
+
+                    // load chart if latest date is equal to selected temperature date in drop-down menu
+                    if (document.getElementById("temperatureDateArray").value === date) {
+                        // dynamic chart y axis min max based on lowest and highest values
+                        let temporaryNumberArray = [];
+                        let temperatureValueNumberArray = convertStringToNumberArray(temperatureValueArray, temporaryNumberArray);
+                        let lowestTemperature, highestTemperature;
+                        lowestTemperature = findLowestInArray(temperatureValueNumberArray);
+                        highestTemperature = findHighestInArray(temperatureValueNumberArray);
+                        console.log(lowestTemperature);
+                        console.log(highestTemperature);
+                        let lowestTemperatureCeiling, highestTemperatureCeiling;
+                        lowestTemperatureCeiling = Math.round((Math.round(lowestTemperature)) / 10) * 10;
+                        highestTemperatureCeiling = Math.round((Math.round(highestTemperature)) / 10) * 10;
+
+                        if (highestTemperatureCeiling === lowestTemperatureCeiling) {
+                            highestTemperatureCeiling = highestTemperatureCeiling + 10;
+                        }
+                        if (highestTemperature > highestTemperatureCeiling) {
+                            while (highestTemperature > highestTemperatureCeiling) {
+                                highestTemperatureCeiling += 10;
+                            }
+                        }
+                        if (lowestTemperature < lowestTemperatureCeiling) {
+                            while (lowestTemperature < lowestTemperatureCeiling) {
+                                lowestTemperatureCeiling -= 10;
+                            }
+                        }
+
+                        // empty and reload the div to prevent old temperature chart data from being shown
+                        // when hovering over temperature chart data points
+                        document.getElementById("temperatureChartContainer").innerHTML = "";
+                        document.getElementById('temperatureChartContainer').innerHTML = "<canvas id=\"temperatureChart\"></canvas>";
+                        generateChart("temperatureChart", timeArray, temperatureValueNumberArray, lowestTemperatureCeiling, highestTemperatureCeiling);
+                    }
                 });
 
-                await RefDHT("DHT11/Humidity/", humidityDateSelect, "humidityDateArray");
+                await firebase.database().ref('DHT11/Humidity/').once('value', (snap) => {
+                    humidityDays = snap.val();
+                    humidityDays = Object.keys(humidityDays);
+                    humidityDays.sort(compareDate);
+                    for (var i = 0; i < humidityDays.length; i++) {
+                        var option = humidityDays[i];
+                        var element = document.createElement("option");
+                        element.textContent = option;
+                        element.value = option;
+                        humidityDateSelect.prepend(element);
+                    }
+                    document.getElementById("humidityDateArray").selectedIndex = "0";
+                });
+
                 firebase.database().ref(currentDayHumidity).on('value', (snap) => {
                     var humidityStr = snap.val();
                     var humidityArray = [];
@@ -917,7 +1187,20 @@
                     }
                 });
 
-                await RefDHT("MQ135/Alcohol/", alcoholDateSelect, "alcoholDateArray");
+                await firebase.database().ref('MQ135/Alcohol/').once('value', (snap) => {
+                    alcoholDays = snap.val();
+                    alcoholDays = Object.keys(alcoholDays);
+                    alcoholDays.sort(compareDate);
+                    for (var i = 0; i < alcoholDays.length; i++) {
+                        var option = alcoholDays[i];
+                        var element = document.createElement("option");
+                        element.textContent = option;
+                        element.value = option;
+                        alcoholDateSelect.prepend(element);
+                    }
+                    document.getElementById("alcoholDateArray").selectedIndex = "0";
+                });
+
                 firebase.database().ref(currentDayAlcohol).on('value', (snap) => {
                     var alcoholStr = snap.val();
                     var alcoholArray = [];
@@ -995,7 +1278,21 @@
                     }
                 });
 
-                await RefDHT("MQ135/Acetone/", acetoneDateSelect, "acetoneDateArray");
+                await firebase.database().ref('MQ135/Acetone/').once('value', (snap) => {
+                    acetoneDays = snap.val();
+                    acetoneDays = Object.keys(acetoneDays);
+                    acetoneDays.sort(compareDate);
+
+                    for (var i = 0; i < acetoneDays.length; i++) {
+                        var option = acetoneDays[i];
+                        var element = document.createElement("option");
+                        element.textContent = option;
+                        element.value = option;
+                        acetoneDateSelect.prepend(element);
+                    }
+                    document.getElementById("acetoneDateArray").selectedIndex = "0";
+                });
+
                 firebase.database().ref(currentDayAcetone).on('value', (snap) => {
                     var acetoneStr = snap.val();
                     var acetoneArray = [];
@@ -1073,7 +1370,21 @@
                     }
                 });
 
-                await RefDHT("MQ2/LPG/", LPGDateSelect, "LPGDateArray");
+                await firebase.database().ref('MQ2/LPG/').once('value', (snap) => {
+                    LPGDays = snap.val();
+                    LPGDays = Object.keys(LPGDays);
+                    LPGDays.sort(compareDate);
+
+                    for (var i = 0; i < LPGDays.length; i++) {
+                        var option = LPGDays[i];
+                        var element = document.createElement("option");
+                        element.textContent = option;
+                        element.value = option;
+                        LPGDateSelect.prepend(element);
+                    }
+                    document.getElementById("LPGDateArray").selectedIndex = "0";
+                });
+
                 firebase.database().ref(currentDayLPG).on('value', (snap) => {
                     var LPGStr = snap.val();
                     var LPGArray = [];
@@ -1152,7 +1463,21 @@
                     }
                 });
 
-                await RefDHT("MQ2/CO/", CODateSelect, "CODateArray");
+                await firebase.database().ref('MQ2/CO/').once('value', (snap) => {
+                    CODays = snap.val();
+                    CODays = Object.keys(CODays);
+                    CODays.sort(compareDate);
+
+                    for (var i = 0; i < CODays.length; i++) {
+                        var option = CODays[i];
+                        var element = document.createElement("option");
+                        element.textContent = option;
+                        element.value = option;
+                        CODateSelect.prepend(element);
+                    }
+                    document.getElementById("CODateArray").selectedIndex = "0";
+                });
+
                 firebase.database().ref(currentDayCO).on('value', (snap) => {
                     var COStr = snap.val();
                     var COArray = [];
@@ -1230,7 +1555,20 @@
                     }
                 });
 
-                await RefDHT("DSM501A/PM25/", PM25DateSelect, "PM25DateArray");
+                await firebase.database().ref('DSM501A/PM25/').once('value', (snap) => {
+                    PM25Days = snap.val();
+                    PM25Days = Object.keys(PM25Days);
+                    PM25Days.sort(compareDate);
+                    for (var i = 0; i < PM25Days.length; i++) {
+                        var option = PM25Days[i];
+                        var element = document.createElement("option");
+                        element.textContent = option;
+                        element.value = option;
+                        PM25DateSelect.prepend(element);
+                    }
+                    document.getElementById("PM25DateArray").selectedIndex = "0";
+                });
+
                 firebase.database().ref(currentDayPM25).on('value', (snap) => {
                     var PM25Str = snap.val();
                     var PM25Array = [];
@@ -1306,7 +1644,6 @@
                         generateChart("PM25Chart", timeArray, PM25ValueNumberArray, lowestPM25Ceiling, highestPM25Ceiling);
                     }
                 });
-
             }
         );
     </script>
