@@ -448,7 +448,7 @@
             firebase.database().ref(selectedDayParameter).on('value', (snap) => {
                 let parameterStr = snap.val();
                 let parameterValueArray = [];
-
+ 
                 // insert retrieved selected parameter date data into array
                 Object.keys(parameterStr).forEach((key) => {
                     parameterArray.push({[key]: parameterStr[key]});
