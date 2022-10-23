@@ -469,7 +469,6 @@
                     // insert actual parameter value into parameter value array
                     parameterValueArray.push(cleanParameter);
                 }
-
                 let yAxisValues = dynamicYAxis(parameterValueArray)
                 parameterValueNumberArray = yAxisValues[0];
                 lowestParameterCeiling = yAxisValues[1];
@@ -478,44 +477,42 @@
             return [timeArray, parameterValueNumberArray, lowestParameterCeiling, highestParameterCeiling];
         }
 
-
         function cleanParameterPush(parameterArray) {
             let iterator = parameterArray.values();
             let timeArray = [];
             let parameterValueArray = [];
 
             for (let elements of iterator) {
-                // insert latest temperature array element keys (time) into time array
+                // insert latest parameter array element keys (time) into time array
                 timeArray.push(Object.keys(elements).toString());
-                // json converted to string for the latest temperature array element value (temperature)
+                // json converted to string for the latest parameter array element value (temperature)
                 let cleanParameter = JSON.stringify(Object.values(elements));
-                // remove unnecessary string data and be left with only actual temperature value
+                // remove unnecessary string data and be left with only actual parameter value
                 cleanParameter = cleanParameter.split(":").pop();
                 cleanParameter = cleanParameter.replaceAll("\"", "");
                 cleanParameter = cleanParameter.replaceAll("}", "");
                 cleanParameter = cleanParameter.replaceAll("]", "");
-                // insert actual temperature value into temperature value array
+                // insert actual parameter value into parameter value array
                 parameterValueArray.push(cleanParameter);
             }
 
             return [timeArray, parameterValueArray];
         }
 
-
-        function jsonParameterReturnCompare(parameterStr) {
+        function jsonLatestParameterReturnCompare(parameterStr) {
             let parameterArray = [];
 
-            // insert retrieved latest temperature data into temperature array
+            // insert retrieved latest parameter data into parameter array
             Object.keys(parameterStr).forEach((key) => {
                 parameterArray.push({[key]: parameterStr[key]});
             });
 
-            // json converted to string for final (latest) temperature array element value
+            // json converted to string for final (latest) parameter array element value
             let latestParameter = parameterArray[parameterArray.length - 1];
             let parameterValue = Object.values(latestParameter);
             let jsonParameterValue = JSON.stringify(parameterValue);
 
-            // remove unnecessary string data and be left with only actual latest temperature value
+            // remove unnecessary string data and be left with only actual latest parameter value
             jsonParameterValue = jsonParameterValue.split(":").pop();
             jsonParameterValue = jsonParameterValue.replaceAll("\"", "");
             jsonParameterValue = jsonParameterValue.replaceAll("}", "");
@@ -549,6 +546,25 @@
             }
 
             return [parameterValueNumberArray, lowestParameterCeiling, highestParameterCeiling];
+        }
+
+        async function RefDHT(DHTParameter, parameterDateSelect, parameterDateArray) {
+            await firebase.database().ref(DHTParameter.toString()).once('value', (snap) => {
+                let parameterDays = snap.val();
+                parameterDays = Object.keys(parameterDays);
+                // sort parameter date array from oldest to latest
+                parameterDays.sort(compareDate);
+                // load parameter date data into parameter date drop-down menu
+                for (var i = 0; i < parameterDays.length; i++) {
+                    var option = parameterDays[i];
+                    var element = document.createElement("option");
+                    element.textContent = option;
+                    element.value = option;
+                    parameterDateSelect.prepend(element);
+                }
+                // select latest parameter date by default
+                document.getElementById(parameterDateArray.toString()).selectedIndex = "0";
+            });
         }
 
         // obtain historical temperature data after selecting temperature date from drop-down menu
@@ -706,17 +722,17 @@
 
                 document.querySelector('#load');
 
-                var firebaseDays = document.getElementById("firebaseDateArray");
+                let firebaseDays = document.getElementById("firebaseDateArray");
 
-                var temperatureDateSelect = document.getElementById("temperatureDateArray");
-                var humidityDateSelect = document.getElementById("humidityDateArray");
-                var alcoholDateSelect = document.getElementById("alcoholDateArray");
-                var acetoneDateSelect = document.getElementById("acetoneDateArray");
-                var LPGDateSelect = document.getElementById("LPGDateArray");
-                var CODateSelect = document.getElementById("CODateArray");
-                var PM25DateSelect = document.getElementById("PM25DateArray");
+                let temperatureDateSelect = document.getElementById("temperatureDateArray");
+                let humidityDateSelect = document.getElementById("humidityDateArray");
+                let alcoholDateSelect = document.getElementById("alcoholDateArray");
+                let acetoneDateSelect = document.getElementById("acetoneDateArray");
+                let LPGDateSelect = document.getElementById("LPGDateArray");
+                let CODateSelect = document.getElementById("CODateArray");
+                let PM25DateSelect = document.getElementById("PM25DateArray");
 
-                var date, previousDateCount, currentDateCount;
+                let date, previousDateCount, currentDateCount;
 
                 // get previous firebaseDays array length
                 await firebase.database().ref('DHT11/Temperature/').once('value', (snap) => {
@@ -766,42 +782,22 @@
 
                 let timeStr;
 
-                async function RefDHT(DHTParameter, parameterDateSelect, parameterDateArray) {
-                    await firebase.database().ref(DHTParameter.toString()).once('value', (snap) => {
-                        let parameterDays = snap.val();
-                        parameterDays = Object.keys(parameterDays);
-                        // sort parameter date array from oldest to latest
-                        parameterDays.sort(compareDate);
-                        // load parameter date data into parameter date drop-down menu
-                        for (var i = 0; i < parameterDays.length; i++) {
-                            var option = parameterDays[i];
-                            var element = document.createElement("option");
-                            element.textContent = option;
-                            element.value = option;
-                            parameterDateSelect.prepend(element);
-                        }
-                        // select latest parameter date by default
-                        document.getElementById(parameterDateArray.toString()).selectedIndex = "0";
-                    });
-                }
-
                 await RefDHT("DHT11/Temperature/", temperatureDateSelect, "temperatureDateArray");
 
                 await firebase.database().ref(currentDayTemperature).on('value', (snap) => {
-                    let temperatureStr = snap.val();
-                    let jsonReturnedParameter = jsonParameterReturnCompare(temperatureStr);
-                    let temperatureArray = jsonReturnedParameter[0];
+                    let jsonReturnedParameter = jsonLatestParameterReturnCompare(snap.val());
+                    let parameterArray = jsonReturnedParameter[0];
                     let latestTemperature = jsonReturnedParameter[1];
                     let jsonTemperatureValue = jsonReturnedParameter[2];
 
-                    let timeAndParameterValueArray = cleanParameterPush(temperatureArray);
+                    let parameterValueArray = cleanParameterPush(parameterArray);
 
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("temperatureDateArray").value === date) {
-                        let yAxisValues = dynamicYAxis(timeAndParameterValueArray[1])
+                        let yAxisValues = dynamicYAxis(parameterValueArray[1])
 
                         generateChart("temperatureChartContainer", "<canvas id=\"temperatureChart\"></canvas>", "temperatureChart",
-                            timeAndParameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
+                            parameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
                     }
 
                     // compare latest temperature value
@@ -817,32 +813,31 @@
                         document.getElementById("temperatureIndicator").style.backgroundColor = "#bd1816";
                         jsonTemperatureValue = jsonTemperatureValue + '&#8451' + '&#129397';
                     }
-
-                    // latest temperature value
-                    document.getElementById('latestTemperature').innerHTML = jsonTemperatureValue;
                     // latest date
                     document.getElementById('currentDate').innerHTML = "Date: " + date;
                     // latest time
                     timeStr = Object.keys(latestTemperature);
                     document.getElementById('currentTime').innerHTML = "Time: " + timeStr;
+
+                    // latest temperature value
+                    document.getElementById('latestTemperature').innerHTML = jsonTemperatureValue;
                 });
 
                 await RefDHT("DHT11/Humidity/", humidityDateSelect, "humidityDateArray");
 
                 await firebase.database().ref(currentDayHumidity).on('value', (snap) => {
-                    let humidityStr = snap.val();
-                    let jsonReturnedParameter = jsonParameterReturnCompare(humidityStr);
-                    let humidityArray = jsonReturnedParameter[0];
+                    let jsonReturnedParameter = jsonLatestParameterReturnCompare(snap.val());
+                    let parameterArray = jsonReturnedParameter[0];
                     let jsonHumidityValue = jsonReturnedParameter[2];
 
-                    let timeAndParameterValueArray = cleanParameterPush(humidityArray);
+                    let parameterValueArray = cleanParameterPush(parameterArray);
 
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("humidityDateArray").value === date) {
-                        let yAxisValues = dynamicYAxis(timeAndParameterValueArray[1])
+                        let yAxisValues = dynamicYAxis(parameterValueArray[1])
 
                         generateChart("humidityChartContainer", "<canvas id=\"humidityChart\"></canvas>", "humidityChart",
-                            timeAndParameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
+                            parameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
                     }
 
                     if (jsonHumidityValue >= 0 && jsonHumidityValue < 60) {
@@ -858,99 +853,24 @@
                         jsonHumidityValue = jsonHumidityValue + "%" + '&#128543;';
                     }
 
-                    // latest humidity value
                     document.getElementById('latestHumidity').innerHTML = jsonHumidityValue;
                 });
-
-                // firebase.database().ref(currentDayHumidity).on('value', (snap) => {
-                //     var humidityStr = snap.val();
-                //     var humidityArray = [];
-                //     Object.keys(humidityStr).forEach((key) => {
-                //         humidityArray.push({[key]: humidityStr[key]});
-                //     });
-                //
-                //     var latestHumidity = humidityArray[humidityArray.length - 1];
-                //     var humidityValue = Object.values(latestHumidity);
-                //     var jsonHumidityValue = JSON.stringify(humidityValue);
-                //
-                //     jsonHumidityValue = jsonHumidityValue.split(":").pop();
-                //     jsonHumidityValue = jsonHumidityValue.replaceAll("\"", "");
-                //     jsonHumidityValue = jsonHumidityValue.replaceAll("}", "");
-                //     jsonHumidityValue = jsonHumidityValue.replaceAll("]", "");
-                //
-                //     if (jsonHumidityValue >= 0 && jsonHumidityValue < 60) {
-                //         document.getElementById("humidityIndicator").style.backgroundColor = "#4CBB17";
-                //         jsonHumidityValue = jsonHumidityValue + "%" + '&#128516;';
-                //     }
-                //     if (jsonHumidityValue >= 60 && jsonHumidityValue < 80) {
-                //         document.getElementById("humidityIndicator").style.backgroundColor = "#FFA500";
-                //         jsonHumidityValue = jsonHumidityValue + "%" + '&#128577;';
-                //     }
-                //     if (jsonHumidityValue >= 80) {
-                //         document.getElementById("humidityIndicator").style.backgroundColor = "#bd1816";
-                //         jsonHumidityValue = jsonHumidityValue + "%" + '&#128543;';
-                //     }
-                //
-                //     document.getElementById('latestHumidity').innerHTML = jsonHumidityValue;
-                //     var iterator = humidityArray.values();
-                //
-                //     var timeArray = [];
-                //     var humidityValueArray = [];
-                //     for (let elements of iterator) {
-                //         timeArray.push(Object.keys(elements).toString());
-                //         let cleanHumidity = JSON.stringify(Object.values(elements));
-                //         cleanHumidity = cleanHumidity.split(":").pop();
-                //         cleanHumidity = cleanHumidity.replaceAll("\"", "");
-                //         cleanHumidity = cleanHumidity.replaceAll("}", "");
-                //         cleanHumidity = cleanHumidity.replaceAll("]", "");
-                //         humidityValueArray.push(cleanHumidity);
-                //     }
-                //
-                //     if (document.getElementById("humidityDateArray").value === date) {
-                //         let temporaryNumberArray = [];
-                //         let humidityValueNumberArray = convertStringToNumberArray(humidityValueArray, temporaryNumberArray);
-                //         let lowestHumidity, highestHumidity;
-                //         lowestHumidity = findLowestInArray(humidityValueNumberArray);
-                //         highestHumidity = findHighestInArray(humidityValueNumberArray);
-                //         let lowestHumidityCeiling, highestHumidityCeiling;
-                //         lowestHumidityCeiling = Math.round((Math.round(lowestHumidity)) / 10) * 10;
-                //         highestHumidityCeiling = Math.round((Math.round(highestHumidity)) / 10) * 10;
-                //         if (highestHumidityCeiling === lowestHumidityCeiling) {
-                //             highestHumidityCeiling = highestHumidityCeiling + 10;
-                //         }
-                //         if (highestHumidity > highestHumidityCeiling) {
-                //             while (highestHumidity > highestHumidityCeiling) {
-                //                 highestHumidityCeiling += 10;
-                //             }
-                //         }
-                //         if (lowestHumidity < lowestHumidityCeiling) {
-                //             while (lowestHumidity < lowestHumidityCeiling) {
-                //                 lowestHumidityCeiling -= 10;
-                //             }
-                //         }
-                //
-                //         document.getElementById('humidityChartContainer').innerHTML = "";
-                //         document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
-                //         generateChart("humidityChart", timeArray, humidityValueArray, lowestHumidityCeiling, highestHumidityCeiling);
-                //     }
-                // });
 
                 await RefDHT("MQ135/Alcohol/", alcoholDateSelect, "alcoholDateArray");
 
                 await firebase.database().ref(currentDayAlcohol).on('value', (snap) => {
-                    var alcoholStr = snap.val();
-                    var jsonReturnedParameter = jsonParameterReturnCompare(alcoholStr);
-                    var alcoholArray = jsonReturnedParameter[0];
-                    var jsonAlcoholValue = jsonReturnedParameter[2];
+                    let jsonReturnedParameter = jsonLatestParameterReturnCompare(snap.val());
+                    let parameterArray = jsonReturnedParameter[0];
+                    let jsonAlcoholValue = jsonReturnedParameter[2];
 
-                    let timeAndParameterValueArray = cleanParameterPush(alcoholArray);
+                    let parameterValueArray = cleanParameterPush(parameterArray);
 
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("alcoholDateArray").value === date) {
-                        let yAxisValues = dynamicYAxis(timeAndParameterValueArray[1])
+                        let yAxisValues = dynamicYAxis(parameterValueArray[1])
 
                         generateChart("alcoholChartContainer", "<canvas id=\"alcoholChart\"></canvas>", "alcoholChart",
-                            timeAndParameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
+                            parameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
                     }
 
                     if (jsonAlcoholValue <= 100) {
@@ -970,104 +890,24 @@
                         jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128128;';
                     }
 
-                    // latest alcohol value
                     document.getElementById('latestAlcohol').innerHTML = jsonAlcoholValue;
                 });
-
-                // firebase.database().ref(currentDayAlcohol).on('value', (snap) => {
-                //     var alcoholStr = snap.val();
-                //     var alcoholArray = [];
-                //     Object.keys(alcoholStr).forEach((key) => {
-                //         alcoholArray.push({[key]: alcoholStr[key]});
-                //     });
-                //
-                //     var latestAlcohol = alcoholArray[alcoholArray.length - 1];
-                //     var alcoholValue = Object.values(latestAlcohol);
-                //     var jsonAlcoholValue = JSON.stringify(alcoholValue);
-                //
-                //     jsonAlcoholValue = jsonAlcoholValue.split(":").pop();
-                //     jsonAlcoholValue = jsonAlcoholValue.replaceAll("\"", "");
-                //     jsonAlcoholValue = jsonAlcoholValue.replaceAll("}", "");
-                //     jsonAlcoholValue = jsonAlcoholValue.replaceAll("]", "");
-                //
-                //     if (jsonAlcoholValue <= 100) {
-                //         document.getElementById("alcoholIndicator").style.backgroundColor = "#4CBB17";
-                //         jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128516;';
-                //     }
-                //     if (jsonAlcoholValue > 100 && jsonAlcoholValue <= 200) {
-                //         document.getElementById("alcoholIndicator").style.backgroundColor = "#FFA500";
-                //         jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128577;';
-                //     }
-                //     if (jsonAlcoholValue > 200 && jsonAlcoholValue <= 400) {
-                //         document.getElementById("alcoholIndicator").style.backgroundColor = "#bd1816";
-                //         jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128567;';
-                //     }
-                //     if (jsonAlcoholValue > 400) {
-                //         document.getElementById("alcoholIndicator").style.backgroundColor = "#000000";
-                //         jsonAlcoholValue = jsonAlcoholValue + 'ppm' + '&#128128;';
-                //     }
-                //
-                //     document.getElementById('latestAlcohol').innerHTML = jsonAlcoholValue;
-                //     var iterator = alcoholArray.values();
-                //
-                //     var timeArray = [];
-                //     var alcoholValueArray = [];
-                //     for (let elements of iterator) {
-                //         timeArray.push(Object.keys(elements).toString());
-                //         let cleanAlcohol = JSON.stringify(Object.values(elements));
-                //         cleanAlcohol = cleanAlcohol.split(":").pop();
-                //         cleanAlcohol = cleanAlcohol.replaceAll("\"", "");
-                //         cleanAlcohol = cleanAlcohol.replaceAll("}", "");
-                //         cleanAlcohol = cleanAlcohol.replaceAll("]", "");
-                //         alcoholValueArray.push(cleanAlcohol);
-                //     }
-                //
-                //     if (document.getElementById("alcoholDateArray").value === date) {
-                //         let temporaryNumberArray = [];
-                //         let alcoholValueNumberArray = convertStringToNumberArray(alcoholValueArray, temporaryNumberArray);
-                //         let lowestAlcohol, highestAlcohol;
-                //         lowestAlcohol = findLowestInArray(alcoholValueNumberArray);
-                //         highestAlcohol = findHighestInArray(alcoholValueNumberArray);
-                //         let lowestAlcoholCeiling, highestAlcoholCeiling;
-                //         lowestAlcoholCeiling = Math.round((Math.round(lowestAlcohol)) / 10) * 10;
-                //         highestAlcoholCeiling = Math.round((Math.round(highestAlcohol)) / 10) * 10;
-                //         if (highestAlcoholCeiling === lowestAlcoholCeiling) {
-                //             highestAlcoholCeiling = highestAlcoholCeiling + 10;
-                //         }
-                //         if (highestAlcohol > highestAlcoholCeiling) {
-                //             while (highestAlcohol > highestAlcoholCeiling) {
-                //                 highestAlcoholCeiling += 10;
-                //             }
-                //         }
-                //         if (lowestAlcohol < lowestAlcoholCeiling) {
-                //             while (lowestAlcohol < lowestAlcoholCeiling) {
-                //                 lowestAlcoholCeiling -= 10;
-                //             }
-                //         }
-                //
-                //         document.getElementById("alcoholChartContainer").innerHTML = "";
-                //         document.getElementById('alcoholChartContainer').innerHTML = "<canvas id=\"alcoholChart\"></canvas>";
-                //         generateChart("alcoholChart", timeArray, alcoholValueNumberArray, lowestAlcoholCeiling, highestAlcoholCeiling);
-                //     }
-                // });
-
 
                 await RefDHT("MQ135/Acetone/", acetoneDateSelect, "acetoneDateArray");
 
                 await firebase.database().ref(currentDayAcetone).on('value', (snap) => {
-                    let acetoneStr = snap.val();
-                    let jsonReturnedParameter = jsonParameterReturnCompare(acetoneStr);
-                    let acetoneArray = jsonReturnedParameter[0];
+                    let jsonReturnedParameter = jsonLatestParameterReturnCompare(snap.val());
+                    let parameterArray = jsonReturnedParameter[0];
                     let jsonAcetoneValue = jsonReturnedParameter[2];
 
-                    let timeAndParameterValueArray = cleanParameterPush(acetoneArray);
+                    let parameterValueArray = cleanParameterPush(parameterArray);
 
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("acetoneDateArray").value === date) {
-                        let yAxisValues = dynamicYAxis(timeAndParameterValueArray[1])
+                        let yAxisValues = dynamicYAxis(parameterValueArray[1])
 
                         generateChart("acetoneChartContainer", "<canvas id=\"acetoneChart\"></canvas>", "acetoneChart",
-                            timeAndParameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
+                            parameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
                     }
 
                     if (jsonAcetoneValue <= 100) {
@@ -1087,103 +927,24 @@
                         jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128128;';
                     }
 
-                    // latest acetone value
                     document.getElementById('latestAcetone').innerHTML = jsonAcetoneValue;
                 });
-
-                // firebase.database().ref(currentDayAcetone).on('value', (snap) => {
-                //     var acetoneStr = snap.val();
-                //     var acetoneArray = [];
-                //     Object.keys(acetoneStr).forEach((key) => {
-                //         acetoneArray.push({[key]: acetoneStr[key]});
-                //     });
-                //
-                //     var latestAcetone = acetoneArray[acetoneArray.length - 1];
-                //     var acetoneValue = Object.values(latestAcetone);
-                //     var jsonAcetoneValue = JSON.stringify(acetoneValue);
-                //
-                //     jsonAcetoneValue = jsonAcetoneValue.split(":").pop();
-                //     jsonAcetoneValue = jsonAcetoneValue.replaceAll("\"", "");
-                //     jsonAcetoneValue = jsonAcetoneValue.replaceAll("}", "");
-                //     jsonAcetoneValue = jsonAcetoneValue.replaceAll("]", "");
-                //
-                //     if (jsonAcetoneValue <= 100) {
-                //         document.getElementById("acetoneIndicator").style.backgroundColor = "#4CBB17";
-                //         jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128516;';
-                //     }
-                //     if (jsonAcetoneValue > 100 && jsonAcetoneValue < 250) {
-                //         document.getElementById("acetoneIndicator").style.backgroundColor = "#FFA500";
-                //         jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128577;';
-                //     }
-                //     if (jsonAcetoneValue > 250 && jsonAcetoneValue <= 500) {
-                //         document.getElementById("acetoneIndicator").style.backgroundColor = "#bd1816";
-                //         jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128567;';
-                //     }
-                //     if (jsonAcetoneValue > 500) {
-                //         document.getElementById("acetoneIndicator").style.backgroundColor = "#000000";
-                //         jsonAcetoneValue = jsonAcetoneValue + 'ppm' + '&#128128;';
-                //     }
-                //
-                //     document.getElementById('latestAcetone').innerHTML = jsonAcetoneValue;
-                //     var iterator = acetoneArray.values();
-                //
-                //     var timeArray = [];
-                //     var acetoneValueArray = [];
-                //     for (let elements of iterator) {
-                //         timeArray.push(Object.keys(elements).toString());
-                //         let cleanAcetone = JSON.stringify(Object.values(elements));
-                //         cleanAcetone = cleanAcetone.split(":").pop();
-                //         cleanAcetone = cleanAcetone.replaceAll("\"", "");
-                //         cleanAcetone = cleanAcetone.replaceAll("}", "");
-                //         cleanAcetone = cleanAcetone.replaceAll("]", "");
-                //         acetoneValueArray.push(cleanAcetone);
-                //     }
-                //
-                //     if (document.getElementById("acetoneDateArray").value === date) {
-                //         let temporaryNumberArray = [];
-                //         let acetoneValueNumberArray = convertStringToNumberArray(acetoneValueArray, temporaryNumberArray);
-                //         let lowestAcetone, highestAcetone;
-                //         lowestAcetone = findLowestInArray(acetoneValueNumberArray);
-                //         highestAcetone = findHighestInArray(acetoneValueNumberArray);
-                //         let lowestAcetoneCeiling, highestAcetoneCeiling;
-                //         lowestAcetoneCeiling = Math.round((Math.round(lowestAcetone)) / 10) * 10;
-                //         highestAcetoneCeiling = Math.round((Math.round(highestAcetone)) / 10) * 10;
-                //         if (highestAcetoneCeiling === lowestAcetoneCeiling) {
-                //             highestAcetoneCeiling = highestAcetoneCeiling + 10;
-                //         }
-                //         if (highestAcetone > highestAcetoneCeiling) {
-                //             while (highestAcetone > highestAcetoneCeiling) {
-                //                 highestAcetoneCeiling += 10;
-                //             }
-                //         }
-                //         if (lowestAcetone < lowestAcetoneCeiling) {
-                //             while (lowestAcetone < lowestAcetoneCeiling) {
-                //                 lowestAcetoneCeiling -= 10;
-                //             }
-                //         }
-                //
-                //         document.getElementById("acetoneChartContainer").innerHTML = "";
-                //         document.getElementById('acetoneChartContainer').innerHTML = "<canvas id=\"acetoneChart\"></canvas>";
-                //         generateChart("acetoneChart", timeArray, acetoneValueArray, lowestAcetoneCeiling, highestAcetoneCeiling);
-                //     }
-                // });
 
                 await RefDHT("MQ2/LPG/", LPGDateSelect, "LPGDateArray");
 
                 await firebase.database().ref(currentDayLPG).on('value', (snap) => {
-                    let LPGStr = snap.val();
-                    let jsonReturnedParameter = jsonParameterReturnCompare(LPGStr);
-                    let LPGArray = jsonReturnedParameter[0];
+                    let jsonReturnedParameter = jsonLatestParameterReturnCompare(snap.val());
+                    let parameterArray = jsonReturnedParameter[0];
                     let jsonLPGValue = jsonReturnedParameter[2];
 
-                    let timeAndParameterValueArray = cleanParameterPush(LPGArray);
+                    let parameterValueArray = cleanParameterPush(parameterArray);
 
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("LPGDateArray").value === date) {
-                        let yAxisValues = dynamicYAxis(timeAndParameterValueArray[1])
+                        let yAxisValues = dynamicYAxis(parameterValueArray[1])
 
                         generateChart("LPGChartContainer", "<canvas id=\"LPGChart\"></canvas>", "LPGChart",
-                            timeAndParameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
+                            parameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
                     }
 
                     if (jsonLPGValue <= 500) {
@@ -1203,105 +964,24 @@
                         jsonLPGValue = jsonLPGValue + 'ppm' + '&#128128;';
                     }
 
-                    // latest LPG value
                     document.getElementById('latestLPG').innerHTML = jsonLPGValue;
                 });
-
-
-                // firebase.database().ref(currentDayLPG).on('value', (snap) => {
-                //     var LPGStr = snap.val();
-                //     var LPGArray = [];
-                //     Object.keys(LPGStr).forEach((key) => {
-                //         LPGArray.push({[key]: LPGStr[key]});
-                //     });
-                //
-                //     var latestLPG = LPGArray[LPGArray.length - 1];
-                //     var LPGValue = Object.values(latestLPG);
-                //     var jsonLPGValue = JSON.stringify(LPGValue);
-                //
-                //     jsonLPGValue = jsonLPGValue.split(":").pop();
-                //     jsonLPGValue = jsonLPGValue.replaceAll("\"", "");
-                //     jsonLPGValue = jsonLPGValue.replaceAll("}", "");
-                //     jsonLPGValue = jsonLPGValue.replaceAll("]", "");
-                //
-                //     if (jsonLPGValue <= 500) {
-                //         document.getElementById("LPGIndicator").style.backgroundColor = "#4CBB17";
-                //         jsonLPGValue = jsonLPGValue + 'ppm' + '&#128516;';
-                //     }
-                //     if (jsonLPGValue > 500 && jsonLPGValue <= 1000) {
-                //         document.getElementById("LPGIndicator").style.backgroundColor = "#FFA500";
-                //         jsonLPGValue = jsonLPGValue + 'ppm' + '&#128577;';
-                //     }
-                //     if (jsonLPGValue > 1000 && jsonLPGValue <= 1250) {
-                //         document.getElementById("LPGIndicator").style.backgroundColor = "#bd1816";
-                //         jsonLPGValue = jsonLPGValue + 'ppm' + '&#128567;';
-                //     }
-                //     if (jsonLPGValue > 1250) {
-                //         document.getElementById("LPGIndicator").style.backgroundColor = "#000000";
-                //         jsonLPGValue = jsonLPGValue + 'ppm' + '&#128128;';
-                //     }
-                //
-                //     document.getElementById('latestLPG').innerHTML = jsonLPGValue;
-                //     var iterator = LPGArray.values();
-                //
-                //
-                //     var timeArray = [];
-                //     var LPGValueArray = [];
-                //     for (let elements of iterator) {
-                //         timeArray.push(Object.keys(elements).toString());
-                //         let cleanLPG = JSON.stringify(Object.values(elements));
-                //         cleanLPG = cleanLPG.split(":").pop();
-                //         cleanLPG = cleanLPG.replaceAll("\"", "");
-                //         cleanLPG = cleanLPG.replaceAll("}", "");
-                //         cleanLPG = cleanLPG.replaceAll("]", "");
-                //         LPGValueArray.push(cleanLPG);
-                //     }
-                //
-                //     if (document.getElementById("LPGDateArray").value === date) {
-                //         let temporaryNumberArray = [];
-                //         let LPGValueNumberArray = convertStringToNumberArray(LPGValueArray, temporaryNumberArray);
-                //         let lowestLPG, highestLPG;
-                //         lowestLPG = findLowestInArray(LPGValueNumberArray);
-                //         highestLPG = findHighestInArray(LPGValueNumberArray);
-                //         let lowestLPGCeiling, highestLPGCeiling;
-                //         lowestLPGCeiling = Math.round((Math.round(lowestLPG)) / 10) * 10;
-                //         highestLPGCeiling = Math.round((Math.round(highestLPG)) / 10) * 10;
-                //         if (highestLPGCeiling === lowestLPGCeiling) {
-                //             highestLPGCeiling = highestLPGCeiling + 10;
-                //         }
-                //         if (highestLPG > highestLPGCeiling) {
-                //             while (highestLPG > highestLPGCeiling) {
-                //                 highestLPGCeiling += 10;
-                //             }
-                //         }
-                //         if (lowestLPG < lowestLPGCeiling) {
-                //             while (lowestLPG < lowestLPGCeiling) {
-                //                 lowestLPGCeiling -= 10;
-                //             }
-                //         }
-                //
-                //         document.getElementById("LPGChartContainer").innerHTML = "";
-                //         document.getElementById('LPGChartContainer').innerHTML = "<canvas id=\"LPGChart\"></canvas>";
-                //         generateChart("LPGChart", timeArray, LPGValueArray, lowestLPGCeiling, highestLPGCeiling);
-                //     }
-                // });
 
                 await RefDHT("MQ2/CO/", CODateSelect, "CODateArray");
 
                 await firebase.database().ref(currentDayCO).on('value', (snap) => {
-                    let COStr = snap.val();
-                    let jsonReturnedParameter = jsonParameterReturnCompare(COStr);
-                    let COArray = jsonReturnedParameter[0];
+                    let jsonReturnedParameter = jsonLatestParameterReturnCompare(snap.val());
+                    let parameterArray = jsonReturnedParameter[0];
                     let jsonCOValue = jsonReturnedParameter[2];
 
-                    let timeAndParameterValueArray = cleanParameterPush(COArray);
+                    let parameterValueArray = cleanParameterPush(parameterArray);
 
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("LPGDateArray").value === date) {
-                        let yAxisValues = dynamicYAxis(timeAndParameterValueArray[1])
+                        let yAxisValues = dynamicYAxis(parameterValueArray[1])
 
                         generateChart("COChartContainer", "<canvas id=\"COChart\"></canvas>", "COChart",
-                            timeAndParameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
+                            parameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
                     }
 
                     if (jsonCOValue <= 6) {
@@ -1321,103 +1001,24 @@
                         document.getElementById("COIndicator").style.backgroundColor = "#000000";
                     }
 
-                    // latest LPG value
                     document.getElementById('latestCO').innerHTML = jsonCOValue;
                 });
-
-                // firebase.database().ref(currentDayCO).on('value', (snap) => {
-                //     var COStr = snap.val();
-                //     var COArray = [];
-                //     Object.keys(COStr).forEach((key) => {
-                //         COArray.push({[key]: COStr[key]});
-                //     });
-                //
-                //     var latestCO = COArray[COArray.length - 1];
-                //     var COValue = Object.values(latestCO);
-                //     var jsonCOValue = JSON.stringify(COValue);
-                //
-                //     jsonCOValue = jsonCOValue.split(":").pop();
-                //     jsonCOValue = jsonCOValue.replaceAll("\"", "");
-                //     jsonCOValue = jsonCOValue.replaceAll("}", "");
-                //     jsonCOValue = jsonCOValue.replaceAll("]", "");
-                //
-                //     if (jsonCOValue <= 6) {
-                //         jsonCOValue = jsonCOValue + 'ppm' + '&#128516;';
-                //         document.getElementById("COIndicator").style.backgroundColor = "#4CBB17";
-                //     }
-                //     if (jsonCOValue > 6 && jsonCOValue <= 50) {
-                //         jsonCOValue = jsonCOValue + 'ppm' + '&#128577;';
-                //         document.getElementById("COIndicator").style.backgroundColor = "#FFA500";
-                //     }
-                //     if (jsonCOValue > 50 && jsonCOValue <= 200) {
-                //         jsonCOValue = jsonCOValue + 'ppm' + '&#128567;';
-                //         document.getElementById("COIndicator").style.backgroundColor = "#bd1816";
-                //     }
-                //     if (jsonCOValue > 200) {
-                //         jsonCOValue = jsonCOValue + 'ppm' + '&#128128;';
-                //         document.getElementById("COIndicator").style.backgroundColor = "#000000";
-                //     }
-                //
-                //     document.getElementById('latestCO').innerHTML = jsonCOValue;
-                //     var iterator = COArray.values();
-                //
-                //     var timeArray = [];
-                //     var COValueArray = [];
-                //     for (let elements of iterator) {
-                //         timeArray.push(Object.keys(elements).toString());
-                //         let cleanCO = JSON.stringify(Object.values(elements));
-                //         cleanCO = cleanCO.split(":").pop();
-                //         cleanCO = cleanCO.replaceAll("\"", "");
-                //         cleanCO = cleanCO.replaceAll("}", "");
-                //         cleanCO = cleanCO.replaceAll("]", "");
-                //         COValueArray.push(cleanCO);
-                //     }
-                //
-                //     if (document.getElementById("CODateArray").value === date) {
-                //         let temporaryNumberArray = [];
-                //         let COValueNumberArray = convertStringToNumberArray(COValueArray, temporaryNumberArray);
-                //         let lowestCO, highestCO;
-                //         lowestCO = findLowestInArray(COValueNumberArray);
-                //         highestCO = findHighestInArray(COValueNumberArray);
-                //         let lowestCOCeiling, highestCOCeiling;
-                //         lowestCOCeiling = Math.round((Math.round(lowestCO)) / 10) * 10;
-                //         highestCOCeiling = Math.round((Math.round(highestCO)) / 10) * 10;
-                //         if (highestCOCeiling === lowestCOCeiling) {
-                //             highestCOCeiling = highestCOCeiling + 10;
-                //         }
-                //         if (highestCO > highestCOCeiling) {
-                //             while (highestCO > highestCOCeiling) {
-                //                 highestCOCeiling += 10;
-                //             }
-                //         }
-                //         if (lowestCO < lowestCOCeiling) {
-                //             while (lowestCO < lowestCOCeiling) {
-                //                 lowestCOCeiling -= 10;
-                //             }
-                //         }
-                //
-                //         document.getElementById("COChartContainer").innerHTML = "";
-                //         document.getElementById('COChartContainer').innerHTML = "<canvas id=\"COChart\"></canvas>";
-                //         generateChart("COChart", timeArray, COValueNumberArray, lowestCOCeiling, highestCOCeiling);
-                //     }
-                // });
 
                 await RefDHT("DSM501A/PM25/", PM25DateSelect, "PM25DateArray");
 
                 await firebase.database().ref(currentDayPM25).on('value', (snap) => {
-                    let PM25Str = snap.val();
-                    let jsonReturnedParameter = jsonParameterReturnCompare(PM25Str);
-                    let PM25Array = jsonReturnedParameter[0];
+                    let jsonReturnedParameter = jsonLatestParameterReturnCompare(snap.val());
+                    let parameterArray = jsonReturnedParameter[0];
                     let jsonPM25Value = jsonReturnedParameter[2];
 
-                    let timeAndParameterValueArray = cleanParameterPush(PM25Array);
+                    let parameterValueArray = cleanParameterPush(parameterArray);
 
                     // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("PM25DateArray").value === date) {
-                        let yAxisValues = dynamicYAxis(timeAndParameterValueArray[1])
+                        let yAxisValues = dynamicYAxis(parameterValueArray[1])
 
                         generateChart("PM25ChartContainer", "<canvas id=\"PM25Chart\"></canvas>", "PM25Chart",
-                            timeAndParameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
+                            parameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
                     }
 
                     if (jsonPM25Value <= 12) {
@@ -1437,86 +1038,8 @@
                         document.getElementById("PM25Indicator").style.backgroundColor = "#000000";
                     }
 
-                    // latest LPG value
                     document.getElementById('latestPM25').innerHTML = jsonPM25Value;
                 });
-
-                // firebase.database().ref(currentDayPM25).on('value', (snap) => {
-                //     var PM25Str = snap.val();
-                //     var PM25Array = [];
-                //     Object.keys(PM25Str).forEach((key) => {
-                //         PM25Array.push({[key]: PM25Str[key]});
-                //     });
-                //
-                //     var latestPM25 = PM25Array[PM25Array.length - 1];
-                //     var PM25Value = Object.values(latestPM25);
-                //     var jsonPM25Value = JSON.stringify(PM25Value);
-                //
-                //     jsonPM25Value = jsonPM25Value.split(":").pop();
-                //     jsonPM25Value = jsonPM25Value.replaceAll("\"", "");
-                //     jsonPM25Value = jsonPM25Value.replaceAll("}", "");
-                //     jsonPM25Value = jsonPM25Value.replaceAll("]", "");
-                //
-                //     if (jsonPM25Value <= 12) {
-                //         jsonPM25Value = jsonPM25Value + 'µg/m<sup>3</sup>' + '&#128516;';
-                //         document.getElementById("PM25Indicator").style.backgroundColor = "#4CBB17";
-                //     }
-                //     if (jsonPM25Value > 12 && jsonPM25Value <= 35) {
-                //         jsonPM25Value = jsonPM25Value + 'µg/m<sup>3</sup>' + '&#128577;';
-                //         document.getElementById("PM25Indicator").style.backgroundColor = "#FFA500";
-                //     }
-                //     if (jsonPM25Value > 35 && jsonPM25Value <= 55) {
-                //         jsonPM25Value = jsonPM25Value + 'µg/m<sup>3</sup>' + '&#128567;';
-                //         document.getElementById("PM25Indicator").style.backgroundColor = "#bd1816";
-                //     }
-                //     if (jsonPM25Value > 55) {
-                //         jsonPM25Value = jsonPM25Value + 'µg/m<sup>3</sup>' + '&#128128;';
-                //         document.getElementById("PM25Indicator").style.backgroundColor = "#000000";
-                //     }
-                //     document.getElementById('latestPM25').innerHTML = jsonPM25Value;
-                //
-                //     var iterator = PM25Array.values();
-                //     var timeArray = [];
-                //     var PM25ValueArray = [];
-                //     for (let elements of iterator) {
-                //         timeArray.push(Object.keys(elements).toString());
-                //         let cleanPM25 = JSON.stringify(Object.values(elements));
-                //         cleanPM25 = cleanPM25.split(":").pop();
-                //         cleanPM25 = cleanPM25.replaceAll("\"", "");
-                //         cleanPM25 = cleanPM25.replaceAll("}", "");
-                //         cleanPM25 = cleanPM25.replaceAll("]", "");
-                //         PM25ValueArray.push(cleanPM25);
-                //     }
-                //
-                //     if (document.getElementById("PM25DateArray").value === date) {
-                //         let temporaryNumberArray = [];
-                //         let PM25ValueNumberArray = convertStringToNumberArray(PM25ValueArray, temporaryNumberArray);
-                //         let lowestPM25, highestPM25;
-                //         lowestPM25 = findLowestInArray(PM25ValueNumberArray);
-                //         highestPM25 = findHighestInArray(PM25ValueNumberArray);
-                //         let lowestPM25Ceiling, highestPM25Ceiling;
-                //         lowestPM25Ceiling = Math.round((Math.round(lowestPM25)) / 10) * 10;
-                //         highestPM25Ceiling = Math.round((Math.round(highestPM25)) / 10) * 10;
-                //         if (highestPM25Ceiling === lowestPM25Ceiling) {
-                //             highestPM25Ceiling = highestPM25Ceiling + 10;
-                //         }
-                //         if (highestPM25 > highestPM25Ceiling) {
-                //             while (highestPM25 > highestPM25Ceiling) {
-                //                 highestPM25Ceiling += 10;
-                //             }
-                //         }
-                //         if (lowestPM25 < lowestPM25Ceiling) {
-                //             while (lowestPM25 < lowestPM25Ceiling) {
-                //                 lowestPM25Ceiling -= 10;
-                //             }
-                //         }
-                //
-                //         document.getElementById("PM25ChartContainer").innerHTML = "";
-                //         document.getElementById('PM25ChartContainer').innerHTML = "<canvas id=\"PM25Chart\"></canvas>";
-                //         generateChart("PM25Chart", timeArray, PM25ValueNumberArray, lowestPM25Ceiling, highestPM25Ceiling);
-                //     }
-                // });
-
             }
         );
     </script>
