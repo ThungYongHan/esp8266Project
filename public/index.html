@@ -448,7 +448,7 @@
             firebase.database().ref(selectedDayParameter).on('value', (snap) => {
                 let parameterStr = snap.val();
                 let parameterValueArray = [];
- 
+
                 // insert retrieved selected parameter date data into array
                 Object.keys(parameterStr).forEach((key) => {
                     parameterArray.push({[key]: parameterStr[key]});
@@ -479,7 +479,7 @@
         }
 
 
-        function cleanParameterPush(parameterArray){
+        function cleanParameterPush(parameterArray) {
             let iterator = parameterArray.values();
             let timeArray = [];
             let parameterValueArray = [];
@@ -829,21 +829,12 @@
 
                 await RefDHT("DHT11/Humidity/", humidityDateSelect, "humidityDateArray");
 
-                firebase.database().ref(currentDayHumidity).on('value', (snap) => {
+                await firebase.database().ref(currentDayHumidity).on('value', (snap) => {
                     var humidityStr = snap.val();
-                    var humidityArray = [];
-                    Object.keys(humidityStr).forEach((key) => {
-                        humidityArray.push({[key]: humidityStr[key]});
-                    });
-
-                    var latestHumidity = humidityArray[humidityArray.length - 1];
-                    var humidityValue = Object.values(latestHumidity);
-                    var jsonHumidityValue = JSON.stringify(humidityValue);
-
-                    jsonHumidityValue = jsonHumidityValue.split(":").pop();
-                    jsonHumidityValue = jsonHumidityValue.replaceAll("\"", "");
-                    jsonHumidityValue = jsonHumidityValue.replaceAll("}", "");
-                    jsonHumidityValue = jsonHumidityValue.replaceAll("]", "");
+                    var jsonReturnedParameter = jsonParameterReturnCompare(humidityStr);
+                    var humidityArray = jsonReturnedParameter[0];
+                    var latestHumidity = jsonReturnedParameter[1];
+                    var jsonHumidityValue = jsonReturnedParameter[2];
 
                     if (jsonHumidityValue >= 0 && jsonHumidityValue < 60) {
                         document.getElementById("humidityIndicator").style.backgroundColor = "#4CBB17";
@@ -858,49 +849,93 @@
                         jsonHumidityValue = jsonHumidityValue + "%" + '&#128543;';
                     }
 
-                    document.getElementById('latestHumidity').innerHTML = jsonHumidityValue;
-                    var iterator = humidityArray.values();
+                    let timeAndParameterValueArray = cleanParameterPush(humidityArray);
 
-                    var timeArray = [];
-                    var humidityValueArray = [];
-                    for (let elements of iterator) {
-                        timeArray.push(Object.keys(elements).toString());
-                        let cleanHumidity = JSON.stringify(Object.values(elements));
-                        cleanHumidity = cleanHumidity.split(":").pop();
-                        cleanHumidity = cleanHumidity.replaceAll("\"", "");
-                        cleanHumidity = cleanHumidity.replaceAll("}", "");
-                        cleanHumidity = cleanHumidity.replaceAll("]", "");
-                        humidityValueArray.push(cleanHumidity);
-                    }
-
+                    // load chart if latest date is equal to selected temperature date in drop-down menu
                     if (document.getElementById("humidityDateArray").value === date) {
-                        let temporaryNumberArray = [];
-                        let humidityValueNumberArray = convertStringToNumberArray(humidityValueArray, temporaryNumberArray);
-                        let lowestHumidity, highestHumidity;
-                        lowestHumidity = findLowestInArray(humidityValueNumberArray);
-                        highestHumidity = findHighestInArray(humidityValueNumberArray);
-                        let lowestHumidityCeiling, highestHumidityCeiling;
-                        lowestHumidityCeiling = Math.round((Math.round(lowestHumidity)) / 10) * 10;
-                        highestHumidityCeiling = Math.round((Math.round(highestHumidity)) / 10) * 10;
-                        if (highestHumidityCeiling === lowestHumidityCeiling) {
-                            highestHumidityCeiling = highestHumidityCeiling + 10;
-                        }
-                        if (highestHumidity > highestHumidityCeiling) {
-                            while (highestHumidity > highestHumidityCeiling) {
-                                highestHumidityCeiling += 10;
-                            }
-                        }
-                        if (lowestHumidity < lowestHumidityCeiling) {
-                            while (lowestHumidity < lowestHumidityCeiling) {
-                                lowestHumidityCeiling -= 10;
-                            }
-                        }
+                        let yAxisValues = dynamicYAxis(timeAndParameterValueArray[1])
 
-                        document.getElementById('humidityChartContainer').innerHTML = "";
-                        document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
-                        generateChart("humidityChart", timeArray, humidityValueArray, lowestHumidityCeiling, highestHumidityCeiling);
+                        generateChart("humidityChartContainer", "<canvas id=\"humidityChart\"></canvas>", "humidityChart",
+                            timeAndParameterValueArray[0], yAxisValues[0], yAxisValues[1], yAxisValues[2]);
                     }
+
+                    // latest temperature value
+                    document.getElementById('latestHumidity').innerHTML = jsonHumidityValue;
                 });
+
+
+                // firebase.database().ref(currentDayHumidity).on('value', (snap) => {
+                //     var humidityStr = snap.val();
+                //     var humidityArray = [];
+                //     Object.keys(humidityStr).forEach((key) => {
+                //         humidityArray.push({[key]: humidityStr[key]});
+                //     });
+                //
+                //     var latestHumidity = humidityArray[humidityArray.length - 1];
+                //     var humidityValue = Object.values(latestHumidity);
+                //     var jsonHumidityValue = JSON.stringify(humidityValue);
+                //
+                //     jsonHumidityValue = jsonHumidityValue.split(":").pop();
+                //     jsonHumidityValue = jsonHumidityValue.replaceAll("\"", "");
+                //     jsonHumidityValue = jsonHumidityValue.replaceAll("}", "");
+                //     jsonHumidityValue = jsonHumidityValue.replaceAll("]", "");
+                //
+                //     if (jsonHumidityValue >= 0 && jsonHumidityValue < 60) {
+                //         document.getElementById("humidityIndicator").style.backgroundColor = "#4CBB17";
+                //         jsonHumidityValue = jsonHumidityValue + "%" + '&#128516;';
+                //     }
+                //     if (jsonHumidityValue >= 60 && jsonHumidityValue < 80) {
+                //         document.getElementById("humidityIndicator").style.backgroundColor = "#FFA500";
+                //         jsonHumidityValue = jsonHumidityValue + "%" + '&#128577;';
+                //     }
+                //     if (jsonHumidityValue >= 80) {
+                //         document.getElementById("humidityIndicator").style.backgroundColor = "#bd1816";
+                //         jsonHumidityValue = jsonHumidityValue + "%" + '&#128543;';
+                //     }
+                //
+                //     document.getElementById('latestHumidity').innerHTML = jsonHumidityValue;
+                //     var iterator = humidityArray.values();
+                //
+                //     var timeArray = [];
+                //     var humidityValueArray = [];
+                //     for (let elements of iterator) {
+                //         timeArray.push(Object.keys(elements).toString());
+                //         let cleanHumidity = JSON.stringify(Object.values(elements));
+                //         cleanHumidity = cleanHumidity.split(":").pop();
+                //         cleanHumidity = cleanHumidity.replaceAll("\"", "");
+                //         cleanHumidity = cleanHumidity.replaceAll("}", "");
+                //         cleanHumidity = cleanHumidity.replaceAll("]", "");
+                //         humidityValueArray.push(cleanHumidity);
+                //     }
+                //
+                //     if (document.getElementById("humidityDateArray").value === date) {
+                //         let temporaryNumberArray = [];
+                //         let humidityValueNumberArray = convertStringToNumberArray(humidityValueArray, temporaryNumberArray);
+                //         let lowestHumidity, highestHumidity;
+                //         lowestHumidity = findLowestInArray(humidityValueNumberArray);
+                //         highestHumidity = findHighestInArray(humidityValueNumberArray);
+                //         let lowestHumidityCeiling, highestHumidityCeiling;
+                //         lowestHumidityCeiling = Math.round((Math.round(lowestHumidity)) / 10) * 10;
+                //         highestHumidityCeiling = Math.round((Math.round(highestHumidity)) / 10) * 10;
+                //         if (highestHumidityCeiling === lowestHumidityCeiling) {
+                //             highestHumidityCeiling = highestHumidityCeiling + 10;
+                //         }
+                //         if (highestHumidity > highestHumidityCeiling) {
+                //             while (highestHumidity > highestHumidityCeiling) {
+                //                 highestHumidityCeiling += 10;
+                //             }
+                //         }
+                //         if (lowestHumidity < lowestHumidityCeiling) {
+                //             while (lowestHumidity < lowestHumidityCeiling) {
+                //                 lowestHumidityCeiling -= 10;
+                //             }
+                //         }
+                //
+                //         document.getElementById('humidityChartContainer').innerHTML = "";
+                //         document.getElementById('humidityChartContainer').innerHTML = "<canvas id=\"humidityChart\"></canvas>";
+                //         generateChart("humidityChart", timeArray, humidityValueArray, lowestHumidityCeiling, highestHumidityCeiling);
+                //     }
+                // });
 
                 await RefDHT("MQ135/Alcohol/", alcoholDateSelect, "alcoholDateArray");
                 firebase.database().ref(currentDayAlcohol).on('value', (snap) => {
